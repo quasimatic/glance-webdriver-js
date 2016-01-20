@@ -5,12 +5,12 @@ describe('Containing', function () {
 
 	it("should look inside a container", function*() {
 		var content = yield glance.getHTML("box2>Item 1")
-		content.should.match(/<div class="box2-item".*>Item 1<\/div>/);
+		content.should.match(/<div.*class="box2-item".*>Item 1<\/div>/);
 	});
 
 	it("should traverse the dom looking for items in multiple containers", function*() {
 		var content = yield glance.getHTML("Item 1 in box 3>Item 2")
-		content.should.match(/<div class="box3-item-2".*>Item 2<\/div>/);
+		content.should.match(/<div.*class="box3-item-2".*>Item 2<\/div>/);
 	});
 
 	it("should show a duplicate found error if container finds more than one", function*() {
@@ -21,22 +21,22 @@ describe('Containing', function () {
 
 	it("should traverse the dom looking for items in parent containers", function*() {
 		var content = yield glance.getHTML("box5>inner-box>Item 1");
-		content.should.match(/<div class="box5-item-1".*>Item 1<\/div>/);
+		content.should.match(/<div.*class="box5-item-1".*>Item 1<\/div>/);
 	});
 
 	it("should only crawl parents til first find", function*() {
 		var content = yield glance.getHTML("Item B>Item A");
-		content.should.match(/<div class="box6-item-A".*>Item A<\/div>/);
+		content.should.match(/<div.*class="box6-item-A".*>Item A<\/div>/);
 	});
 
 	it("should look by class near a container", function*() {
 		var content = yield glance.getHTML("box7>Item Content>class-name");
-		content.should.match(/<div class="class-name".*><\/div>/);
+		content.should.match(/<div.*class="class-name".*><\/div>/);
 	});
 
 	it("should look by node type near a container", function*() {
 		var content = yield glance.getHTML("Item Content>input-near-content");
-		content.should.match(/<input class="input-near-content".*>/);
+		content.should.match(/<input.*class="input-near-content".*>/);
 	});
 
 	it("should look within a custom label", function* () {
@@ -45,7 +45,7 @@ describe('Containing', function () {
 		}, "customlabel");
 
 		var content = yield glance.getHTML("box9>customlabel>Item 1")
-		content.should.match(/<div class="box9-item-1".*>Item 1<\/div>/);
+		content.should.match(/<div.*class="box9-item-1".*>Item 1<\/div>/);
 	});
 
 	it("should find the custom label in container", function*(){
@@ -54,11 +54,11 @@ describe('Containing', function () {
 		}, "customClassLabel");
 
 		var content = yield glance.getHTML("Container Label For Custom Class>customClassLabel");
-		content.should.match(/<div class="custom-class".*>Inside<\/div>/);
+		content.should.match(/<div.*class="custom-class".*>Inside<\/div>/);
 	})
 
 	it("Should limit and narrow the search to containers found", function*(){
 		var content = yield glance.getHTML("reference 1>parent>target")
-		content.should.match(/<div class="target-1".*>target<\/div>/);
+		content.should.match(/<div.*class="target-1".*>target<\/div>/);
 	})
 });
