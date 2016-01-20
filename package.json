@@ -1,6 +1,6 @@
 {
-  "name": "glance",
-  "version": "0.0.1",
+  "name": "glance-webdriver",
+  "version": "0.0.3",
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
@@ -22,13 +22,13 @@
   },
   "homepage": "https://github.com/semiautomatic/glance",
   "dependencies": {
-    "webdriverio": "^3.4.0"
+    "webdriverio": "^3.4.0",
+    "lodash": "^4.0.0"
   },
   "devDependencies": {
     "babel": "^6.3.26",
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
-    "lodash": "^4.0.0",
     "mocha": "^2.3.4"
   }
 }

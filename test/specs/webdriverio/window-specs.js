@@ -29,6 +29,6 @@ describe('Window', function () {
 		yield glance.activateOnlyWindow();
 
 		var content = yield glance.getHTML("Popup")
-		content.should.match(/<a href="\.\/new-window.html" target="_blank".*>Popup<\/a>/);
+		content.should.match(/<a.*href="\.\/new-window.html" target="_blank".*>Popup<\/a>/);
 	});
 });

@@ -6,6 +6,6 @@ describe("overrides", function(){
 
 		yield glance.url("file:///" + __dirname + "/examples/nth.html")
 		var content = yield glance.customCommand();
-		content.should.match(/<div class="item-2".*>Item A<\/div>/);
+		content.should.match(/<div.*class="item-2".*>Item A<\/div>/);
 	});
 })

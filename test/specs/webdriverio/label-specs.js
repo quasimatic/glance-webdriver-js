@@ -20,17 +20,17 @@ describe('Targeting', function () {
 
 	it('will look by id', function* () {
 		var content = yield glance.getHTML("label-id")
-		content.should.match(/<div id="label-id".*>ID Item<\/div>/);
+		content.should.match(/<div.*id="label-id".*>ID Item<\/div>/);
 	});
 
 	it("should look by class", function*() {
 		var content = yield glance.getHTML("div-class")
-		content.should.match(/<div class="div-class".*>Class Item<\/div>/);
+		content.should.match(/<div.*class="div-class".*>Class Item<\/div>/);
 	});
 
 	it("should look by node type", function*() {
 		var content = yield glance.getHTML("button")
-		content.should.match(/<button class="button-direct".*>Button<\/button>/);
+		content.should.match(/<button.*class="button-direct".*>Button<\/button>/);
 	});
 
 	it("should allow using wdio selector", function*(){
@@ -40,17 +40,17 @@ describe('Targeting', function () {
 
 	it("should use the last index against the whole selector", function*() {
 		var content = yield glance.getHTML("h2>Shared Title#1")
-		content.should.match(/<span class="title".*>Shared Title<\/span>/);
+		content.should.match(/<span.*class="title".*>Shared Title<\/span>/);
 	});
 
 	it.skip("should look at attributes by value", function*() {
 		var content = yield glance.getHTML("attribute-value")
-		content.should.match(/<div data-key="attribute-value".*>Attribute Item<\/div>/);
+		content.should.match(/<div.*data-key="attribute-value".*>Attribute Item<\/div>/);
 	});
 
 	it("should look by node type", function*() {
 		var content = yield glance.getHTML("text and nodes#1")
-		content.should.match(/<div class="text-with-nodes".*>\n    This item has text and nodes\n    <div>Inner Text<\/div>\n    <span>More Text<\/span>\n<\/div>/);
+		content.should.match(/<div.*class="text-with-nodes".*>\n    This item has text and nodes\n    <div>Inner Text<\/div>\n    <span>More Text<\/span>\n<\/div>/);
 	});
 
 	it("should look by custom labels", function* () {
