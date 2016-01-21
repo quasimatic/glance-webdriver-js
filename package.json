@@ -1,6 +1,6 @@
 {
   "name": "glance-webdriver",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {

@@ -38,7 +38,7 @@ describe('Input get', function() {
 			return glance.get(selector + ">special-widget>span")
 		}, "complex-control-1");
 
-		var content = yield glance.get("special-container>complex-control-1")
+		var content = yield glance.get("wrapper-1>special-container>complex-control-1")
 		content.should.equal('special value 1');
 	});
 });
@@ -74,7 +74,7 @@ describe('Input set', function() {
 
 	it("should set using a custom label", function*() {
 		glance.addCustomSet(function(selector){
-			return glance.set(selector + ">special-widget>input", "special value 1")
+			return glance.set(selector + "wrapper-1>special-widget>input", "special value 1")
 		}, "complex-control-1");
 
 		yield glance.set("special-container>complex-control-1", "special value 1")
