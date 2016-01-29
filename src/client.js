@@ -1,25 +1,14 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-exports.default = function (selector, customLabels, multiple) {
+export default function(selector, customLabels, multiple) {
 	customLabels = customLabels || {};
 
-	var unique = function unique(array) {
-		var o = {},
-		    i,
-		    l = array.length,
-		    r = [];
-		for (i = 0; i < l; i += 1) {
-			o[xpath(array[i]).xpath] = array[i];
-		}for (i in o) {
-			r.push(o[i]);
-		}return r;
+	var unique = function(array) {
+		var o = {}, i, l = array.length, r = [];
+		for (i = 0; i < l; i += 1) o[xpath(array[i]).xpath] = array[i];
+		for (i in o) r.push(o[i]);
+		return r;
 	};
 
-	var isDescendant = function isDescendant(parent, child) {
+	var isDescendant = function(parent, child) {
 		var node = child.parentNode;
 		while (node != null) {
 			if (node == parent) {
@@ -30,7 +19,7 @@ exports.default = function (selector, customLabels, multiple) {
 		return false;
 	};
 
-	var contentMatch = function contentMatch(origin, target) {
+	var contentMatch = function(origin, target) {
 		try {
 			//
 			// Exact match
@@ -57,12 +46,13 @@ exports.default = function (selector, customLabels, multiple) {
 			}
 
 			return results;
-		} catch (e) {
+		}
+		catch (e) {
 			return false;
 		}
 	};
 
-	var cssQuery = function cssQuery(origin, target) {
+	var cssQuery = function(origin, target) {
 		try {
 			var results = origin.querySelectorAll(target);
 			if (results.length == 0) {
@@ -70,7 +60,8 @@ exports.default = function (selector, customLabels, multiple) {
 			}
 
 			return results;
-		} catch (e) {
+		}
+		catch (e) {
 			return false;
 		}
 	};
@@ -85,7 +76,7 @@ exports.default = function (selector, customLabels, multiple) {
 					var e = xpathResult.snapshotItem(i);
 
 					if (isDescendant(container, e)) {
-						r.push(e);
+						r.push(e)
 					}
 				}
 			}
@@ -95,33 +86,34 @@ exports.default = function (selector, customLabels, multiple) {
 			}
 
 			return false;
-		} catch (e) {
+		}
+		catch (e) {
 			return false;
 		}
 	}
 
 	var Strategies = {
-		getByCustomLabel: function getByCustomLabel(container, text) {
+		getByCustomLabel: function(container, text) {
 			var elementsXPath = customLabels[text];
 			if (!elementsXPath) return false;
 
 			return customLabelMatch(container, elementsXPath);
 		},
-		searchTextExactMatch: function searchTextExactMatch(container, text) {
-			return contentMatch(container, text);
+		searchTextExactMatch: function(container, text) {
+			return contentMatch(container, text)
 		},
-		searchID: function searchID(container, text) {
+		searchID: function(container, text) {
 			return cssQuery(container, "#" + text);
 		},
-		searchClass: function searchClass(container, text) {
+		searchClass: function(container, text) {
 			return cssQuery(container, "." + text);
 		},
-		searchType: function searchType(container, text) {
+		searchType: function(container, text) {
 			return cssQuery(container, text);
 		}
 	};
 
-	var findElement = function findElement(container, label) {
+	var findElement = function(container, label) {
 		var l = label.split("#")[0];
 
 		var parent = container;
@@ -146,34 +138,36 @@ exports.default = function (selector, customLabels, multiple) {
 		}
 	};
 
-	var indexOf = function indexOf(label) {
+	var indexOf = function(label) {
 		var index = label.split("#")[1];
 		return index ? index - 1 : -1;
 	};
 
-	var drillDown = function drillDown(label) {
+	var drillDown = function(label) {
 		var body = document.querySelector("body");
 		var labels = label.split(">");
 		var lastIndex = label.match(/#(\d*)$/);
 
-		var targets = searchContainer(body, labels, 0);
+		var targets = searchContainer(body, labels, 0)
 
 		if (!targets) {
 			return false;
-		} else {
+		}
+		else {
 
 			if (lastIndex) {
 				//
 				// Assume last index is for all targets found
 				//
 				return [targets[lastIndex[1] - 1]];
-			} else {
+			}
+			else {
 				return targets;
 			}
 		}
 	};
 
-	var limitToReferences = function limitToReferences(elements, container) {
+	var limitToReferences = function(elements, container) {
 		var elementContainsContainer = false;
 		var parentsContainingReference = [];
 		for (var e = 0; e < elements.length; ++e) {
@@ -183,12 +177,13 @@ exports.default = function (selector, customLabels, multiple) {
 			}
 		}
 
-		if (elementContainsContainer) return parentsContainingReference;
+		if (elementContainsContainer)
+			return parentsContainingReference;
 
 		return elements;
-	};
+	}
 
-	var searchContainer = function searchContainer(container, labels, labelIndex) {
+	var searchContainer = function(container, labels, labelIndex) {
 		var l = labels[labelIndex];
 		var i = indexOf(l);
 
@@ -201,14 +196,16 @@ exports.default = function (selector, customLabels, multiple) {
 		var lastItem = labelIndex + 1 === labels.length;
 		if (lastItem) {
 			return elements;
-		} else {
+		}
+		else {
 			// IS a container
 			var targets = [];
 
 			if (i >= 0) {
 				var childContainer = elements[i];
 				targets = targets.concat(Array.prototype.slice.call(searchContainer(childContainer, labels, labelIndex + 1)));
-			} else {
+			}
+			else {
 				for (var c = 0; c < elements.length; c++) {
 					var childContainer = elements[c];
 					var foundItems = Array.prototype.slice.call(searchContainer(childContainer, labels, labelIndex + 1));
@@ -220,7 +217,7 @@ exports.default = function (selector, customLabels, multiple) {
 		}
 	};
 
-	var xpath = function xpath(element) {
+	var xpath = function(element) {
 		var originalElement = element;
 		var path = "";
 		var nodeCount = 1;
@@ -231,7 +228,7 @@ exports.default = function (selector, customLabels, multiple) {
 				tagsInsideSVG = nodeCount;
 			}
 			++nodeCount;
-			element = element.parentNode;
+			element = element.parentNode
 		}
 
 		element = originalElement;
@@ -242,23 +239,24 @@ exports.default = function (selector, customLabels, multiple) {
 			if (tagsInsideSVG > 0) {
 				xname = "*[name()='" + element.tagName + "']";
 				--tagsInsideSVG;
-			} else {
-				xname = element.tagName;
+			}
+			else {
+				xname = element.tagName
 			}
 			xname += "[" + i + "]";
 			path = "/" + xname + path;
 
-			element = element.parentNode;
+			element = element.parentNode
 		}
 
-		return { xpath: path };
+		return {xpath: path};
 	};
 
-	var index = function index(element) {
+	var index = function(element) {
 		var i = 1;
 		var sibling = element;
 		while (sibling = sibling.previousSibling) {
-			if (sibling.nodeType == 1 && sibling.tagName == element.tagName) i++;
+			if (sibling.nodeType == 1 && sibling.tagName == element.tagName) i++
 		}
 
 		return i;
@@ -266,13 +264,13 @@ exports.default = function (selector, customLabels, multiple) {
 
 	function IDGenerator() {
 		this.length = 8;
-		this.timestamp = +new Date();
+		this.timestamp = +new Date;
 
-		var _getRandomInt = function _getRandomInt(min, max) {
-			return Math.floor(Math.random() * (max - min + 1)) + min;
-		};
+		var _getRandomInt = function(min, max) {
+			return Math.floor(Math.random() * ( max - min + 1 )) + min;
+		}
 
-		this.generate = function () {
+		this.generate = function() {
 			var ts = this.timestamp.toString();
 			var parts = ts.split("").reverse();
 			var id = "";
@@ -283,20 +281,20 @@ exports.default = function (selector, customLabels, multiple) {
 			}
 
 			return id;
-		};
+		}
 	}
 
-	var search = function search() {
+	var search = function() {
 		var targetElements = drillDown(selector);
 
-		if (!targetElements || targetElements.length == 0) return { notFound: true };
+		if (!targetElements || targetElements.length == 0) return {notFound: true}
 		var elementIDs = [];
 		var generator = new IDGenerator();
 
 		for (var i = 0; i < targetElements.length; i++) {
 			var id = targetElements[i].getAttribute("data-glance-id");
 
-			if (!id) {
+			if(!id) {
 				id = generator.generate();
 				targetElements[i].setAttribute("data-glance-id", id);
 			}
@@ -304,8 +302,8 @@ exports.default = function (selector, customLabels, multiple) {
 			elementIDs.push(id);
 		}
 
-		return { ids: elementIDs };
+		return {ids: elementIDs};
 	};
 
 	return search();
-};
+}

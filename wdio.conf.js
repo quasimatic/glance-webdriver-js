@@ -86,7 +86,7 @@ exports.config = {
     // Test reporter for stdout.
     // The following are supported: dot (default), spec and xunit
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporter: 'dot',
+    reporter: 'spec',
     
     //
     // Options to be passed to Mocha.
@@ -118,8 +118,8 @@ exports.config = {
         expect = chai.expect;
         chai.Should();
 
-        Glance = require('./lib/glance');
-        glance = Glance.webdriverIO(browser);
+        Glance = require('./lib/glance').default;
+        glance = new Glance(this);
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from

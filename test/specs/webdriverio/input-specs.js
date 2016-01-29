@@ -34,9 +34,9 @@ describe('Input get', function() {
 	});
 
 	it("should get using a custom label", function*() {
-		glance.addCustomGet(function(selector){
-			return glance.get(selector + ">special-widget>span")
-		}, "complex-control-1");
+		glance.addGetter("complex-control-1", function(selector) {
+			return this.get(selector + ">special-widget>span")
+		});
 
 		var content = yield glance.get("wrapper-1>special-container>complex-control-1")
 		content.should.equal('special value 1');
@@ -48,37 +48,51 @@ describe('Input set', function() {
 		yield glance.url("file:///" + __dirname + "/examples/set.html")
 	})
 
-	it("should get value", function*() {
+	it("should set value", function*() {
 		yield glance.set("input-1", "value 1")
 		var content = yield glance.get("input-1")
 		content.should.equal('value 1');
 	});
 
-	it("should get text", function*() {
+	it.skip("should not set text", function*() {
 		yield glance.set("label-1", "label 1").catch(function(err) {
 			err.message.should.equal("label-1 text not changable");
 		})
 	});
 
-	it("should get selected text by default", function*() {
+	it("should set selected text by default", function*() {
 		yield glance.set("select-1", "text2");
 		var content = yield glance.get("select-1")
 		content.should.equal('text2');
 	});
 
-	it("should get selected value", function*() {
+	it("should set selected value", function*() {
 		yield glance.set("select-1>value", "value3")
 		var content = yield glance.get("select-1>value")
 		content.should.equal('value3');
 	});
 
 	it("should set using a custom label", function*() {
-		glance.addCustomSet(function(selector){
-			return glance.set(selector + "wrapper-1>special-widget>input", "special value 1")
-		}, "complex-control-1");
+		glance.addSetter("complex-control-1", function(selector) {
+			return this.set(selector + ">wrapper-1>special-widget>input", "special value 1")
+		});
 
-		yield glance.set("special-container>complex-control-1", "special value 1")
+		yield glance.set("special-container>complex-control-1", "special value 1");
 		var content = yield glance.get("special-container>special-widget>input");
 		content.should.equal('special value 1');
+	});
+
+	it("should reject if it can't find a setter", function(done) {
+		this.timeout(30000)
+
+		glance.set("non-existing", "value 1").catch(function(err) {
+			try {
+				err.message.should.equal("Element not found: non-existing")
+				done();
+			}
+			catch (err) {
+				done(err)
+			}
+		});
 	});
 });
