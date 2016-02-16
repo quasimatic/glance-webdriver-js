@@ -50,7 +50,7 @@ describe('Targeting', function () {
 
 	it("should look by custom labels", function* () {
 		yield glance.addLabel("customlabel", function (selector) {
-			return this.convertGlanceSelector(".random>div#2").then((wdioSelector)=> this.webdriverio().element(wdioSelector))
+			return this.convertGlanceSelector(".random>div#2").then((wdioSelector)=> this.webdriverio.element(wdioSelector))
 		});
 
 		var content = yield glance.get("customlabel>html");

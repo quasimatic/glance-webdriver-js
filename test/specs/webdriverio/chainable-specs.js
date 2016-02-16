@@ -17,7 +17,7 @@ describe("Chainable", function() {
         }
 
         yield glance.addLabel("customlabel", function(selector) {
-            return this.convertGlanceSelector("Button 2").then((wdioSelector)=> this.webdriverio().element(wdioSelector))
+            return this.convertGlanceSelector("Button 2").then((wdioSelector)=> this.webdriverio.element(wdioSelector))
         });
 
         var content = yield glance.get("customlabel>html");

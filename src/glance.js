@@ -34,16 +34,16 @@ class Glance {
                 this.setLogLevel(config.logLevel);
             }
 
-            if (config.wdio) {
-                this.wdio = config.wdio
+            if (config.webdriverio) {
+                this.webdriverio = config.webdriverio
                 resolve();
             }
             else if (config.options) {
-                this.wdio = config;
+                this.webdriverio = config;
                 resolve();
             }
             else {
-                this.wdio = wdio.remote(config).init(resolve);
+                this.webdriverio = wdio.remote(config).init(resolve);
             }
         });
     }
@@ -51,10 +51,6 @@ class Glance {
     setLogLevel(level) {
         log.setLevel(level);
         return this;
-    }
-
-    webdriverio() {
-        return this.wdio;
     }
 
     wrapPromise(func) {
@@ -69,42 +65,42 @@ class Glance {
     }
 
     url(address) {
-        return this.wrapPromise(()=> this.webdriverio().url(address));
+        return this.wrapPromise(()=> this.webdriverio.url(address));
     }
 
     //
     // Interactions
     //
     type(text) {
-        return this.wrapPromise(()=> this.webdriverio().keys(text));
+        return this.wrapPromise(()=> this.webdriverio.keys(text));
     }
 
     click(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio().click(wdioSelector)));
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio.click(wdioSelector)));
     }
 
     doubleClick(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> this.webdriverio().doubleClick(wdioSelector)));
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> this.webdriverio.doubleClick(wdioSelector)));
     }
 
     middleClick(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio().middleClick(wdioSelector)));
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio.middleClick(wdioSelector)));
     }
 
     rightClick(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio().rightClick(wdioSelector)));
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio.rightClick(wdioSelector)));
     }
 
     moveMouseTo(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio().moveToObject(wdioSelector)));
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio.moveToObject(wdioSelector)));
     }
 
     mouseDown() {
-        return this.wrapPromise(()=> this.webdriverio().buttonDown(0));
+        return this.wrapPromise(()=> this.webdriverio.buttonDown(0));
     }
 
     mouseUp() {
-        return this.wrapPromise(()=> this.webdriverio().buttonUp(0));
+        return this.wrapPromise(()=> this.webdriverio.buttonUp(0));
     }
 
     dragAndDrop(sourceSelector, targetSelector) {
@@ -114,13 +110,13 @@ class Glance {
                     this.convertGlanceSelector(targetSelector)
                 ])
                 .then((result)=> {
-                    return this.webdriverio().dragAndDrop(result[0], result[1]);
+                    return this.webdriverio.dragAndDrop(result[0], result[1]);
                 });
         });
     }
 
     pause(delay) {
-        return this.wrapPromise(()=> this.webdriverio().pause(delay));
+        return this.wrapPromise(()=> this.webdriverio.pause(delay));
     }
 
     //
@@ -168,14 +164,14 @@ class Glance {
     // Script excecution
     //
     execute(func, ...args) {
-        return this.wrapPromise(()=> this.webdriverio().execute(func, args));
+        return this.wrapPromise(()=> this.webdriverio.execute(func, args));
     }
 
     //
     // Glance selector
     //
     glanceElement(selector, customLabels, multiple) {
-        return this.webdriverio().execute(glanceFunc, selector, customLabels, multiple).then(function(res) {
+        return this.webdriverio.execute(glanceFunc, selector, customLabels, multiple).then(function(res) {
             var val = res.value;
 
             //return client.log("browser").then(function(logs){
@@ -227,7 +223,7 @@ class Glance {
     getCustomElementIDs(e) {
         var element = e.value || e;
 
-        return this.webdriverio().execute(function(s) {
+        return this.webdriverio.execute(function(s) {
             var result = [];
 
             var elements = s;

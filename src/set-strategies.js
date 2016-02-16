@@ -35,7 +35,7 @@ export default [
         }
 
         return g.convertGlanceSelector(selector).then(function(wdioSelector) {
-            return g.webdriverio().getTagName(wdioSelector).then(function(tagName) {
+            return g.webdriverio.getTagName(wdioSelector).then(function(tagName) {
                 log.debug("Found tag:", tagName)
                 if (tagName === "select") {
                     if (byValue) {
@@ -59,7 +59,7 @@ export default [
         log.debug("Setter: value");
         if (selector == "value" || selector.match("value$") == "value") {
             selector = selector.replace(/>value$/, "");
-            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio().setValue(wdioSelector, value));
+            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.setValue(wdioSelector, value));
         }
 
         return Promise.reject();
@@ -69,10 +69,10 @@ export default [
         log.debug("Setter: input");
 
         return g.convertGlanceSelector(selector).then((wdioSelector)=> {
-            return g.webdriverio().getTagName(wdioSelector).then(function(tagName) {
+            return g.webdriverio.getTagName(wdioSelector).then(function(tagName) {
                 log.debug("Found tag name:", tagName)
                 if (tagName === "input") {
-                    return g.webdriverio().setValue(wdioSelector, value)
+                    return g.webdriverio.setValue(wdioSelector, value)
                 }
 
                 return Promise.reject();

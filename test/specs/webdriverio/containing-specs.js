@@ -41,7 +41,7 @@ describe('Containing', function () {
 
 	it("should look within a custom label", function* () {
 		yield glance.addLabel("customlabel", function() {
-			return this.convertGlanceSelector(".random>div#2").then((wdioSelector)=> this.webdriverio().element(wdioSelector));
+			return this.convertGlanceSelector(".random>div#2").then((wdioSelector)=> this.webdriverio.element(wdioSelector));
 		});
 
 		var content = yield glance.get("box9>customlabel>Item 1>html")
@@ -50,7 +50,7 @@ describe('Containing', function () {
 
 	it("should find the custom label in container", function*(){
 		yield glance.addLabel("customClassLabel", function() {
-			return this.convertGlanceSelectors("custom-class").then((wdioSelector)=> this.webdriverio().elements(wdioSelector));
+			return this.convertGlanceSelectors("custom-class").then((wdioSelector)=> this.webdriverio.elements(wdioSelector));
 		});
 
 		var content = yield glance.get("Container Label For Custom Class>customClassLabel>html");

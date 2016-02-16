@@ -9,8 +9,8 @@ describe('Timing', function () {
 
 	it.skip("should retry failed action", function*() {
 		var retry = 0;
-		/*glance.webdriverio().addCommand("glanceElement", function(selector, customLabels, multiple) {
-			return glance.webdriverio().searchClient(selector, customLabels, multiple, 0).then(function (id) {
+		/*glance.webdriverio.addCommand("glanceElement", function(selector, customLabels, multiple) {
+			return glance.webdriverio.searchClient(selector, customLabels, multiple, 0).then(function (id) {
 				if(retry == 3)
 					return id;
 
