@@ -119,6 +119,10 @@ class Glance {
         });
     }
 
+    pause(delay) {
+        return this.wrapPromise(()=> this.webdriverio().pause(delay));
+    }
+
     //
     // Labels
     //
