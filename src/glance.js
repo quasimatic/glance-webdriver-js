@@ -1,4 +1,3 @@
-import {Promise} from 'es6-promise';
 import wdio from 'webdriverio';
 import log from "loglevel";
 
