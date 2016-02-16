@@ -73,13 +73,24 @@ describe('Input set', function() {
 	});
 
 	it("should set using a custom label", function*() {
-		glance.addSetter("complex-control-1", function(selector) {
+		glance.addSetter("complex-control-1", function(selector, value) {
 			return this.set(selector + ">wrapper-1>special-widget>input", "special value 1")
 		});
 
 		yield glance.set("special-container>complex-control-1", "special value 1");
 		var content = yield glance.get("special-container>special-widget>input");
 		content.should.equal('special value 1');
+	});
+
+
+	it("should set a non element custom label", function*() {
+		glance.addSetter("non-element", function(selector, value) {
+			return this.set("wrapper-1>special-widget-2>input", value)
+		});
+
+		yield glance.set("non-element", "special value 2");
+		var content = yield glance.get("special-container>special-widget-2>input");
+		content.should.equal('special value 2');
 	});
 
 	it("should reject if it can't find a setter", function(done) {
