@@ -107,6 +107,18 @@ class Glance {
         return this.wrapPromise(()=> this.webdriverio().buttonUp(0));
     }
 
+    dragAndDrop(sourceSelector, targetSelector) {
+        return this.wrapPromise(()=> {
+            return Promise.all([
+                    this.convertGlanceSelector(sourceSelector),
+                    this.convertGlanceSelector(targetSelector)
+                ])
+                .then((result)=> {
+                    return this.webdriverio().dragAndDrop(result[0], result[1]);
+                });
+        });
+    }
+
     //
     // Labels
     //
