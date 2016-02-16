@@ -36,15 +36,15 @@ class Glance {
 
             if (config.wdio) {
                 this.wdio = config.wdio
+                resolve();
             }
-            else if (config.state) {
+            else if (config.options) {
                 this.wdio = config;
+                resolve();
             }
             else {
-                this.wdio = wdio.remote(config).init();
+                this.wdio = wdio.remote(config).init(resolve);
             }
-
-            this.wdio.init(resolve);
         });
     }
 
