@@ -1,5 +1,6 @@
 describe('Input get', function() {
 	before(function*() {
+		glance = new Glance(browser);
 		yield glance.url("file:///" + __dirname + "/examples/get.html")
 	})
 
@@ -45,6 +46,7 @@ describe('Input get', function() {
 
 describe('Input set', function() {
 	before(function*() {
+		glance = new Glance(browser);
 		yield glance.url("file:///" + __dirname + "/examples/set.html")
 	})
 

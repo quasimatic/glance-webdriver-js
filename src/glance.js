@@ -18,12 +18,16 @@ function delay(ms) {
 }
 
 function retryingPromise(func, retryCount) {
-    return func().catch((err)=> {
-        if (retryCount < 3) {
-            return delay(retryCount * 500).then(()=> retryingPromise(func, ++retryCount))
+    return func().catch((reason)=> {
+        if (retryCount <= 3) {
+            let delayAmount = retryCount * 500;
+            log.debug("Retrying with delay:", delayAmount)
+            return delay(delayAmount).then(()=> retryingPromise(func, ++retryCount))
         }
-
-        throw new Error(err);
+        else {
+            log.debug("Retries failed:", reason)
+            throw new Error(reason);
+        }
     });
 }
 
@@ -60,7 +64,7 @@ class Glance {
             })
         };
 
-        this.promise = this.promise.then(nextFunc, nextFunc);
+        this.promise = this.promise.then(nextFunc);
         return this;
     }
 
@@ -304,25 +308,25 @@ class Glance {
     }
 
     then(onFulfilled, onRejected) {
-        this.promise = new Promise((resolve, reject)=> {
-            this.promise.then((value)=> {
-                    resolve(onFulfilled.call(new Glance(this), value));
-                },
-                (reason)=> {
-                    reject(onRejected.call(new Glance(this), reason));
-                }
-            );
-        });
+        onFulfilled = onFulfilled || Promise.resolve;
+        onRejected = onRejected || Promise.reject;
+        this.promise = this.promise.then((value)=> {
+                return Promise.resolve(onFulfilled.call(new Glance(this), value));
+            },
+            (reason)=> {
+                return Promise.reject(onRejected.call(new Glance(this), reason));
+            }
+        );
 
         return this;
     }
 
     catch(onRejected) {
-        this.promise = new Promise((resolve, reject)=> {
-            this.promise.then(resolve, (reason)=> {
-                reject(onRejected.call(new Glance(this), reason));
-            });
-        });
+        onRejected = onRejected || Promise.reject;
+
+        this.promise = this.promise.catch((reason)=> {
+            return Promise.resolve(onRejected.call(new Glance(this), reason));
+        })
 
         return this;
     }

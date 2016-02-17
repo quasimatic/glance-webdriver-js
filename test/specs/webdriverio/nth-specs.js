@@ -1,5 +1,6 @@
 describe('Nth', function () {
 	before(function*() {
+		glance = new Glance(browser);
 		yield glance.url("file:///" + __dirname + "/examples/nth.html")
 	});
 

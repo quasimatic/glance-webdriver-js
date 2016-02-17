@@ -1,5 +1,6 @@
 describe('Drag and Drop', function () {
 	before(function*() {
+		glance = new Glance(browser);
 		yield glance.url("file:///" + __dirname + "/examples/drag-and-drop.html")
 	});
 
