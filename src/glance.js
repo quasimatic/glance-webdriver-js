@@ -120,6 +120,29 @@ class Glance {
     }
 
     //
+    // Wait for change
+    //
+    watchForChange(selector) {
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> this.webdriverio.selectorExecute(wdioSelector, function(elements) {
+            elements[0].setAttribute("data-glance-wait-for-change", "true")
+        })));
+    }
+
+    waitForChange(selector) {
+        return this.wrapPromise(()=> {
+            return this.convertGlanceSelector(selector).then((wdioSelector)=> {
+                return this.webdriverio.getAttribute(wdioSelector, "data-glance-wait-for-change").then((res)=> {
+                    if (res == null)
+                        return Promise.resolve();
+                    else
+                        return Promise.reject("Waiting for element to change: " + reference)
+                }, () => Promise.resolve())
+
+            })
+        });
+    }
+
+    //
     // Labels
     //
     addLabel(label, func) {
@@ -246,7 +269,13 @@ class Glance {
         return new Promise((resolve, reject)=> {
             return this.getCustomLabeledElements(reference).then((labels)=> {
                 return this.glanceElement(reference, labels).then((id)=> {
-                        resolve("[data-glance-id='" + id + "']")
+                        var idSelector = "[data-glance-id='" + id + "']";
+                        this.webdriverio.getAttribute(idSelector, "data-glance-wait-for-change").then((res)=> {
+                            if (res == null)
+                                resolve(idSelector)
+                            else
+                                reject("Waiting for element to change: " + reference)
+                        }, ()=> resolve(idSelector));
                     })
                     .catch(function() {
                         reject("Element not found: " + reference)
