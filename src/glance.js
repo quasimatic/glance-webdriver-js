@@ -76,7 +76,10 @@ class Glance {
     }
 
     click(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio.click(wdioSelector)));
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> {
+            log.info("Clicking: " + selector);
+            return this.webdriverio.click(wdioSelector)
+        }));
     }
 
     doubleClick(selector) {
