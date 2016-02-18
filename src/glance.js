@@ -110,14 +110,22 @@ class Glance {
         return this.wrapPromise(()=> this.webdriverio.buttonUp(0));
     }
 
-    dragAndDrop(sourceSelector, targetSelector) {
+    dragAndDrop(sourceSelector, targetSelector, xOffset, yOffset) {
         return this.wrapPromise(()=> {
             return Promise.all([
                     this.convertGlanceSelector(sourceSelector),
                     this.convertGlanceSelector(targetSelector)
                 ])
                 .then((result)=> {
-                    return this.webdriverio.dragAndDrop(result[0], result[1]);
+                    if (this.webdriverio.isMobile) {
+                        return this.webdriverio.getLocation(sourceElem).then(
+                            (location) => this.webdriverio.touchDown(location.x, location.y)
+                        ).getLocation(destinationElem).then(
+                            (location) => this.webdriverio.touchMove(location.x, location.y).touchUp(location.x, location.y)
+                        )
+                    }
+
+                    return this.webdriverio.moveToObject(result[0]).buttonDown().moveToObject(result[1], xOffset, yOffset).buttonUp()
                 });
         });
     }
