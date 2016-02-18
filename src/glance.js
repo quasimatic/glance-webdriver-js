@@ -98,8 +98,8 @@ class Glance {
         return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio.rightClick(wdioSelector)));
     }
 
-    moveMouseTo(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio.moveToObject(wdioSelector)));
+    moveMouseTo(selector, xOffset, yOffset) {
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.webdriverio.moveToObject(wdioSelector, xOffset, yOffset)));
     }
 
     mouseDown() {
