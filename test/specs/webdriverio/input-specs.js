@@ -20,7 +20,7 @@ describe('Input get', function() {
 	});
 
 	it("should get selected value", function*() {
-		var content = yield glance.get("select-1>value")
+		var content = yield glance.get("select-1:value")
 		content.should.equal('value2');
 	});
 
@@ -30,7 +30,7 @@ describe('Input get', function() {
 	});
 
 	it("should get select option value", function*() {
-		var content = yield glance.get("select-1>text1>value")
+		var content = yield glance.get("select-1>text1:value")
 		content.should.equal('value1');
 	});
 
@@ -39,7 +39,7 @@ describe('Input get', function() {
 			return this.get(selector + ">special-widget>span")
 		});
 
-		var content = yield glance.get("wrapper-1>special-container>complex-control-1")
+		var content = yield glance.get("wrapper-1>special-container:complex-control-1")
 		content.should.equal('special value 1');
 	});
 });
@@ -69,8 +69,8 @@ describe('Input set', function() {
 	});
 
 	it("should set selected value", function*() {
-		yield glance.set("select-1>value", "value3")
-		var content = yield glance.get("select-1>value")
+		yield glance.set("select-1:value", "value3")
+		var content = yield glance.get("select-1:value")
 		content.should.equal('value3');
 	});
 
@@ -79,7 +79,7 @@ describe('Input set', function() {
 			return this.set(selector + ">wrapper-1>special-widget>input", "special value 1")
 		});
 
-		yield glance.set("special-container>complex-control-1", "special value 1");
+		yield glance.set("special-container:complex-control-1", "special value 1");
 		var content = yield glance.get("special-container>special-widget>input");
 		content.should.equal('special value 1');
 	});

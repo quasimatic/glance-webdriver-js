@@ -7,7 +7,7 @@ describe('Timing', function() {
         this.timeout(30000)
         yield glance.url("file:///" + __dirname + "/examples/timing.html")
 
-        var content = yield glance.get("Appearing Item>html")
+        var content = yield glance.get("Appearing Item:html")
         content.should.match(/<div.*>Appearing Item<\/div>/);
     });
 

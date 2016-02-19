@@ -4,7 +4,7 @@ export default [
     function custom(g, selector, customGets) {
         var custom = customGets[selector]
         if (!custom) {
-            var match = selector.match(/.+>(.+)$/);
+            var match = selector.match(/.+:(.+)$/);
             if (match) {
                 var label = match[1]
                 if (label)
@@ -13,7 +13,7 @@ export default [
         }
 
         if (custom) {
-            return Promise.resolve(custom.call(g, selector.replace(/(.+)>.+$/, "$1")))
+            return Promise.resolve(custom.call(g, selector.replace(/(.+):.+$/, "$1")))
         }
 
         return Promise.reject();
@@ -32,8 +32,8 @@ export default [
     },
 
     function html(g, selector, customGets) {
-        if (selector == "html" || selector.match("html$") == "html") {
-            selector = selector.replace(/>html$/, "");
+        if (selector == "html" || selector.match(":html$") == ":html") {
+            selector = selector.replace(/:html$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getHTML(wdioSelector));
         }
 
@@ -41,8 +41,8 @@ export default [
     },
 
     function value(g, selector, customGets) {
-        if (selector == "value" || selector.match("value$") == "value") {
-            selector = selector.replace(/>value$/, "");
+        if (selector == "value" || selector.match(":value$") == ":value") {
+            selector = selector.replace(/:value$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getValue(wdioSelector));
         }
 

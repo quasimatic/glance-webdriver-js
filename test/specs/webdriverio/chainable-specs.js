@@ -5,8 +5,8 @@ describe("Chainable", function() {
 
     it("should chain promises", function*() {
         yield glance.url("file:///" + __dirname + "/examples/set.html")
-        yield glance.set("select-1>value", "value3")
-        var content = yield glance.get("select-1>value")
+        yield glance.set("select-1:value", "value3")
+        var content = yield glance.get("select-1:value")
         content.should.equal('value3');
 
         yield glance.url("file:///" + __dirname + "/examples/chaining.html")
@@ -23,7 +23,7 @@ describe("Chainable", function() {
             return this.convertGlanceSelector("Button 2").then((wdioSelector)=> this.webdriverio.element(wdioSelector))
         });
 
-        var content = yield glance.get("customlabel>html");
+        var content = yield glance.get("customlabel:html");
         content.should.match(/<button.*>Button 2<\/button>/)
 
         yield glance.url("file:///" + __dirname + "/examples/chaining-2.html")

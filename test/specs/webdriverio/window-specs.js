@@ -26,13 +26,13 @@ describe('Window', function() {
         yield glance.url("file:///" + __dirname + "/examples/window.html");
         yield glance.click("Popup");
         yield glance.webdriverio.activateNewWindow();
-        var content = yield glance.get("Popup Window>html")
+        var content = yield glance.get("Popup Window:html")
         content.should.match(/<div.*>Popup Window<\/div>/);
 
         yield glance.click("Close")
         yield glance.webdriverio.activateOnlyWindow();
 
-        var content = yield glance.get("Popup>html")
+        var content = yield glance.get("Popup:html")
         content.should.match(/<a.*href="\.\/new-window.html" target="_blank".*>Popup<\/a>/);
     });
 });

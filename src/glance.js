@@ -292,8 +292,8 @@ class Glance {
                                 reject("Waiting for element to change: " + reference)
                         }, ()=> resolve(idSelector));
                     })
-                    .catch(function() {
-                        reject("Element not found: " + reference)
+                    .catch(function(reason) {
+                        reject(reason.message);
                     });
             });
         })
@@ -308,8 +308,8 @@ class Glance {
                         }).join("|");
                         resolve(result);
                     })
-                    .catch(function() {
-                        reject("Element not found: " + reference)
+                    .catch(function(reason) {
+                        reject(reason.message);
                     });
             });
         });

@@ -7,7 +7,7 @@ export default [
 
         custom = customSets[selector]
         if (!custom) {
-            var match = selector.match(/.+>(.+)$/);
+            var match = selector.match(/.+:(.+)$/);
             if (match) {
                 var label = match[1];
                 if (label)
@@ -16,7 +16,7 @@ export default [
         }
 
         if (custom) {
-            return Promise.resolve(custom.call(g, selector.replace(/(.+)>.+$/, "$1"), value));
+            return Promise.resolve(custom.call(g, selector.replace(/(.+):.+$/, "$1"), value));
         }
 
         return Promise.reject();
@@ -25,8 +25,8 @@ export default [
     function select(g, selector, value, customSets) {
         log.debug("Setter: select");
         var byValue = false;
-        if (selector == "value" || selector.match("value$") == "value") {
-            selector = selector.replace(/>value$/, "");
+        if (selector == "value" || selector.match(":value$") == ":value") {
+            selector = selector.replace(/:value$/, "");
             byValue = true;
             log.debug("selecting by value")
         }
@@ -57,8 +57,8 @@ export default [
 
     function value(g, selector, value, customSets) {
         log.debug("Setter: value");
-        if (selector == "value" || selector.match("value$") == "value") {
-            selector = selector.replace(/>value$/, "");
+        if (selector == "value" || selector.match(":value$") == ":value") {
+            selector = selector.replace(/:value$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.setValue(wdioSelector, value));
         }
 
