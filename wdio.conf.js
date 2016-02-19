@@ -119,6 +119,8 @@ exports.config = {
         chai.Should();
 
         Glance = require('./lib/glance').default;
+
+        parser = require('./lib/glance-parser');
     },
 
     //

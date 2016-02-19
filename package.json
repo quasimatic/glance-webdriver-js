@@ -4,8 +4,8 @@
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
-    "build": "babel src -d lib",
-    "test": "node_modules/.bin/wdio wdio.conf.js"
+    "build": "babel src -d lib; node_modules/.bin/pegjs src/glance.pegjs lib/glance-parser.js",
+    "test": "npm run build; node_modules/.bin/wdio wdio.conf.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
     "es6-promise": "^3.0.2",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "pegjs": "^0.9.0"
   }
 }
