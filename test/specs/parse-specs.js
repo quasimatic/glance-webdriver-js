@@ -1,4 +1,4 @@
-describe.only("Parsing", function() {
+describe("Parsing", function() {
     it("should get label", function() {
         parser.parse("label").should.deep.equal({
                 containers: [

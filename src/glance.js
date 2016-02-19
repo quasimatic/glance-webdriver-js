@@ -4,6 +4,7 @@ import log from "loglevel";
 import glanceFunc from './client';
 import GetStrategies from './get-strategies'
 import SetStrategies from './set-strategies'
+import parser from './glance-parser'
 
 var customLabels = [];
 var customGets = [];
@@ -50,6 +51,10 @@ class Glance {
                 this.webdriverio = wdio.remote(config).init(resolve);
             }
         });
+    }
+
+    parse(reference) {
+        return parser.parse(reference);
     }
 
     setLogLevel(level) {
@@ -236,7 +241,8 @@ class Glance {
 
     getCustomLabeledElements(reference) {
         return new Promise((resolve, reject)=> {
-            var labels = reference.split(">");
+            var data = this.parse(reference);
+            var labels = data.containers.map((r)=> r.label);
 
             var foundLabels = _.filter(labels, function(label) {
                 return customLabels[label];

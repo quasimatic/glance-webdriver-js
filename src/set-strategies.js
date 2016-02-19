@@ -25,7 +25,9 @@ export default [
     function select(g, selector, value, customSets) {
         log.debug("Setter: select");
         var byValue = false;
-        if (selector == "value" || selector.match(":value$") == ":value") {
+
+        var data = g.parse(selector);
+        if (selector == "value" || data.containers[data.containers.length-1].transform == "value") {
             selector = selector.replace(/:value$/, "");
             byValue = true;
             log.debug("selecting by value")
@@ -57,7 +59,8 @@ export default [
 
     function value(g, selector, value, customSets) {
         log.debug("Setter: value");
-        if (selector == "value" || selector.match(":value$") == ":value") {
+        var data = g.parse(selector);
+        if (selector == "value" || data.containers[data.containers.length-1].transform == "value") {
             selector = selector.replace(/:value$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.setValue(wdioSelector, value));
         }

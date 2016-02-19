@@ -32,7 +32,9 @@ export default [
     },
 
     function html(g, selector, customGets) {
-        if (selector == "html" || selector.match(":html$") == ":html") {
+        var data = g.parse(selector);
+
+        if (selector == "html" || data.containers[data.containers.length-1].transform == "html") {
             selector = selector.replace(/:html$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getHTML(wdioSelector));
         }
@@ -41,7 +43,8 @@ export default [
     },
 
     function value(g, selector, customGets) {
-        if (selector == "value" || selector.match(":value$") == ":value") {
+        var data = g.parse(selector);
+        if (selector == "value" || data.containers[data.containers.length-1].transform == "value") {
             selector = selector.replace(/:value$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getValue(wdioSelector));
         }
