@@ -328,7 +328,7 @@ class Glance {
                 return Promise.resolve(onFulfilled.call(new Glance(this), value));
             },
             (reason)=> {
-                return Promise.reject(onRejected.call(new Glance(this), reason));
+                return Promise.resolve(onRejected.call(new Glance(this), reason));
             }
         );
 
