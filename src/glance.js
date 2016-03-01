@@ -4,7 +4,7 @@ import log from "loglevel";
 import glanceFunc from './client';
 import GetStrategies from './get-strategies'
 import SetStrategies from './set-strategies'
-import parser from './glance-parser'
+import parser from '../lib/glance-parser'
 
 var customLabels = [];
 var customGets = [];
