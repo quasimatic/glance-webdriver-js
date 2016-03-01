@@ -84,7 +84,13 @@ export default [
     },
 
     function error(g, selector, value, customSets) {
-        log.debug('Can\'t find a setter for: "' + selector + '"')
-        return Promise.reject("Element not found: " + selector);
+        return g.convertGlanceSelector(selector).then(function(){
+            log.debug("No setter found for: " + selector)
+            return Promise.reject("No setter found for: " + selector);
+        },
+        function (err) {
+            log.debug("Can't set because " + err)
+            return Promise.reject("Can't set because " + err)
+        });
     }
 ];

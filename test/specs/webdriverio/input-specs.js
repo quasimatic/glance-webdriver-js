@@ -95,12 +95,40 @@ describe('Input set', function() {
 		content.should.equal('special value 2');
 	});
 
+	it("should reject if it can't set a readonly element", function(done) {
+		this.timeout(30000)
+
+		glance.set("readonly-element", "value 1").catch(function(err) {
+			try {
+				err.message.should.equal("No setter found for: readonly-element")
+				done();
+			}
+			catch (err) {
+				done(err)
+			}
+		});
+	});
+
+
 	it("should reject if it can't find a setter", function(done) {
 		this.timeout(30000)
 
 		glance.set("non-existing", "value 1").catch(function(err) {
 			try {
-				err.message.should.equal("Element not found: non-existing")
+				err.message.should.equal("Can't set because Element not found: non-existing")
+				done();
+			}
+			catch (err) {
+				done(err)
+			}
+		});
+	});
+
+	it("should reject if it finds duplicates", function(done) {
+		this.timeout(30000)
+		glance.set("duplicate-element", "value 1").catch(function(err) {
+			try {
+				err.message.should.equal("Can't set because Found 2 duplicates for: duplicate-element")
 				done();
 			}
 			catch (err) {
