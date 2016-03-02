@@ -23,6 +23,16 @@ export default [
     },
 
     function select(g, selector, value, customSets) {
+        log.debug("Setter: url");
+        if (selector == "$PAGE$:url") {
+            log.debug("Setting url")
+            return g.webdriverio.url(value);
+        }
+
+        return Promise.reject()
+    },
+
+    function select(g, selector, value, customSets) {
         log.debug("Setter: select");
         var byValue = false;
 

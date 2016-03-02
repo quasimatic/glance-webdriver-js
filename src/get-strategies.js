@@ -19,9 +19,21 @@ export default [
         return Promise.reject();
     },
 
+    function url(g, selector, customGets) {
+        log.debug("Getter: url")
+        if (selector == "$PAGE$:url") {
+            log.debug("Getting url")
+            return g.webdriverio.getUrl();
+        }
+
+        log.debug("Not getting url")
+
+        return Promise.reject()
+    },
+
     function pageTitle(g, selector, customGets) {
         log.debug("Getter: pageTitle")
-        if (selector == "$TITLE$") {
+        if (selector == "$PAGE$:title") {
             log.debug("Getting Title")
             return g.webdriverio.getTitle();
         }
