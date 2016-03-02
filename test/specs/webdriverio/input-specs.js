@@ -57,7 +57,7 @@ describe('Input set', function() {
 	});
 
 	it.skip("should not set text", function*() {
-		yield glance.set("label-1", "label 1").catch(function(err) {
+		yield glance.set("label-1", "label 1").catch(function (err) {
 			err.message.should.equal("label-1 text not changable");
 		})
 	});
@@ -75,7 +75,7 @@ describe('Input set', function() {
 	});
 
 	it("should set using a custom label", function*() {
-		glance.addSetter("complex-control-1", function(selector, value) {
+		glance.addSetter("complex-control-1", function (selector, value) {
 			return this.set(selector + ">wrapper-1>special-widget>input", "special value 1")
 		});
 
@@ -86,7 +86,7 @@ describe('Input set', function() {
 
 
 	it("should set a non element custom label", function*() {
-		glance.addSetter("non-element", function(selector, value) {
+		glance.addSetter("non-element", function (selector, value) {
 			return this.set("wrapper-1>special-widget-2>input", value)
 		});
 
@@ -95,10 +95,10 @@ describe('Input set', function() {
 		content.should.equal('special value 2');
 	});
 
-	it("should reject if it can't set a readonly element", function(done) {
+	it("should reject if it can't set a readonly element", function (done) {
 		this.timeout(30000)
 
-		glance.set("readonly-element", "value 1").catch(function(err) {
+		glance.set("readonly-element", "value 1").catch(function (err) {
 			try {
 				err.message.should.equal("No setter found for: readonly-element")
 				done();
@@ -110,10 +110,10 @@ describe('Input set', function() {
 	});
 
 
-	it("should reject if it can't find a setter", function(done) {
+	it("should reject if it can't find a setter", function (done) {
 		this.timeout(30000)
 
-		glance.set("non-existing", "value 1").catch(function(err) {
+		glance.set("non-existing", "value 1").catch(function (err) {
 			try {
 				err.message.should.equal("Can't set because Element not found: non-existing")
 				done();
@@ -124,9 +124,9 @@ describe('Input set', function() {
 		});
 	});
 
-	it("should reject if it finds duplicates", function(done) {
+	it("should reject if it finds duplicates", function (done) {
 		this.timeout(30000)
-		glance.set("duplicate-element", "value 1").catch(function(err) {
+		glance.set("duplicate-element", "value 1").catch(function (err) {
 			try {
 				err.message.should.equal("Can't set because Found 2 duplicates for: duplicate-element")
 				done();
@@ -135,5 +135,13 @@ describe('Input set', function() {
 				done(err)
 			}
 		});
+	});
+});
+
+describe("page setters", function(){
+	it("should change the url by a setter", function*() {
+		yield glance.set("$PAGE$:url", "file:///" + __dirname + "/examples/set-2.html")
+		var title = yield glance.get("$PAGE$:title");
+		title.should.equal("NEW SET TEST PAGE");
 	});
 });

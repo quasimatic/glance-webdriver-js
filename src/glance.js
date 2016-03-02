@@ -322,8 +322,8 @@ class Glance {
     }
 
     then(onFulfilled, onRejected) {
-        onFulfilled = onFulfilled || Promise.resolve;
-        onRejected = onRejected || Promise.reject;
+        onFulfilled = onFulfilled || function(value) { return Promise.resolve(value) };
+        onRejected = onRejected || function(reason) { return Promise.reject(reason) };
         this.promise = this.promise.then((value)=> {
                 return Promise.resolve(onFulfilled.call(new Glance(this), value));
             },
@@ -336,7 +336,7 @@ class Glance {
     }
 
     catch(onRejected) {
-        onRejected = onRejected || Promise.reject;
+        onRejected = onRejected || function(reason) { return Promise.reject(reason) };
 
         this.promise = this.promise.catch((reason)=> {
             return Promise.resolve(onRejected.call(new Glance(this), reason));

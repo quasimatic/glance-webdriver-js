@@ -22,7 +22,7 @@ export default [
         return Promise.reject();
     },
 
-    function select(g, selector, value, customSets) {
+    function url(g, selector, value, customSets) {
         log.debug("Setter: url");
         if (selector == "$PAGE$:url") {
             log.debug("Setting url")
