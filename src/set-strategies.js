@@ -24,7 +24,7 @@ export default [
 
     function url(g, selector, value, customSets) {
         log.debug("Setter: url");
-        if (selector == "$PAGE$:url") {
+        if (selector == "$url") {
             log.debug("Setting url")
             return g.webdriverio.url(value);
         }

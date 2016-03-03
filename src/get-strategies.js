@@ -21,7 +21,7 @@ export default [
 
     function url(g, selector, customGets) {
         log.debug("Getter: url")
-        if (selector == "$PAGE$:url") {
+        if (selector == "$url") {
             log.debug("Getting url")
             return g.webdriverio.getUrl();
         }
@@ -30,19 +30,7 @@ export default [
 
         return Promise.reject()
     },
-
-    function pageTitle(g, selector, customGets) {
-        log.debug("Getter: pageTitle")
-        if (selector == "$PAGE$:title") {
-            log.debug("Getting Title")
-            return g.webdriverio.getTitle();
-        }
-
-        log.debug("Not getting title")
-
-        return Promise.reject()
-    },
-
+    
     function html(g, selector, customGets) {
         var data = g.parse(selector);
 

@@ -140,8 +140,8 @@ describe('Input set', function() {
 
 describe("page setters", function(){
 	it("should change the url by a setter", function*() {
-		yield glance.set("$PAGE$:url", "file:///" + __dirname + "/examples/set-2.html")
-		var title = yield glance.get("$PAGE$:title");
+		yield glance.set("$url", "file:///" + __dirname + "/examples/set-2.html")
+		var title = yield glance.webdriverio.getTitle()
 		title.should.equal("NEW SET TEST PAGE");
 	});
 });
