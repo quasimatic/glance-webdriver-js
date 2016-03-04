@@ -5,7 +5,7 @@
   "main": "lib/glance.js",
   "scripts": {
     "build": "pegjs src/glance.pegjs lib/glance-parser.js; babel src -d lib;",
-    "test": "npm run build && node_modules/.bin/wdio wdio.conf.js"
+    "test": "npm run build && mocha --compilers js:babel-register --require ./test/test_helper.js test/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -22,13 +22,6 @@
     "url": "https://github.com/quasimatic/glance/issues"
   },
   "homepage": "https://github.com/quasimatic/glance",
-  "babel": {
-    "env": {
-      "testing": {
-
-      }
-    }
-  },
   "dependencies": {
     "lodash": "^4.5.0",
     "loglevel": "1.4.0",

@@ -99,7 +99,7 @@ export default [
             return Promise.reject("No setter found for: " + selector);
         },
         function (err) {
-            log.debug("Can't set because " + err)
+            log.debug("Can't set " + selector + " because " + err)
             return Promise.reject("Can't set because " + err)
         });
     }

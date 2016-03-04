@@ -149,9 +149,9 @@ class Glance {
     //
     addLabel(label, func) {
         return this.wrapPromise(()=> {
-            customLabels[label] = func
+            customLabels[label] = func;
             return Promise.resolve();
-        })
+        });
     }
 
     //

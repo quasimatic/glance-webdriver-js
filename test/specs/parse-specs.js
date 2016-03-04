@@ -1,3 +1,5 @@
+import parser from '../../lib/glance-parser';
+
 describe("Parsing", function() {
     it("should get label", function() {
         parser.parse("label").should.deep.equal({
