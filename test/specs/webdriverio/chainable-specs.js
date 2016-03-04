@@ -1,5 +1,5 @@
-describe("Chainable", function() {
-    before(function(){
+describe("Chainable", function () {
+    before(function () {
         glance = new Glance(browser);
     });
 
@@ -14,12 +14,12 @@ describe("Chainable", function() {
             .click("Button 2")
             .get("result-1")
             .set("input-1", "value-1")
-            .set("input-missing", "value-missing").catch(()=>{
+            .set("input-missing", "value-missing").catch(()=> {
                 return Promise.resolve();
             })
 
 
-        yield glance.addLabel("customlabel", function(selector) {
+        yield glance.addLabel("customlabel", function (selector) {
             return this.convertGlanceSelector("Button 2").then((wdioSelector)=> this.webdriverio.element(wdioSelector))
         });
 
@@ -32,5 +32,19 @@ describe("Chainable", function() {
 
         var result = yield glance.get("result-a")
         result.should.equal("Result A")
+
+        yield glance.addLabel("blockinglabel", function (selector) {
+            return glance.click("Custom Button").convertGlanceSelector("Custom Button").then((wdioSelector)=> this.webdriverio.element(wdioSelector))
+        });
+
+        yield glance.url("file:///" + __dirname + "/examples/chaining.html")
+            .then(function () {
+                console.log("Clicking");
+                return glance.click("blockinglabel");
+            });
+
+        var clickedText = yield glance.get("input-1");
+        clickedText.should.equal("clicked")
+
     });
 })

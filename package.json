@@ -5,7 +5,7 @@
   "main": "lib/glance.js",
   "scripts": {
     "build": "pegjs src/glance.pegjs lib/glance-parser.js; babel src -d lib;",
-    "test": "npm run build; node_modules/.bin/wdio wdio.conf.js"
+    "test": "npm run build && node_modules/.bin/wdio wdio.conf.js"
   },
   "repository": {
     "type": "git",

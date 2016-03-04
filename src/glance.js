@@ -18,20 +18,6 @@ function delay(ms) {
     });
 }
 
-function retryingPromise(func, retryCount) {
-    return func().catch((reason)=> {
-        if (retryCount <= 3) {
-            let delayAmount = retryCount * 500;
-            log.debug("Retrying with delay:", delayAmount)
-            return delay(delayAmount).then(()=> retryingPromise(func, ++retryCount))
-        }
-        else {
-            log.debug("Retries failed:", reason)
-            throw new Error(reason);
-        }
-    });
-}
-
 class Glance {
     constructor(config) {
         this.promise = new Promise((resolve, reject)=> {
@@ -63,14 +49,9 @@ class Glance {
     }
 
     wrapPromise(func) {
-        let nextFunc = ()=> {
-            return new Promise((resolve, reject) => {
-                retryingPromise(func, 1).then(resolve, reject)
-            })
-        };
-
-        this.promise = this.promise.then(nextFunc);
-        return this;
+        return this._waitForThen(function () {
+            return this._retryingPromise(func, 1)
+        });
     }
 
     url(address) {
@@ -85,10 +66,11 @@ class Glance {
     }
 
     click(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> {
-            log.info("Clicking: " + selector);
-            return this.webdriverio.click(wdioSelector)
-        }));
+        return this.wrapPromise(() => {
+            return this.convertGlanceSelector(selector).then((wdioSelector) => {
+                return this.webdriverio.click(wdioSelector)
+            })
+        });
     }
 
     doubleClick(selector) {
@@ -143,7 +125,7 @@ class Glance {
     // Wait for change
     //
     watchForChange(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> this.webdriverio.selectorExecute(wdioSelector, function(elements) {
+        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> this.webdriverio.selectorExecute(wdioSelector, function (elements) {
             elements[0].setAttribute("data-glance-wait-for-change", "true")
         })));
     }
@@ -214,7 +196,7 @@ class Glance {
     // Glance selector
     //
     glanceElement(selector, customLabels, multiple) {
-        return this.webdriverio.execute(glanceFunc, selector, customLabels, multiple).then(function(res) {
+        return this.webdriverio.execute(glanceFunc, selector, customLabels, multiple).then(function (res) {
             var val = res.value;
 
             //return client.log("browser").then(function(logs){
@@ -244,7 +226,7 @@ class Glance {
             var data = this.parse(reference);
             var labels = data.containers.map((r)=> r.label);
 
-            var foundLabels = _.filter(labels, function(label) {
+            var foundLabels = _.filter(labels, function (label) {
                 return customLabels[label];
             });
 
@@ -267,7 +249,7 @@ class Glance {
     getCustomElementIDs(e) {
         var element = e.value || e;
 
-        return this.webdriverio.execute(function(s) {
+        return this.webdriverio.execute(function (s) {
             var result = [];
 
             var elements = s;
@@ -281,7 +263,7 @@ class Glance {
             }
 
             return result.join("|");
-        }, element).then(function(res) {
+        }, element).then(function (res) {
             return res.value
         });
     }
@@ -298,7 +280,7 @@ class Glance {
                                 reject("Waiting for element to change: " + reference)
                         }, ()=> resolve(idSelector));
                     })
-                    .catch(function(reason) {
+                    .catch(function (reason) {
                         reject(reason.message);
                     });
             });
@@ -309,12 +291,12 @@ class Glance {
         return new Promise((resolve, reject)=> {
             return this.getCustomLabeledElements(reference).then((labels)=> {
                 return this.glanceElement(reference, labels, true).then((ids)=> {
-                        var result = ids.map(function(id) {
+                        var result = ids.map(function (id) {
                             return "//*[@data-glance-id='" + id + "']"
                         }).join("|");
                         resolve(result);
                     })
-                    .catch(function(reason) {
+                    .catch(function (reason) {
                         reject(reason.message);
                     });
             });
@@ -322,27 +304,64 @@ class Glance {
     }
 
     then(onFulfilled, onRejected) {
-        onFulfilled = onFulfilled || function(value) { return Promise.resolve(value) };
-        onRejected = onRejected || function(reason) { return Promise.reject(reason) };
-        this.promise = this.promise.then((value)=> {
-                return Promise.resolve(onFulfilled.call(new Glance(this), value));
+        onFulfilled = onFulfilled || function (value) {
+                return Promise.resolve(value)
+            };
+        onRejected = onRejected || function (reason) {
+                return Promise.reject(reason)
+            };
+
+        var g = this;
+        return this._waitForThen(function (value) {
+                g.promise = Promise.resolve();
+                return Promise.resolve(onFulfilled(value));
             },
-            (reason)=> {
-                return Promise.resolve(onRejected.call(new Glance(this), reason));
+            function (reason) {
+                g.promise = Promise.resolve();
+                return Promise.resolve(onRejected(reason));
             }
         );
+    }
+
+    catch(onRejected) {
+        onRejected = onRejected || function (reason) {
+                return Promise.reject(reason)
+            };
+
+        var g = this;
+        return this._waitForCatch(function (reason) {
+            g.promise = Promise.resolve();
+            return Promise.resolve(onRejected(reason));
+        });
+    }
+
+    _waitForThen(resolve, reject) {
+        reject = reject || function (reason) {
+                return Promise.reject(reason)
+            };
+
+        this.promise = this.promise.then((value)=> resolve.call(new Glance(this), value), (reason)=>reject.call(new Glance(this), reason));
 
         return this;
     }
 
-    catch(onRejected) {
-        onRejected = onRejected || function(reason) { return Promise.reject(reason) };
-
-        this.promise = this.promise.catch((reason)=> {
-            return Promise.resolve(onRejected.call(new Glance(this), reason));
-        })
-
+    _waitForCatch(reject) {
+        this.promise = this.promise.catch((reason)=> reject.call(new Glance(this), reason));
         return this;
+    }
+
+    _retryingPromise(func, retryCount) {
+        return func().catch((reason) => {
+            if (retryCount <= 3) {
+                let delayAmount = retryCount * 500;
+                log.debug("Retrying with delay:", delayAmount)
+                return delay(delayAmount).then(() => this._retryingPromise(func, ++retryCount))
+            }
+            else {
+                log.debug("Retries failed:", reason)
+                throw new Error(reason);
+            }
+        });
     }
 }
 
