@@ -5,6 +5,7 @@ import glanceFunc from './client';
 import GetStrategies from './get-strategies'
 import SetStrategies from './set-strategies'
 import parser from '../lib/glance-parser'
+import './promise-array'
 
 var customLabels = [];
 var customGets = [];
@@ -160,14 +161,14 @@ class Glance {
     get(selector) {
         var g = new Glance(this);
         return this.wrapPromise(()=> {
-            return GetStrategies.reduce((s1, s2) => s1.catch((reason)=> s2(g, selector, customGets)), Promise.reject())
+            return GetStrategies.firstResolved((getStrategy)=> getStrategy(g, selector, customGets))
         });
     }
 
     set(selector, value) {
         var g = new Glance(this);
         return this.wrapPromise(()=> {
-            return SetStrategies.reduce((s1, s2) => s1.catch(()=> s2(g, selector, value, customSets)), Promise.reject())
+            return SetStrategies.firstResolved((setStrategy)=> setStrategy(g, selector, value, customSets))
         });
     }
 

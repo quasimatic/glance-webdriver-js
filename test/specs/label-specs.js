@@ -72,5 +72,4 @@ describe('Targeting', function () {
     it("should show an error if element not found", function () {
         return glance.get("item-not-found").should.be.rejectedWith("Element not found: item-not-found")
     });
-})
-;
+});
