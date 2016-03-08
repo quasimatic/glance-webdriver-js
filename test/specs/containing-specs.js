@@ -12,7 +12,7 @@ describe('Containing', function () {
             coloredLogs: true,
             screenshotPath: './errorShots/',
             baseUrl: 'http://localhost',
-            waitforTimeout: 5000
+            waitforTimeout: 10000
         });
 
         return glance.url("file:///" + __dirname + "/examples/containers.html")
