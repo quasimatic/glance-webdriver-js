@@ -8,14 +8,11 @@ describe("Chainable", function () {
             capabilities: [{
                 browserName: 'phantomjs'
             }],
-            logLevel: 'silent',
             coloredLogs: true,
             screenshotPath: './errorShots/',
             baseUrl: 'http://localhost',
             waitforTimeout: 5000
         });
-
-        //glance.setLogLevel('error')
     });
 
     it("should chain promises", function () {
