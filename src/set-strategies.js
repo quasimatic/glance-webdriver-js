@@ -84,7 +84,7 @@ export default [
         return g.convertGlanceSelector(selector).then((wdioSelector)=> {
             return g.webdriverio.getTagName(wdioSelector).then(function(tagName) {
                 log.debug("Found tag name:", tagName)
-                if (tagName === "input") {
+                if (tagName === "input" || tagName === "textarea") {
                     return g.webdriverio.setValue(wdioSelector, value)
                 }
 

@@ -68,6 +68,11 @@ describe('Input set', function () {
             .get("input-1").should.eventually.equal('value 1');
     });
 
+    it("should set value on textarea", function () {
+        return glance.set("textarea-1", "value 1")
+            .get("textarea-1").should.eventually.equal('value 1');
+    });
+
     it.skip("should not set text", function () {
         return glance.set("label-1", "label 1").catch(function (err) {
             err.message.should.equal("label-1 text not changable");
