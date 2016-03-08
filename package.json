@@ -1,6 +1,6 @@
 {
   "name": "@quasimatic/glance",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
