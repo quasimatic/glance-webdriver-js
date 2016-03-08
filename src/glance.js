@@ -46,6 +46,7 @@ class Glance {
 
     setLogLevel(level) {
         log.setLevel(level);
+        this.logLevel = level;
         return this;
     }
 
@@ -197,28 +198,28 @@ class Glance {
     // Glance selector
     //
     glanceElement(selector, customLabels, multiple) {
-        return this.webdriverio.execute(glanceFunc, selector, customLabels, multiple).then(function (res) {
+        return this.webdriverio.execute(glanceFunc, selector, customLabels, multiple, this.logLevel).then(function (res) {
             var val = res.value;
 
-            //return client.log("browser").then(function(logs){
-            //	console.log(logs.value.map(function(l){ return l.message}).join("\n"))
+            return this.log("browser").then( function(logs) {
+                log.debug("CLIENT:", logs.value.map(l => l.message).join("\n").replace(/ \(undefined:undefined\)/g, ''))
 
-            if (val.notFound) {
-                throw new Error("Element not found: " + selector);
-            }
+                if (val.notFound) {
+                    throw new Error("Element not found: " + selector);
+                }
 
-            if (multiple) {
-                return val.ids;
-            }
-            else {
-                if (val.ids.length > 1) {
-                    throw new Error("Found " + val.ids.length + " duplicates for: " + selector)
+                if (multiple) {
+                    return val.ids;
                 }
                 else {
-                    return val.ids[0]
+                    if (val.ids.length > 1) {
+                        throw new Error("Found " + val.ids.length + " duplicates for: " + selector)
+                    }
+                    else {
+                        return val.ids[0]
+                    }
                 }
-            }
-            //});
+            });
         });
     }
 

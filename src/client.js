@@ -1,4 +1,42 @@
-export default function(selector, customLabels, multiple) {
+export default function(selector, customLabels, multiple, logLevel) {
+
+	!function(e){"use strict";var n={};n.VERSION="1.2.0";var t,o={},r=function(e,n){return function(){return n.apply(e,arguments)}},i=function(){var e,n,t=arguments,o=t[0];for(n=1;n<t.length;n++)for(e in t[n])e in o||!t[n].hasOwnProperty(e)||(o[e]=t[n][e]);return o},l=function(e,n){return{value:e,name:n}};n.DEBUG=l(1,"DEBUG"),n.INFO=l(2,"INFO"),n.TIME=l(3,"TIME"),n.WARN=l(4,"WARN"),n.ERROR=l(8,"ERROR"),n.OFF=l(99,"OFF");var f=function(e){this.context=e,this.setLevel(e.filterLevel),this.log=this.info};f.prototype={setLevel:function(e){e&&"value"in e&&(this.context.filterLevel=e)},enabledFor:function(e){var n=this.context.filterLevel;return e.value>=n.value},debug:function(){this.invoke(n.DEBUG,arguments)},info:function(){this.invoke(n.INFO,arguments)},warn:function(){this.invoke(n.WARN,arguments)},error:function(){this.invoke(n.ERROR,arguments)},time:function(e){"string"==typeof e&&e.length>0&&this.invoke(n.TIME,[e,"start"])},timeEnd:function(e){"string"==typeof e&&e.length>0&&this.invoke(n.TIME,[e,"end"])},invoke:function(e,n){t&&this.enabledFor(e)&&t(n,i({level:e},this.context))}};var s=new f({filterLevel:n.OFF});!function(){var e=n;e.enabledFor=r(s,s.enabledFor),e.debug=r(s,s.debug),e.time=r(s,s.time),e.timeEnd=r(s,s.timeEnd),e.info=r(s,s.info),e.warn=r(s,s.warn),e.error=r(s,s.error),e.log=e.info}(),n.setHandler=function(e){t=e},n.setLevel=function(e){s.setLevel(e);for(var n in o)o.hasOwnProperty(n)&&o[n].setLevel(e)},n.get=function(e){return o[e]||(o[e]=new f(i({name:e},s.context)))},n.useDefaults=function(e){if(e=e||{},e.formatter=e.formatter||function(e,n){n.name&&e.unshift("["+n.name+"]")},"undefined"!=typeof console){var t={},o=function(e,n){Function.prototype.apply.call(e,console,n)};n.setLevel(e.defaultLevel||n.DEBUG),n.setHandler(function(r,i){r=Array.prototype.slice.call(r);var l,f=console.log;i.level===n.TIME?(l=(i.name?"["+i.name+"] ":"")+r[0],"start"===r[1]?console.time?console.time(l):t[l]=(new Date).getTime():console.timeEnd?console.timeEnd(l):o(f,[l+": "+((new Date).getTime()-t[l])+"ms"])):(i.level===n.WARN&&console.warn?f=console.warn:i.level===n.ERROR&&console.error?f=console.error:i.level===n.INFO&&console.info&&(f=console.info),e.formatter(r,i),o(f,r))})}},"function"==typeof define&&define.amd?define(n):"undefined"!=typeof module&&module.exports?module.exports=n:(n._prevLogger=e.Logger,n.noConflict=function(){return e.Logger=n._prevLogger,n},e.Logger=n)}(this);
+
+	var log = Logger;
+
+	Logger.useDefaults({
+		logLevel: Logger.ERROR
+	});
+
+	switch(logLevel) {
+		case 'trace':
+		case 'info':
+			log.setLevel(Logger.INFO);
+			break;
+
+		case 'debug':
+			log.setLevel(Logger.DEBUG);
+			break;
+
+		case 'warn':
+			log.setLevel(Logger.WARN);
+			break;
+
+		case 'error':
+			log.setLevel(Logger.ERROR);
+			break;
+	}
+
+	log.useDefaults();
+
+	// log = {
+	// 	debug: function() {
+    //
+	// 	}
+	// }
+
+	//log.setLevel(logLevel || "error");
+
 	customLabels = customLabels || {};
 
 	var unique = function(array) {
@@ -24,6 +62,7 @@ export default function(selector, customLabels, multiple) {
 			//
 			// Exact match
 			//
+			log.debug("Searching for exact text:", target)
 			var xpathResult = document.evaluate(".//*[not(self::script) and text()='" + target + "']", origin, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 			var results = [];
 			for (var i = 0; i < xpathResult.snapshotLength; i++) {
@@ -34,6 +73,7 @@ export default function(selector, customLabels, multiple) {
 				//
 				// Contains match
 				//
+				log.debug("Searching for text that contains:", target)
 				var xpathResult = document.evaluate(".//*[not(self::script) and contains(text(),'" + target + "')]", origin, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
 				for (var i = 0; i < xpathResult.snapshotLength; i++) {
@@ -53,6 +93,7 @@ export default function(selector, customLabels, multiple) {
 	};
 
 	var cssQuery = function(origin, target) {
+		log.debug("Searching with css selector:", target)
 		try {
 			var results = origin.querySelectorAll(target);
 			if (results.length == 0) {
@@ -67,6 +108,7 @@ export default function(selector, customLabels, multiple) {
 	};
 
 	function customLabelMatch(container, customLabel) {
+		log.debug("Searching by custom label:", customLabel)
 		try {
 			var r = [];
 			var xpathResult = document.evaluate(customLabel, document.querySelector("body"), null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -103,12 +145,15 @@ export default function(selector, customLabels, multiple) {
 			return contentMatch(container, text)
 		},
 		searchID: function(container, text) {
+			log.debug("Searching by id:", text)
 			return cssQuery(container, "#" + text);
 		},
 		searchClass: function(container, text) {
+			log.debug("Searching by css class:", text)
 			return cssQuery(container, "." + text);
 		},
 		searchType: function(container, text) {
+			log.debug("Searching by node type:", text)
 			return cssQuery(container, text);
 		}
 	};
