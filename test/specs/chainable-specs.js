@@ -2,7 +2,7 @@ import Glance from '../../src/glance';
 let glance;
 
 describe("Chainable", function () {
-    this.timeout(5000);
+    this.timeout(10000);
     before(function () {
         glance = new Glance({
             capabilities: [{
@@ -33,8 +33,8 @@ describe("Chainable", function () {
                     })
             })
             .then(function () {
-                return glance.addLabel("customlabel", function (selector) {
-                        return this.convertGlanceSelector("Button 2").then((wdioSelector)=> this.webdriverio.element(wdioSelector))
+                return glance.addLabel("customlabel", function (glance, selector) {
+                        return glance.convertGlanceSelector("Button 2").then((wdioSelector)=> glance.webdriverio.element(wdioSelector))
                     })
                     .get("customlabel:html").should.eventually.match(/<button.*>Button 2<\/button>/);
             })
@@ -46,7 +46,7 @@ describe("Chainable", function () {
             })
             .then(function () {
                 return glance.addLabel("blockinglabel", function (selector) {
-                        return glance.click("Custom Button").convertGlanceSelector("Custom Button").then((wdioSelector)=> this.webdriverio.element(wdioSelector))
+                        return glance.click("Custom Button").convertGlanceSelector("Custom Button").then((wdioSelector)=> glance.webdriverio.element(wdioSelector))
                     })
                     .url("file:///" + __dirname + "/examples/chaining.html")
                     .then(function () {
@@ -54,6 +54,5 @@ describe("Chainable", function () {
                     })
                     .get("input-1").should.eventually.equal("clicked")
             })
-
     });
 })

@@ -1,23 +1,22 @@
-import wdio from 'webdriverio';
+import * as wdio from 'webdriverio';
+import shortid from 'shortid';
 import log from "loglevel";
 
+import loadGlanceSelector from './glance-selector';
 import glanceFunc from './client';
-import GetStrategies from './get-strategies'
-import SetStrategies from './set-strategies'
+import GetStrategies from './get-strategies';
+import SetStrategies from './set-strategies';
 import parser from '../lib/glance-parser'
-import './promise-array'
-
-var customLabels = [];
-var customGets = [];
-var customSets = [];
-
-import _ from 'lodash';
+import './promise-array';
 
 function delay(ms) {
     return new Promise((resolve, reject) => {
         setTimeout(resolve, ms);
     });
 }
+
+var customGets = [];
+var customSets = [];
 
 class Glance {
     constructor(config) {
@@ -27,15 +26,19 @@ class Glance {
             }
 
             if (config.webdriverio) {
+                this.customLabels = config.customLabels;
                 this.webdriverio = config.webdriverio
                 resolve();
             }
             else if (config.options) {
+                this.customLabels = {};
                 this.webdriverio = config;
                 resolve();
             }
             else {
-                this.webdriverio = wdio.remote(config).init(resolve);
+                this.customLabels = {};
+                this.webdriverio = wdio.remote(config);
+                this.webdriverio.init().then(resolve);
             }
         });
     }
@@ -57,7 +60,7 @@ class Glance {
     }
 
     url(address) {
-        return this.wrapPromise(()=> this.webdriverio.url(address));
+        return this.wrapPromise(()=> this.webdriverio.url(address))
     }
 
     //
@@ -68,11 +71,7 @@ class Glance {
     }
 
     click(selector) {
-        return this.wrapPromise(() => {
-            return this.convertGlanceSelector(selector).then((wdioSelector) => {
-                return this.webdriverio.click(wdioSelector)
-            })
-        });
+        return this.wrapPromise(() => this.convertGlanceSelector(selector).then((wdioSelector) => this.webdriverio.click(wdioSelector)));
     }
 
     doubleClick(selector) {
@@ -151,7 +150,7 @@ class Glance {
     //
     addLabel(label, func) {
         return this.wrapPromise(()=> {
-            customLabels[label] = func;
+            this.customLabels[label] = func;
             return Promise.resolve();
         });
     }
@@ -197,106 +196,108 @@ class Glance {
     //
     // Glance selector
     //
-    glanceElement(selector, customLabels, multiple) {
-        return this.webdriverio.execute(glanceFunc, selector, customLabels, multiple, this.logLevel).then(function (res) {
-            var val = res.value;
+    glanceElement(selector, resolvedLabels, multiple) {
+        var mergedLabels = Object.assign({}, this.customLabels, resolvedLabels)
+        var logLevel = this.logLevel;
 
-            return this.log("browser").then( function(logs) {
-                log.debug("CLIENT:", logs.value.map(l => l.message).join("\n").replace(/ \(undefined:undefined\)/g, ''))
+        return this.webdriverio
+            .execute(loadGlanceSelector)
+            .then(function () {
+                return this.execute(glanceFunc, selector, mergedLabels, multiple, logLevel)
+                    .then(function (res) {
+                        var val = [].concat(res.value);
 
-                if (val.notFound) {
-                    throw new Error("Element not found: " + selector);
-                }
+                        var ids = val.map(function (e) {
+                            return shortid.generate();
+                        });
+                        return this.execute(function (elements, ids) {
+                            for (var i = 0; i < elements.length; ++i) {
+                                elements[i].setAttribute("data-glance-id", ids[i]);
+                            }
+                        }, val, ids).then(function () {
+                            var idsAsCss = ids.map(function (id) {
+                                return `[data-glance-id="${id}"]`;
+                            });
 
-                if (multiple) {
-                    return val.ids;
-                }
-                else {
-                    if (val.ids.length > 1) {
-                        throw new Error("Found " + val.ids.length + " duplicates for: " + selector)
-                    }
-                    else {
-                        return val.ids[0]
-                    }
-                }
-            });
-        });
+                            return this.log("browser").then(function (logs) {
+                                log.debug("CLIENT:", logs.value.map(l => l.message).join("\n").replace(/ \(undefined:undefined\)/g, ''))
+
+                                if (idsAsCss.length == 0) {
+                                    throw new Error("Element not found: " + selector);
+                                }
+
+                                if (idsAsCss.length == 1) {
+                                    return idsAsCss[0];
+                                }
+
+                                if (multiple) {
+                                    return idsAsCss.join(",");
+                                }
+
+                                if (idsAsCss.length > 1) {
+                                    throw new Error("Found " + idsAsCss.length + " duplicates for: " + selector)
+                                }
+                            });
+                        })
+                    })
+
+            })
+
+        // },
+        // function(){
+        //     console.log("CAUGHT")
+        // });
     }
 
     getCustomLabeledElements(reference) {
         return new Promise((resolve, reject)=> {
+
             var data = this.parse(reference);
             var labels = data.containers.map((r)=> r.label);
 
-            var foundLabels = _.filter(labels, function (label) {
-                return customLabels[label];
+            var foundLabels = labels.filter((label)=> {
+                return this.customLabels[label] && typeof(this.customLabels[label]) == 'function';
             });
 
-            var labelLookup = {};
-            if (foundLabels.length > 0) {
+            var resolvedCustomLabels = {};
+            foundLabels.resolveSeries((key) => {
                 var g = new Glance(this);
-                return customLabels[foundLabels[0]].apply(g).then((element) => {
-                    return g.getCustomElementIDs(element).then((xpath) => {
-                        labelLookup[foundLabels[0]] = xpath;
-                        return resolve(labelLookup);
-                    });
-                });
-            }
 
-            return resolve(labelLookup);
-        });
+                return Promise.resolve(this.customLabels[key](g, key)).then((element) => {
+                    resolvedCustomLabels[key] = element.value;
+                })
+            }).then(() => {
+                resolve(resolvedCustomLabels);
+            })
+        })
 
-    }
-
-    getCustomElementIDs(e) {
-        var element = e.value || e;
-
-        return this.webdriverio.execute(function (s) {
-            var result = [];
-
-            var elements = s;
-
-            if (!s.length)
-                elements = [s];
-
-            for (var a = 0; a < elements.length; ++a) {
-                var element = elements[a];
-                result.push("//*[@data-glance-id='" + element.getAttribute('data-glance-id') + "']")
-            }
-
-            return result.join("|");
-        }, element).then(function (res) {
-            return res.value
-        });
     }
 
     convertGlanceSelector(reference) {
-        return new Promise((resolve, reject)=> {
-            return this.getCustomLabeledElements(reference).then((labels)=> {
-                return this.glanceElement(reference, labels).then((id)=> {
-                        var idSelector = "[data-glance-id='" + id + "']";
-                        this.webdriverio.getAttribute(idSelector, "data-glance-wait-for-change").then((res)=> {
-                            if (res == null)
-                                resolve(idSelector)
-                            else
-                                reject("Waiting for element to change: " + reference)
-                        }, ()=> resolve(idSelector));
-                    })
-                    .catch(function (reason) {
-                        reject(reason.message);
+        return this.getCustomLabeledElements(reference).then((labels)=> {
+            return this.glanceElement(reference, labels).then((cssIds)=> {
+                    return this.webdriverio.getAttribute(cssIds, "data-glance-wait-for-change").then((res)=> {
+                        if (res == null) {
+                            return Promise.resolve(cssIds);
+                        }
+                        else {
+                            return Promise.reject("Waiting for element to change: " + reference)
+                        }
+                    }, ()=> {
+                        return Promise.resolve(cssIds)
                     });
-            });
-        })
+                })
+                .catch(function (reason) {
+                    return Promise.reject(reason.message);
+                });
+        });
     }
 
     convertGlanceSelectors(reference) {
         return new Promise((resolve, reject)=> {
             return this.getCustomLabeledElements(reference).then((labels)=> {
-                return this.glanceElement(reference, labels, true).then((ids)=> {
-                        var result = ids.map(function (id) {
-                            return "//*[@data-glance-id='" + id + "']"
-                        }).join("|");
-                        resolve(result);
+                return this.glanceElement(reference, labels, true).then((cssIds)=> {
+                        resolve(cssIds);
                     })
                     .catch(function (reason) {
                         reject(reason.message);

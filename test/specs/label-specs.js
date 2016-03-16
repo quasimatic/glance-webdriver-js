@@ -26,10 +26,6 @@ describe('Targeting', function () {
         return glance.get("Item Contains:html").should.eventually.match(/<div.*>This Item Contains Text<\/div>/);
     });
 
-    it("should look by exact match first then contains", function () {
-        return glance.get("Item Exact Match:html").should.eventually.match(/<div.*>Item Exact Match<\/div>/);
-    });
-
     it('will look by id', function () {
         return glance.get("label-id:html").should.eventually.match(/<div.*id="label-id".*>ID Item<\/div>/);
     });
@@ -42,21 +38,14 @@ describe('Targeting', function () {
         return glance.get("button:html").should.eventually.match(/<button.*class="button-direct".*>Button<\/button>/);
     });
 
-    it("should use the last index against the whole selector", function () {
-        return glance.get("h2>Shared Title#1:html").should.eventually.match(/<span.*class="title".*>Shared Title<\/span>/);
-    });
-
-    it.skip("should look at attributes by value", function () {
-        return glance.get("attribute-value:html").should.eventually.match(/<div.*data-key="attribute-value".*>Attribute Item<\/div>/);
-    });
-
     it("should look by node type", function () {
         return glance.get("text and nodes#1:html").should.eventually.match(/<div.*class="text-with-nodes".*>\n    This item has text and nodes\n    <div>Inner Text<\/div>\n    <span>More Text<\/span>\n<\/div>/);
     });
 
     it("should look by custom labels", function () {
-        return glance.addLabel("customlabel", function (selector) {
-                return this.convertGlanceSelector(".random>div#2").then((wdioSelector)=> this.webdriverio.element(wdioSelector))
+        return glance.addLabel("customlabel", function (glance, selector) {
+            console.log(selector);
+                return glance.convertGlanceSelector(".random>div#2").then((wdioSelector)=> glance.webdriverio.element(wdioSelector))
             })
             .get("customlabel:html").should.eventually.match(/<div.*>Other Custom Data<\/div>/);
     });
@@ -66,7 +55,7 @@ describe('Targeting', function () {
     });
 
     it("should show a duplicate error only for first type of match", function () {
-        return glance.get("Copy Exact Match").should.be.rejectedWith("Found 2 duplicates for: Copy Exact Match")
+        return glance.get("Copy Exact Match").should.be.rejectedWith("Found 4 duplicates for: Copy Exact Match")
     })
 
     it("should show an error if element not found", function () {
