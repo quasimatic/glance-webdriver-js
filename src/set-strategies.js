@@ -37,7 +37,8 @@ export default [
         var byValue = false;
 
         var data = g.parse(selector);
-        if (selector == "value" || data.containers[data.containers.length-1].transform == "value") {
+
+        if (selector == "value" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("value") != -1)) {
             selector = selector.replace(/:value$/, "");
             byValue = true;
             log.debug("selecting by value")
@@ -45,10 +46,11 @@ export default [
         else {
             log.debug("selecting by text")
         }
-
+        
         return g.convertGlanceSelector(selector).then(function(wdioSelector) {
             return g.webdriverio.getTagName(wdioSelector).then(function(tagName) {
                 log.debug("Found tag:", tagName)
+
                 if (tagName === "select") {
                     if (byValue) {
                         return this.selectByValue(wdioSelector, value)
@@ -70,7 +72,7 @@ export default [
     function value(g, selector, value, customSets) {
         log.debug("Setter: value");
         var data = g.parse(selector);
-        if (selector == "value" || data.containers[data.containers.length-1].transform == "value") {
+        if (selector == "value" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("value") != -1)) {
             selector = selector.replace(/:value$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.setValue(wdioSelector, value));
         }

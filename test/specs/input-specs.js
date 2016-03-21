@@ -79,12 +79,12 @@ describe('Input set', function () {
         })
     });
 
-    it("should set selected text by default", function () {
+    it("should set select text by default", function () {
         return glance.set("select-1", "text2")
             .get("select-1").should.eventually.equal('text2');
     });
 
-    it("should set selected value", function () {
+    it("should set select value", function () {
         return glance.set("select-1:value", "value3")
             .get("select-1:value").should.eventually.equal('value3');
     });

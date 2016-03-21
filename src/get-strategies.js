@@ -34,7 +34,7 @@ export default [
     function html(g, selector, customGets) {
         var data = g.parse(selector);
 
-        if (selector == "html" || data.containers[data.containers.length-1].transform == "html") {
+        if (selector == "html" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("html") != -1)) {
             selector = selector.replace(/:html$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getHTML(wdioSelector));
         }
@@ -44,7 +44,7 @@ export default [
 
     function value(g, selector, customGets) {
         var data = g.parse(selector);
-        if (selector == "value" || data.containers[data.containers.length-1].transform == "value") {
+        if (selector == "value" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("value") != -1)) {
             selector = selector.replace(/:value$/, "");
             return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getValue(wdioSelector));
         }

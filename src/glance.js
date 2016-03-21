@@ -6,7 +6,7 @@ import loadGlanceSelector from './glance-selector';
 import glanceFunc from './client';
 import GetStrategies from './get-strategies';
 import SetStrategies from './set-strategies';
-import parser from '../lib/glance-parser'
+import {Parser} from '@quasimatic/glance-selector'
 import './promise-array';
 
 function delay(ms) {
@@ -44,7 +44,7 @@ class Glance {
     }
 
     parse(reference) {
-        return parser.parse(reference);
+        return Parser.parse(reference);
     }
 
     setLogLevel(level) {
@@ -253,7 +253,7 @@ class Glance {
         return new Promise((resolve, reject)=> {
 
             var data = this.parse(reference);
-            var labels = data.containers.map((r)=> r.label);
+            var labels = data.map((r)=> r.label);
 
             var foundLabels = labels.filter((label)=> {
                 return this.customLabels[label] && typeof(this.customLabels[label]) == 'function';
