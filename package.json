@@ -1,6 +1,6 @@
 {
   "name": "@quasimatic/glance",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "lodash": "^4.6.1",
     "loglevel": "1.4.0",
     "shortid": "^2.2.4",
-    "webdriverio": "^4.0.4"
+    "webdriverio": "^4.0.5"
   },
   "devDependencies": {
     "babel": "^6.5.2",
