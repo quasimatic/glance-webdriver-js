@@ -1,6 +1,6 @@
 {
   "name": "@quasimatic/glance",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/quasimatic/glance",
   "dependencies": {
-    "@quasimatic/glance-selector": "0.0.2",
+    "@quasimatic/glance-selector": "0.0.4",
     "lodash": "^4.6.1",
     "loglevel": "1.4.0",
     "shortid": "^2.2.4",
