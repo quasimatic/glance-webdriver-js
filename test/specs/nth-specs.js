@@ -1,19 +1,14 @@
-import Glance from '../../src/glance';
+import {createGlance} from "../test-helper"
 let glance;
 
 describe('Nth', function () {
 	before(function() {
-		glance = new Glance({
-			capabilities: [{
-				browserName: 'phantomjs'
-			}],
-			logLevel: 'silent',
-			coloredLogs: true,
-			screenshotPath: './errorShots/',
-			baseUrl: 'http://localhost',
-			waitforTimeout: 5000
-		});
+		glance = createGlance();
 		return glance.url("file:///" + __dirname + "/examples/nth.html")
+	});
+
+	after(function(){
+		glance.end();
 	});
 
 	it("should get the nth item", function() {

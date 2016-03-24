@@ -1,20 +1,16 @@
-import Glance from '../../src/glance';
+import {createGlance} from "../test-helper"
+
 let glance;
 
 describe('Input get', function () {
     before(function () {
-        glance = new Glance({
-            capabilities: [{
-                browserName: 'phantomjs'
-            }],
-            logLevel: 'silent',
-            coloredLogs: true,
-            screenshotPath: './errorShots/',
-            baseUrl: 'http://localhost',
-            waitforTimeout: 5000
-        });
+        glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/get.html")
     })
+
+    after(function(){
+        glance.end();
+    });
 
     it("should get value", function () {
         return glance.get("input-1").should.eventually.equal('value 1');
@@ -50,18 +46,13 @@ describe('Input get', function () {
 
 describe('Input set', function () {
     before(function () {
-        glance = new Glance({
-            capabilities: [{
-                browserName: 'phantomjs'
-            }],
-            logLevel: 'silent',
-            coloredLogs: true,
-            screenshotPath: './errorShots/',
-            baseUrl: 'http://localhost',
-            waitforTimeout: 5000
-        });
+        glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/set.html")
     })
+
+    after(function(){
+        glance.end();
+    });
 
     it("should set value", function () {
         return glance.set("input-1", "value 1")
@@ -150,6 +141,15 @@ describe('Input set', function () {
 });
 
 describe("page setters", function () {
+    before(function () {
+        glance = createGlance();
+        return glance.url("file:///" + __dirname + "/examples/set.html")
+    })
+
+    after(function(){
+        glance.end();
+    });
+    
     it("should change the url by a setter", function () {
         return glance.set("$url", "file:///" + __dirname + "/examples/set-2.html")
             .then(function () {

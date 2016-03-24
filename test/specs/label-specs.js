@@ -1,22 +1,16 @@
-import Glance from '../../src/glance';
+import {createGlance} from "../test-helper"
 let glance;
 
 describe('Targeting', function () {
     this.timeout(10000)
     before(function () {
-        glance = new Glance({
-            capabilities: [{
-                browserName: 'phantomjs'
-            }],
-            logLevel: 'silent',
-            coloredLogs: true,
-            screenshotPath: './errorShots/',
-            baseUrl: 'http://localhost',
-            waitforTimeout: 5000
-        });
-
+        glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/labels.html")
     });
+
+    after(function(){
+        glance.end();
+    })
 
     it("should look by content", function () {
         return glance.get("Content Item:html").should.eventually.match(/<div.*>Content Item<\/div>/);

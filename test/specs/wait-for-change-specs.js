@@ -1,18 +1,13 @@
-import Glance from '../../src/glance';
+import {createGlance} from "../test-helper"
 let glance;
 
 describe('Wait for change', function () {
     before(function () {
-        glance = new Glance({
-            capabilities: [{
-                browserName: 'phantomjs'
-            }],
-            logLevel: 'silent',
-            coloredLogs: true,
-            screenshotPath: './errorShots/',
-            baseUrl: 'http://localhost',
-            waitforTimeout: 5000
-        });
+        glance = createGlance();
+    });
+
+    after(function(){
+        glance.end();
     });
 
     it("should wait til change", function () {

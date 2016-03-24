@@ -1,11 +1,12 @@
 {
   "name": "@quasimatic/glance",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
     "build": "babel src -d lib;",
-    "test": "npm run build && mocha --compilers js:babel-register --require ./test/test_helper.js test/**/*.js"
+    "pretest": "npm run build",
+    "test": "mocha --compilers js:babel-register test/**/*.js"
   },
   "repository": {
     "type": "git",

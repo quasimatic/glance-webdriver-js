@@ -63,6 +63,10 @@ class Glance {
         return this.wrapPromise(()=> this.webdriverio.url(address))
     }
 
+    end() {
+        return this.wrapPromise(()=> this.webdriverio.end())
+    }
+
     //
     // Interactions
     //

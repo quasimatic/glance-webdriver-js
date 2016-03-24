@@ -1,18 +1,14 @@
-import Glance from '../../src/glance';
+import {createGlance} from "../test-helper"
 let glance;
 
 describe("Chainable", function () {
     this.timeout(10000);
     before(function () {
-        glance = new Glance({
-            capabilities: [{
-                browserName: 'phantomjs'
-            }],
-            coloredLogs: true,
-            screenshotPath: './errorShots/',
-            baseUrl: 'http://localhost',
-            waitforTimeout: 5000
-        });
+        glance = createGlance();
+    });
+
+    after(function(){
+        glance.end();
     });
 
     it("should chain promises", function () {
