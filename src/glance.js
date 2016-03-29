@@ -73,8 +73,7 @@ class Glance {
     // Cast
     //
     cast(state) {
-        var c = new Cast(new Glance(this));
-        return c.apply(state);
+        return this.wrapPromise(()=>new Cast(new Glance(this)).apply(state));
     }
 
     //
