@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src -d lib;",
     "pretest": "npm run build",
-    "test": "mocha --compilers js:babel-register test/**/*.js"
+    "test": "mocha --compilers js:babel-register --recursive test"
   },
   "repository": {
     "type": "git",

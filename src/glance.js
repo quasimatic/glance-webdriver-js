@@ -9,6 +9,8 @@ import SetStrategies from './set-strategies';
 import {Parser} from '@quasimatic/glance-selector'
 import './promise-array';
 
+import Cast from "./cast";
+
 function delay(ms) {
     return new Promise((resolve, reject) => {
         setTimeout(resolve, ms);
@@ -27,7 +29,7 @@ class Glance {
 
             if (config.webdriverio) {
                 this.customLabels = config.customLabels;
-                this.webdriverio = config.webdriverio
+                this.webdriverio = config.webdriverio;
                 resolve();
             }
             else if (config.options) {
@@ -65,6 +67,14 @@ class Glance {
 
     end() {
         return this.wrapPromise(()=> this.webdriverio.end())
+    }
+
+    //
+    // Cast
+    //
+    cast(state) {
+        var c = new Cast(new Glance(this));
+        return c.apply(state);
     }
 
     //
@@ -371,5 +381,7 @@ class Glance {
         });
     }
 }
+
+export {Cast}
 
 export default Glance

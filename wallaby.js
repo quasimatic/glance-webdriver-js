@@ -1,11 +1,12 @@
 module.exports = function () {
     return {
         files: [
-            'test/**/*.html',
-            'test/test_helper.js',
-            'lib/**/*.js',
-            { pattern: 'src/client.js', instrument: false, load: false },
-            'src/**/*.js'
+            {pattern: 'src/glance-selector.js', instrument: false},
+            {pattern: 'src/client.js', instrument: false},
+            'src/**/*.js',
+            'test/**/*.js',
+            '!test/**/*-specs.js',
+            'test/**/*.html'
         ],
 
         tests: [
@@ -24,7 +25,7 @@ module.exports = function () {
         testFramework: "mocha",
 
         bootstrap: function () {
-            require('./test/test_helper');
+            require('./test/test-helper');
         }
     };
 };
