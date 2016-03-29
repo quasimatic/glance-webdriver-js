@@ -25,7 +25,7 @@ describe('beforeAll Hooks', function() {
         cast = new Cast(Object.assign({
             beforeAll: [
                 function(cast, store) {
-                    store.desiredState["$url"] = store.desiredState["$url"].replace("test.html", "before-test.html")
+                    store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url").replace("test.html", "before-test.html"));
                 }
             ]
 
@@ -43,13 +43,13 @@ describe('beforeAll Hooks', function() {
         cast = new Cast(Object.assign({
             beforeAll: [
                 function(cast, store) {
-                    store.desiredState["$url"] = store.desiredState["$url"] + "before";
+                    store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + "before");
                 },
                 function(cast, store) {
-                    store.desiredState["$url"] = store.desiredState["$url"] + "-test";
+                    store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + "-test");
                 },
                 function(cast, store) {
-                    store.desiredState["$url"] = store.desiredState["$url"] + ".html";
+                    store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + ".html");
                 }
             ]
 
@@ -69,7 +69,7 @@ describe("afterAll Hooks", function() {
         cast = new Cast(Object.assign({
             afterAll: [
                 function(cast, store) {
-                    store.currentState = {"foo": "bar"};
+                    store.currentState = store.currentState.set("foo", "bar");
                     return store;
                 }
             ]
@@ -88,13 +88,13 @@ describe("afterAll Hooks", function() {
         cast = new Cast(Object.assign({
             afterAll: [
                 function(cast, store) {
-                    store.currentState = {"foo": "bar"};
+                    store.currentState = store.currentState.set("foo", "bar");
                 },
                 function(cast, store) {
-                    store.currentState.abc = "123";
+                    store.currentState = store.currentState.set("abc", "123");
                 },
                 function(cast, store) {
-                    store.currentState.another = "one";
+                    store.currentState = store.currentState.set("another", "one");
                 }
             ]
 

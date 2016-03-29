@@ -1,6 +1,7 @@
 import Glance from "./glance";
 import GlanceConverter from "./converters/glance-converter";
 import "./promise-array";
+import * as Immutable from 'immutable'
 
 var converters = [GlanceConverter];
 
@@ -15,6 +16,7 @@ function processTargets(cast, state, store, parentTarget) {
             context: [],
             hooks: []
         };
+
     return Object.keys(state).resolveSeries(label => {
         let values = [].concat(state[label]);
 
@@ -54,11 +56,11 @@ function processTargets(cast, state, store, parentTarget) {
                                     return processTargets(cast, value, store, evaluatedTarget)
                                 }
 
-                                return Promise.resolve(evaluatedTarget);
+                                return Promise.resolve(evaluatedTarget).then(evaluatedTarget => {
+                                    store.currentState = store.currentState.updateIn(target.context.concat(target.label), value => evaluatedTarget.value);
+                                    return parentTarget.hooks.resolveSeries(hook => hook.afterEach(cast, evaluatedTarget, store))
+                                });
                             })
-                            .then(evaluatedTarget => {
-                                return parentTarget.hooks.resolveSeries(hook => hook.afterEach(cast, evaluatedTarget, store))
-                            });
                     })
             })
         })
@@ -112,21 +114,21 @@ class Cast {
 
         return states.resolveSeries((state) => {
                 let store = {
-                    desiredState: state,
-                    currentState: {}
+                    desiredState: Immutable.Map(state),
+                    currentState: Immutable.Map({})
                 };
 
                 return this.beforeAll.resolveSeries(beforeAll => beforeAll(this, store))
-                    .then(()=> processTargets(this, state, store))
+                    .then(()=> processTargets(this, store.desiredState.toObject(), store))
                     .then(()=> this.afterAll.resolveSeries(afterAll => afterAll(this, store)))
                     .then(()=> stores.push(store))
             })
             .then(function() {
                 if (stores.length == 1) {
-                    return stores[0].currentState;
+                    return stores[0].currentState.toObject();
                 }
                 else {
-                    return stores.map(s => s.currentState);
+                    return stores.map(s => s.currentState.toObject());
                 }
             })
     }

@@ -37,11 +37,17 @@ export default {
     },
 
     process(cast, target, store) {
+        if(target.value == null) {
+            return this.get(cast, target, store);
+        }
+
         if (typeof(target.value) == "object") {
             target.context.push(target.label);
             return Promise.resolve(target);
         }
 
-        return this.set(cast, target, store)
+        return this.set(cast, target, store).then((setTarget) =>{
+            return this.get(cast, target, store);
+        })
     }
 }
