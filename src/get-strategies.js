@@ -1,5 +1,32 @@
 import log from 'loglevel';
 
+import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getHTMLFromClient, getSelectTextFromClient} from './client';
+
+function getTagName(g, elementReference) {
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getTagNameFromClient, element.value)
+            .then(res => res.value.toLowerCase())
+    });
+}
+
+function getText(g, elementReference) {
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getTextFromClient, element.value)
+            .then(res => res.value)
+    });
+}
+
+function getUrl(g) {
+    return g.browser.execute(getUrlFromClient).then(res => res.value)
+}
+
+function getHTML(g, elementReference) {
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getHTMLFromClient, element.value)
+            .then(res => res.value)
+    });
+}
+
 export default [
     function custom(g, selector, customGets) {
         var custom = customGets[selector]
@@ -23,20 +50,22 @@ export default [
         log.debug("Getter: url")
         if (selector == "$url") {
             log.debug("Getting url")
-            return g.webdriverio.getUrl();
+            return getUrl(g);
         }
 
         log.debug("Not getting url")
 
         return Promise.reject()
     },
-    
+
     function html(g, selector, customGets) {
         var data = g.parse(selector);
 
         if (selector == "html" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("html") != -1)) {
             selector = selector.replace(/:html$/, "");
-            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getHTML(wdioSelector));
+            return g.convertGlanceSelector(selector).then((wdioSelector)=> {
+                return getHTML(g, wdioSelector)
+            });
         }
 
         return Promise.reject();
@@ -46,7 +75,7 @@ export default [
         var data = g.parse(selector);
         if (selector == "value" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("value") != -1)) {
             selector = selector.replace(/:value$/, "");
-            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getValue(wdioSelector));
+            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.browser.getValue(wdioSelector));
         }
 
         return Promise.reject();
@@ -54,9 +83,9 @@ export default [
 
     function input(g, selector, customGets) {
         return g.convertGlanceSelector(selector).then((wdioSelector)=> {
-            return g.webdriverio.getTagName(wdioSelector).then(function(tagName) {
+            return getTagName(g, wdioSelector).then(function(tagName) {
                 if (tagName === "input") {
-                    return g.webdriverio.getValue(wdioSelector);
+                    return g.browser.getValue(wdioSelector);
                 }
 
                 return Promise.reject();
@@ -66,14 +95,11 @@ export default [
 
     function select(g, selector, customGets) {
         return g.convertGlanceSelector(selector).then((wdioSelector)=> {
-            return g.webdriverio.getTagName(wdioSelector).then(function(tagName) {
+            return getTagName(g, wdioSelector).then(function(tagName) {
                 if (tagName === "select") {
-                    return g.webdriverio.selectorExecute(wdioSelector, function(select) {
-                        var select = select[0];
-                        var i = select.selectedIndex;
-                        if (i == -1) return;
-
-                        return select.options[i].text;
+                    return g.browser.element(wdioSelector).then(res => {
+                        return g.browser.execute(getSelectTextFromClient, res.value)
+                            .then(res => res.value)
                     });
                 }
 
@@ -83,6 +109,6 @@ export default [
     },
 
     function text(g, selector, next) {
-        return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.getText(wdioSelector));
+        return g.convertGlanceSelector(selector).then((wdioSelector)=> getText(g, wdioSelector));
     }
 ];

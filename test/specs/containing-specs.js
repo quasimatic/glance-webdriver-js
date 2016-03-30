@@ -51,7 +51,7 @@ describe('Containing', function () {
 
     it("should look within a custom label", function () {
         return glance.addLabel("customlabel", function (glance) {
-                return glance.convertGlanceSelector(".random>div#2").then((wdioSelector)=> glance.webdriverio.element(wdioSelector));
+                return glance.convertGlanceSelector(".random>div#2").then((wdioSelector)=> glance.browser.element(wdioSelector));
             })
             .get("box9>customlabel>Item 1:html")
             .should.eventually.match(/<div.*class="box9-item-1".*>Item 1<\/div>/);
@@ -59,7 +59,7 @@ describe('Containing', function () {
 
     it("should find the custom label in container", function () {
         return glance.addLabel("customClassLabel", function (glance) {
-                return glance.convertGlanceSelectors("custom-class").then((wdioSelector)=> glance.webdriverio.elements(wdioSelector));
+                return glance.convertGlanceSelectors("custom-class").then((wdioSelector)=> glance.browser.elements(wdioSelector));
             })
             .get("Container Label For Custom Class>customClassLabel:html")
             .should.eventually.match(/<div.*class="custom-class".*>Inside<\/div>/);

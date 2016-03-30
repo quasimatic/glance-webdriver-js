@@ -4,14 +4,16 @@ import Cast from '../../../src/cast';
 let cast;
 
 let options = {
-    capabilities: [{
-        browserName: 'phantomjs'
-    }],
-    logLevel: 'silent',
-    coloredLogs: true,
-    screenshotPath: './errorShots/',
-    baseUrl: 'http://localhost',
-    waitforTimeout: 5000
+    driverConfig: {
+        capabilities: [{
+            browserName: 'phantomjs'
+        }],
+        logLevel: 'silent',
+        coloredLogs: true,
+        screenshotPath: './errorShots/',
+        baseUrl: 'http://localhost',
+        waitforTimeout: 5000
+    }
 }
 
 describe('Cast getters', function () {

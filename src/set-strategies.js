@@ -1,4 +1,12 @@
 import log from 'loglevel';
+import {getTagNameFromClient} from './client';
+
+function getTagName(g, elementReference) {
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getTagNameFromClient, element.value)
+            .then(res => res.value.toLowerCase())
+    });
+}
 
 export default [
     function custom(g, selector, value, customSets) {
@@ -26,7 +34,7 @@ export default [
         log.debug("Setter: url");
         if (selector == "$url") {
             log.debug("Setting url:", value)
-            return g.webdriverio.url(value);
+            return g.browser.url(value);
         }
 
         return Promise.reject()
@@ -48,7 +56,7 @@ export default [
         }
         
         return g.convertGlanceSelector(selector).then(function(wdioSelector) {
-            return g.webdriverio.getTagName(wdioSelector).then(function(tagName) {
+            return getTagName(g, wdioSelector).then(function(tagName) {
                 log.debug("Found tag:", tagName)
 
                 if (tagName === "select") {
@@ -74,7 +82,7 @@ export default [
         var data = g.parse(selector);
         if (selector == "value" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("value") != -1)) {
             selector = selector.replace(/:value$/, "");
-            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.webdriverio.setValue(wdioSelector, value));
+            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.browser.setValue(wdioSelector, value));
         }
 
         return Promise.reject();
@@ -84,10 +92,10 @@ export default [
         log.debug("Setter: input");
 
         return g.convertGlanceSelector(selector).then((wdioSelector)=> {
-            return g.webdriverio.getTagName(wdioSelector).then(function(tagName) {
+            return getTagName(g, wdioSelector).then(function(tagName) {
                 log.debug("Found tag name:", tagName)
                 if (tagName === "input" || tagName === "textarea") {
-                    return g.webdriverio.setValue(wdioSelector, value)
+                    return g.browser.setValue(wdioSelector, value)
                 }
 
                 return Promise.reject();

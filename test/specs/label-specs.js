@@ -38,7 +38,7 @@ describe('Targeting', function () {
 
     it("should look by custom labels", function () {
         return glance.addLabel("customlabel", function (glance, selector) {
-                return glance.convertGlanceSelector(".random>div#2").then((wdioSelector)=> glance.webdriverio.element(wdioSelector))
+                return glance.convertGlanceSelector(".random>div#2").then((wdioSelector)=> glance.browser.element(wdioSelector))
             })
             .get("customlabel:html").should.eventually.match(/<div.*>Other Custom Data<\/div>/);
     });

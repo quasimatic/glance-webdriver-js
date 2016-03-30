@@ -1,6 +1,6 @@
 import Glance from "./glance";
 import GlanceConverter from "./converters/glance-converter";
-import "./promise-array";
+import PromiseUtils from "./promise-utils";
 import * as Immutable from 'immutable'
 
 var converters = [GlanceConverter];
@@ -134,7 +134,7 @@ class Cast {
     }
 
     end() {
-        return this.glance.webdriverio.end();
+        return this.glance.browser.end();
     }
 }
 

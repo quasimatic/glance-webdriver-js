@@ -4,27 +4,29 @@ import Cast from "../../../src/cast";
 let cast;
 
 let options = {
-    capabilities: [{
-        browserName: 'phantomjs'
-    }],
-    logLevel: 'silent',
-    coloredLogs: true,
-    screenshotPath: './errorShots/',
-    baseUrl: 'http://localhost',
-    waitforTimeout: 5000
-};
+    driverConfig: {
+        capabilities: [{
+            browserName: 'phantomjs'
+        }],
+        logLevel: 'silent',
+        coloredLogs: true,
+        screenshotPath: './errorShots/',
+        baseUrl: 'http://localhost',
+        waitforTimeout: 5000
+    }
+}
 
-describe('beforeAll Hooks', function() {
+describe('beforeAll Hooks', function () {
     this.timeout(5000);
 
-    after(function() {
+    after(function () {
         cast.end();
     });
 
-    it("should allow hooking before all", function() {
+    it("should allow hooking before all", function () {
         cast = new Cast(Object.assign({
             beforeAll: [
-                function(cast, store) {
+                function (cast, store) {
                     store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url").replace("test.html", "before-test.html"));
                 }
             ]
@@ -34,21 +36,21 @@ describe('beforeAll Hooks', function() {
         return cast.apply({
                 "$url": "file:///" + __dirname + "/examples/test.html"
             })
-            .then(function() {
-                return cast.glance.webdriverio.getTitle().should.eventually.equal("Test")
+            .then(function () {
+                return cast.glance.browser.getTitle().should.eventually.equal("Test")
             })
     });
 
-    it("should chain before all hooks", function() {
+    it("should chain before all hooks", function () {
         cast = new Cast(Object.assign({
             beforeAll: [
-                function(cast, store) {
+                function (cast, store) {
                     store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + "before");
                 },
-                function(cast, store) {
+                function (cast, store) {
                     store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + "-test");
                 },
-                function(cast, store) {
+                function (cast, store) {
                     store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + ".html");
                 }
             ]
@@ -58,17 +60,17 @@ describe('beforeAll Hooks', function() {
         return cast.apply({
                 "$url": "file:///" + __dirname + "/examples/"
             })
-            .then(function() {
-                return cast.glance.webdriverio.getTitle().should.eventually.equal("Test")
+            .then(function () {
+                return cast.glance.browser.getTitle().should.eventually.equal("Test")
             })
     });
 });
 
-describe("afterAll Hooks", function() {
-    it("should allow hooking after all", function() {
+describe("afterAll Hooks", function () {
+    it("should allow hooking after all", function () {
         cast = new Cast(Object.assign({
             afterAll: [
-                function(cast, store) {
+                function (cast, store) {
                     store.currentState = store.currentState.set("foo", "bar");
                     return store;
                 }
@@ -77,23 +79,23 @@ describe("afterAll Hooks", function() {
         }, options));
 
         return cast.apply({})
-            .then(function(states) {
+            .then(function (states) {
                 return states.should.deep.equal({
                     "foo": "bar"
                 })
             })
     });
 
-    it("should chain after hooks", function() {
+    it("should chain after hooks", function () {
         cast = new Cast(Object.assign({
             afterAll: [
-                function(cast, store) {
+                function (cast, store) {
                     store.currentState = store.currentState.set("foo", "bar");
                 },
-                function(cast, store) {
+                function (cast, store) {
                     store.currentState = store.currentState.set("abc", "123");
                 },
-                function(cast, store) {
+                function (cast, store) {
                     store.currentState = store.currentState.set("another", "one");
                 }
             ]
@@ -101,7 +103,7 @@ describe("afterAll Hooks", function() {
         }, options));
 
         return cast.apply({})
-            .then(function(states) {
+            .then(function (states) {
                 return states.should.deep.equal({
                     "foo": "bar",
                     "abc": "123",
@@ -111,13 +113,13 @@ describe("afterAll Hooks", function() {
     });
 });
 
-describe("Target hooks", function() {
-    it("should call leave target hooks", function() {
+describe("Target hooks", function () {
+    it("should call leave target hooks", function () {
         this.timeout(10000)
         cast = new Cast(Object.assign({
             targetHooks: [{
                 labelFilter: 'after-hook-text-1',
-                after: function(cast, target) {
+                after: function (cast, target) {
                     return cast.glance.click("button-change");
                 }
             }]
@@ -129,17 +131,17 @@ describe("Target hooks", function() {
                     "after-hook-text-1": "Data"
                 }
             ])
-            .then(function() {
+            .then(function () {
                 return cast.glance.get("text-1").should.eventually.equal("Data saved");
             });
     });
 
-    it("should call before target hooks", function() {
+    it("should call before target hooks", function () {
         this.timeout(5000);
         cast = new Cast(Object.assign({
             targetHooks: [{
                 labelFilter: 'before-hook-text-1',
-                before: function(cast, target, store) {
+                before: function (cast, target, store) {
                     target.value = "Before " + target.value
                 }
             }]
@@ -151,26 +153,26 @@ describe("Target hooks", function() {
                     "before-hook-text-1": "Data"
                 }
             ])
-            .then(function() {
+            .then(function () {
                 return cast.glance.get("before-hook-text-1").should.eventually.equal("Before Data");
             });
     });
 
-    it("should setup after hook for child targets", function() {
+    it("should setup after hook for child targets", function () {
         this.timeout(10000);
         var values = [];
         cast = new Cast(Object.assign({
             targetHooks: [{
                 labelFilter: 'parent-context',
-                before: function(cast, target, store) {
+                before: function (cast, target, store) {
                     target.continue = true;
                 },
-                beforeEach: function(cast, target, store) {
+                beforeEach: function (cast, target, store) {
                     target.label = "$url";
                 },
-                afterEach: function(cast, target, store) {
-                    return cast.glance.set(target.label, target.value).then(function() {
-                        return cast.glance.webdriverio.getTitle().then(function(title) {
+                afterEach: function (cast, target, store) {
+                    return cast.glance.set(target.label, target.value).then(function () {
+                        return cast.glance.browser.getTitle().then(function (title) {
                             values.push(title);
                         })
                     })
@@ -181,20 +183,20 @@ describe("Target hooks", function() {
         return cast.apply([
                 {
                     "parent-context": {
-                        "one": "file:///" +__dirname + "/examples/page1.html",
-                        "two" : "file:///" +__dirname + "/examples/page2.html"
+                        "one": "file:///" + __dirname + "/examples/page1.html",
+                        "two": "file:///" + __dirname + "/examples/page2.html"
                     }
                 }
             ])
-            .then(function() {
+            .then(function () {
                 return values.should.deep.equal(["Page 1", "Page 2"])
             });
     })
 });
 
-describe.skip("Custom Context", function() {
+describe.skip("Custom Context", function () {
     this.timeout(10000)
-    it("should support changing the context", function() {
+    it("should support changing the context", function () {
         cast = new Cast(Object.assign({}, options));
 
         return cast.apply({
@@ -204,10 +206,10 @@ describe.skip("Custom Context", function() {
                     "text-2": "Data 2"
                 }
             })
-            .then(function() {
+            .then(function () {
                 return cast.glance.get("wrapper-1>text-1").should.eventually.equal("Data 1")
             })
-            .then(function() {
+            .then(function () {
                 return cast.glance.get("wrapper-1>text-2").should.eventually.equal("Data 2")
             })
     });

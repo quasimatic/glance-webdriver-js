@@ -30,7 +30,7 @@ describe("Chainable", function () {
             })
             .then(function () {
                 return glance.addLabel("customlabel", function (glance, selector) {
-                        return glance.convertGlanceSelector("Button 2").then((wdioSelector)=> glance.webdriverio.element(wdioSelector))
+                        return glance.convertGlanceSelector("Button 2").then((wdioSelector)=> glance.browser.element(wdioSelector))
                     })
                     .get("customlabel:html").should.eventually.match(/<button.*>Button 2<\/button>/);
             })
@@ -42,7 +42,7 @@ describe("Chainable", function () {
             })
             .then(function () {
                 return glance.addLabel("blockinglabel", function (selector) {
-                        return glance.click("Custom Button").convertGlanceSelector("Custom Button").then((wdioSelector)=> glance.webdriverio.element(wdioSelector))
+                        return glance.click("Custom Button").convertGlanceSelector("Custom Button").then((wdioSelector)=> glance.browser.element(wdioSelector))
                     })
                     .url("file:///" + __dirname + "/examples/chaining.html")
                     .then(function () {

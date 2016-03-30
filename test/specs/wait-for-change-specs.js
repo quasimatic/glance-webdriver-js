@@ -1,7 +1,7 @@
 import {createGlance} from "../test-helper"
 let glance;
 
-describe('Wait for change', function () {
+describe.skip('Wait for change', function () {
     before(function () {
         glance = createGlance();
     });

@@ -13,7 +13,7 @@ describe('Window', function () {
     });
 
     it("should change focus to popup window", function () {
-        glance.webdriverio.addCommand("activateNewWindow", function () {
+        glance.browser.driver.addCommand("activateNewWindow", function () {
             return this.pause(1000).getTabIds().then(function (handles) {
                 return this.getCurrentTabId().then(function (current) {
                     if (handles[0] == current)
@@ -24,7 +24,7 @@ describe('Window', function () {
             })
         });
 
-        glance.webdriverio.addCommand("activateOnlyWindow", function () {
+        glance.browser.driver.addCommand("activateOnlyWindow", function () {
             return this.pause(1000).getTabIds()
                 .then(function (handles) {
                     return this.window(handles[0])
@@ -34,14 +34,14 @@ describe('Window', function () {
         return glance.url("file:///" + __dirname + "/examples/window.html")
             .click("Popup")
             .then(function () {
-                return glance.webdriverio.activateNewWindow()
+                return glance.browser.driver.activateNewWindow()
                     .then(function () {
                         return glance.get("Popup Window:html").should.eventually.match(/<div.*>Popup Window<\/div>/);
                     })
             })
             .click("Close")
             .then(function () {
-                return glance.webdriverio.activateOnlyWindow();
+                return glance.browser.driver.activateOnlyWindow();
             })
             .get("Popup:html").should.eventually.match(/<a.*href="\.\/new-window.html" target="_blank".*>Popup<\/a>/);
     });
