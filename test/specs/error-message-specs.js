@@ -2,7 +2,6 @@ import {createGlance} from "../test-helper"
 let glance;
 
 describe('Error Messages', function () {
-    this.timeout(5000)
     before(function () {
         glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/errors.html")

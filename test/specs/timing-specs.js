@@ -11,7 +11,6 @@ describe('Timing', function () {
     });
 
     it("should retry finding selector", function () {
-        this.timeout(30000)
         return glance.url("file:///" + __dirname + "/examples/timing.html")
             .get("Appearing Item:html").should.eventually.match(/<div.*>Appearing Item<\/div>/);
     });

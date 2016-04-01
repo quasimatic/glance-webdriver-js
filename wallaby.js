@@ -26,6 +26,11 @@ module.exports = function () {
 
         bootstrap: function () {
             require('./test/test-helper');
+        },
+
+        workers: {
+            initial: 6,
+            regular: 6
         }
     };
 };

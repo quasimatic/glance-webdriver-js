@@ -127,7 +127,6 @@ describe('Input set', function () {
     });
 
     it("should reject if it finds duplicates", function (done) {
-        this.timeout(30000)
         glance.set("duplicate-element", "value 1").catch(function (err) {
             try {
                 err.message.should.equal("Can't set because Found 2 duplicates for: duplicate-element")

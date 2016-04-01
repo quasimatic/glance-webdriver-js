@@ -2,8 +2,6 @@ import {createGlance} from "../test-helper"
 let glance;
 
 describe('Window', function () {
-    this.timeout(10000);
-
     before(function () {
         glance = createGlance();
     });
@@ -14,7 +12,7 @@ describe('Window', function () {
 
     it("should change focus to popup window", function () {
         glance.browser.driver.addCommand("activateNewWindow", function () {
-            return this.pause(1000).getTabIds().then(function (handles) {
+            return this.getTabIds().then(function (handles) {
                 return this.getCurrentTabId().then(function (current) {
                     if (handles[0] == current)
                         return this.window(handles[1])
@@ -25,7 +23,7 @@ describe('Window', function () {
         });
 
         glance.browser.driver.addCommand("activateOnlyWindow", function () {
-            return this.pause(1000).getTabIds()
+            return this.getTabIds()
                 .then(function (handles) {
                     return this.window(handles[0])
                 })
