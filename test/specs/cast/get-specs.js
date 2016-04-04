@@ -39,15 +39,4 @@ describe('Cast getters', function () {
                 "text-2": "value-2"
             })
     });
-
-    it.skip("should get value after set", function () {
-        return cast.apply({
-                "$url": "file:///" + __dirname + "/examples/get.html",
-                "text-different-than-set": "set value"
-            })
-            .should.eventually.deep.equal({
-                "$url": "file:///" + __dirname + "/examples/get.html",
-                "text-different-than-set": "another value"
-            })
-    })
 });
