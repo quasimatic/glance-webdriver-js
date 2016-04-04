@@ -37,12 +37,14 @@ class WebdriverIODriver {
         return this.driver.rightClick(elementReference)
     }
 
-    mouseDown(elementReference) {
-        return this.driver.buttonDown(0)
+    mouseDown(button) {
+        button = button || 0;
+        return this.driver.buttonDown(button)
     }
 
-    mouseUp(elementReference) {
-        return this.driver.buttonUp(0)
+    mouseUp(button) {
+        button = button || 0;
+        return this.driver.buttonUp(button)
     }
 
     execute(func, ...args) {

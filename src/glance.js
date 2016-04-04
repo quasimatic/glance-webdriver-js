@@ -1,7 +1,8 @@
 import shortid from 'shortid';
 import log from "loglevel";
 
-import loadGlanceSelector from './glance-selector';
+import loadGlanceSelector from '../lib/glance-selector';
+
 import {tagElementWithID, GlanceSelector, waitForChange} from './client';
 import GetStrategies from './get-strategies';
 import SetStrategies from './set-strategies';
