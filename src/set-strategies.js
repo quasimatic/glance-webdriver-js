@@ -2,8 +2,8 @@ import log from 'loglevel';
 import {getTagNameFromClient} from './client';
 
 function getTagName(g, elementReference) {
-    return g.browser.element(elementReference).then(element => {
-        return g.browser.execute(getTagNameFromClient, element.value)
+    return g.webdriver.element(elementReference).then(element => {
+        return g.webdriver.execute(getTagNameFromClient, element.value)
             .then(res => res.value.toLowerCase())
     });
 }
@@ -34,7 +34,7 @@ export default [
         log.debug("Setter: url");
         if (selector == "$url") {
             log.debug("Setting url:", value)
-            return g.browser.url(value);
+            return g.webdriver.url(value);
         }
 
         return Promise.reject()
@@ -55,7 +55,7 @@ export default [
             log.debug("selecting by text")
         }
         
-        return g.convertGlanceSelector(selector).then(function(wdioSelector) {
+        return g.find(selector).then(function(wdioSelector) {
             return getTagName(g, wdioSelector).then(function(tagName) {
                 log.debug("Found tag:", tagName)
 
@@ -82,7 +82,7 @@ export default [
         var data = g.parse(selector);
         if (selector == "value" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("value") != -1)) {
             selector = selector.replace(/:value$/, "");
-            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.browser.setValue(wdioSelector, value));
+            return g.find(selector).then((wdioSelector)=> g.webdriver.setValue(wdioSelector, value));
         }
 
         return Promise.reject();
@@ -91,11 +91,11 @@ export default [
     function input(g, selector, value, customSets) {
         log.debug("Setter: input");
 
-        return g.convertGlanceSelector(selector).then((wdioSelector)=> {
+        return g.find(selector).then((wdioSelector)=> {
             return getTagName(g, wdioSelector).then(function(tagName) {
                 log.debug("Found tag name:", tagName)
                 if (tagName === "input" || tagName === "textarea") {
-                    return g.browser.setValue(wdioSelector, value)
+                    return g.webdriver.setValue(wdioSelector, value)
                 }
 
                 return Promise.reject();
@@ -104,7 +104,7 @@ export default [
     },
 
     function error(g, selector, value, customSets) {
-        return g.convertGlanceSelector(selector).then(function(){
+        return g.find(selector).then(function(){
             log.debug("No setter found for: " + selector)
             return Promise.reject("No setter found for: " + selector);
         },

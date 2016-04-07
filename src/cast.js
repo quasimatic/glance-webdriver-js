@@ -134,7 +134,7 @@ class Cast {
     }
 
     end() {
-        return this.glance.browser.end();
+        return this.glance.webdriver.end();
     }
 }
 

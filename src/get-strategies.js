@@ -3,26 +3,26 @@ import log from 'loglevel';
 import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getHTMLFromClient, getSelectTextFromClient} from './client';
 
 function getTagName(g, elementReference) {
-    return g.browser.element(elementReference).then(element => {
-        return g.browser.execute(getTagNameFromClient, element.value)
+    return g.webdriver.element(elementReference).then(element => {
+        return g.webdriver.execute(getTagNameFromClient, element.value)
             .then(res => res.value.toLowerCase())
     });
 }
 
 function getText(g, elementReference) {
-    return g.browser.element(elementReference).then(element => {
-        return g.browser.execute(getTextFromClient, element.value)
+    return g.webdriver.element(elementReference).then(element => {
+        return g.webdriver.execute(getTextFromClient, element.value)
             .then(res => res.value)
     });
 }
 
 function getUrl(g) {
-    return g.browser.execute(getUrlFromClient).then(res => res.value)
+    return g.webdriver.execute(getUrlFromClient).then(res => res.value)
 }
 
 function getHTML(g, elementReference) {
-    return g.browser.element(elementReference).then(element => {
-        return g.browser.execute(getHTMLFromClient, element.value)
+    return g.webdriver.element(elementReference).then(element => {
+        return g.webdriver.execute(getHTMLFromClient, element.value)
             .then(res => res.value)
     });
 }
@@ -63,7 +63,7 @@ export default [
 
         if (selector == "html" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("html") != -1)) {
             selector = selector.replace(/:html$/, "");
-            return g.convertGlanceSelector(selector).then((wdioSelector)=> {
+            return g.find(selector).then((wdioSelector)=> {
                 return getHTML(g, wdioSelector)
             });
         }
@@ -75,17 +75,17 @@ export default [
         var data = g.parse(selector);
         if (selector == "value" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("value") != -1)) {
             selector = selector.replace(/:value$/, "");
-            return g.convertGlanceSelector(selector).then((wdioSelector)=> g.browser.getValue(wdioSelector));
+            return g.find(selector).then((wdioSelector)=> g.webdriver.getValue(wdioSelector));
         }
 
         return Promise.reject();
     },
 
     function input(g, selector, customGets) {
-        return g.convertGlanceSelector(selector).then((wdioSelector)=> {
+        return g.find(selector).then((wdioSelector)=> {
             return getTagName(g, wdioSelector).then(function(tagName) {
                 if (tagName === "input") {
-                    return g.browser.getValue(wdioSelector);
+                    return g.webdriver.getValue(wdioSelector);
                 }
 
                 return Promise.reject();
@@ -94,11 +94,11 @@ export default [
     },
 
     function select(g, selector, customGets) {
-        return g.convertGlanceSelector(selector).then((wdioSelector)=> {
+        return g.find(selector).then((wdioSelector)=> {
             return getTagName(g, wdioSelector).then(function(tagName) {
                 if (tagName === "select") {
-                    return g.browser.element(wdioSelector).then(res => {
-                        return g.browser.execute(getSelectTextFromClient, res.value)
+                    return g.webdriver.element(wdioSelector).then(res => {
+                        return g.webdriver.execute(getSelectTextFromClient, res.value)
                             .then(res => res.value)
                     });
                 }
@@ -109,6 +109,6 @@ export default [
     },
 
     function text(g, selector, next) {
-        return g.convertGlanceSelector(selector).then((wdioSelector)=> getText(g, wdioSelector));
+        return g.find(selector).then((wdioSelector)=> getText(g, wdioSelector));
     }
 ];

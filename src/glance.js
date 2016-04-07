@@ -22,15 +22,15 @@ class Glance {
                     this.setLogLevel(config.logLevel);
                 }
 
-                if (config.browser) {
+                if (config.webdriver) {
                     this.customLabels = config.customLabels || {}
-                    this.browser = config.browser;
+                    this.webdriver = config.webdriver;
                     resolve();
                 }
                 else if (config.driverConfig) {
                     this.customLabels = {};
-                    this.browser = new WebdriverIODriver(config.driverConfig);
-                    this.browser.init().then(resolve);
+                    this.webdriver = new WebdriverIODriver(config.driverConfig);
+                    this.webdriver.init().then(resolve);
 
                 }
                 else {
@@ -57,11 +57,11 @@ class Glance {
     }
 
     url(address) {
-        return this.wrapPromise(()=> this.browser.url(address))
+        return this.wrapPromise(()=> this.webdriver.url(address))
     }
 
     end() {
-        return this.wrapPromise(()=> this.browser.end())
+        return this.wrapPromise(()=> this.webdriver.end())
     }
 
     //
@@ -75,49 +75,49 @@ class Glance {
     // Interactions
     //
     type(text) {
-        return this.wrapPromise(()=> this.browser.keys(text));
+        return this.wrapPromise(()=> this.webdriver.keys(text));
     }
 
     click(selector) {
-        return this.wrapPromise(() => this.convertGlanceSelector(selector).then((wdioSelector) => this.browser.click(wdioSelector)));
+        return this.wrapPromise(() => this.find(selector).then((wdioSelector) => this.webdriver.click(wdioSelector)));
     }
 
     doubleClick(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> this.browser.doubleClick(wdioSelector)));
+        return this.wrapPromise(()=> this.find(selector).then((wdioSelector)=> this.webdriver.doubleClick(wdioSelector)));
     }
 
     middleClick(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.browser.middleClick(wdioSelector)));
+        return this.wrapPromise(()=> this.find(selector).then((wdioSelector)=>this.webdriver.middleClick(wdioSelector)));
     }
 
     rightClick(selector) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.browser.rightClick(wdioSelector)));
+        return this.wrapPromise(()=> this.find(selector).then((wdioSelector)=>this.webdriver.rightClick(wdioSelector)));
     }
 
     moveMouseTo(selector, xOffset, yOffset) {
-        return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=>this.browser.moveToObject(wdioSelector, xOffset, yOffset)));
+        return this.wrapPromise(()=> this.find(selector).then((wdioSelector)=>this.webdriver.moveToObject(wdioSelector, xOffset, yOffset)));
     }
 
     mouseDown() {
-        return this.wrapPromise(()=> this.browser.buttonDown(0));
+        return this.wrapPromise(()=> this.webdriver.buttonDown(0));
     }
 
     mouseUp() {
-        return this.wrapPromise(()=> this.browser.buttonUp(0));
+        return this.wrapPromise(()=> this.webdriver.buttonUp(0));
     }
 
     dragAndDrop(sourceSelector, targetSelector, xOffset, yOffset) {
         return this.wrapPromise(()=> {
             return Promise.all([
-                    this.convertGlanceSelector(sourceSelector),
-                    this.convertGlanceSelector(targetSelector)
+                    this.find(sourceSelector),
+                    this.find(targetSelector)
                 ])
-                .then(result => this.browser.dragAndDrop(result[0], result[1], xOffset, yOffset));
+                .then(result => this.webdriver.dragAndDrop(result[0], result[1], xOffset, yOffset));
         });
     }
 
     pause(delay) {
-        return this.wrapPromise(()=> this.browser.pause(delay));
+        return this.wrapPromise(()=> this.webdriver.pause(delay));
     }
 
     //
@@ -188,7 +188,7 @@ class Glance {
     // Script excecution
     //
     execute(func, ...args) {
-        return this.wrapPromise(()=> this.browser.execute(func, args));
+        return this.wrapPromise(()=> this.webdriver.execute(func, args));
     }
 
     //
@@ -198,10 +198,10 @@ class Glance {
         var mergedLabels = Object.assign({}, this.customLabels, resolvedLabels)
         var logLevel = this.logLevel;
 
-        return this.browser
+        return this.webdriver
             .execute(loadGlanceSelector)
             .then(() => {
-                return this.browser.execute(GlanceSelector, selector, mergedLabels, multiple, logLevel)
+                return this.webdriver.execute(GlanceSelector, selector, mergedLabels, multiple, logLevel)
                     .then(res => {
                         var val = [].concat(res.value);
 
@@ -212,7 +212,7 @@ class Glance {
                         return {val, ids}
                     })
                     .then(({val, ids}) => {
-                        return this.browser.execute(tagElementWithID, val, ids)
+                        return this.webdriver.execute(tagElementWithID, val, ids)
                         //return Promise.resolve()
                             .then(function () {
                             var idsAsCss = ids.map(function (id) {
@@ -268,19 +268,21 @@ class Glance {
 
     }
 
-    convertGlanceSelector(reference) {
-        return this.getCustomLabeledElements(reference).then((labels)=> {
-            return this.glanceElement(reference, labels).then((cssIds)=> {
-                    return this.browser.element(cssIds)
+    find(selector) {
+        return this.getCustomLabeledElements(selector).then((labels)=> {
+            return this.glanceElement(selector, labels).then((cssIds)=> {
+
+
+                return this.webdriver.element(cssIds)
                         .then(res => {
-                            return this.browser.execute(waitForChange, res.value, "data-glance-wait-for-change")
+                            return this.webdriver.execute(waitForChange, res.value, "data-glance-wait-for-change")
                         })
                         .then((res)=> {
                             if (res.value == null) {
                                 return Promise.resolve(cssIds);
                             }
                             else {
-                                return Promise.reject("Waiting for element to change: " + reference)
+                                return Promise.reject("Waiting for element to change: " + selector)
                             }
                         }, ()=> {
                             return Promise.resolve(cssIds)
@@ -290,19 +292,6 @@ class Glance {
                 .catch(function (reason) {
                     return Promise.reject(reason.message);
                 });
-        });
-    }
-
-    convertGlanceSelectors(reference) {
-        return new Promise((resolve, reject)=> {
-            return this.getCustomLabeledElements(reference).then((labels)=> {
-                return this.glanceElement(reference, labels, true).then((cssIds)=> {
-                        resolve(cssIds);
-                    })
-                    .catch(function (reason) {
-                        reject(reason.message);
-                    });
-            });
         });
     }
 

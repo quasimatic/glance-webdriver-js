@@ -152,7 +152,7 @@ describe("page setters", function () {
     it("should change the url by a setter", function () {
         return glance.set("$url", "file:///" + __dirname + "/examples/set-2.html")
             .then(function () {
-                return glance.browser.getTitle().should.eventually.equal("NEW SET TEST PAGE");
+                return glance.webdriver.getTitle().should.eventually.equal("NEW SET TEST PAGE");
             })
     });
 });
