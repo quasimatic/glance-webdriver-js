@@ -117,7 +117,7 @@ describe('Input set', function () {
 
         glance.set("non-existing", "value 1").catch(function (err) {
             try {
-                err.message.should.equal("Can't set because Element not found: non-existing")
+                err.message.should.equal("Can't set because Error: Element not found: non-existing")
                 done();
             }
             catch (err) {
@@ -129,7 +129,7 @@ describe('Input set', function () {
     it("should reject if it finds duplicates", function (done) {
         glance.set("duplicate-element", "value 1").catch(function (err) {
             try {
-                err.message.should.equal("Can't set because Found 2 duplicates for: duplicate-element")
+                err.message.should.equal("Can't set because Error: Found 2 duplicates for: duplicate-element")
                 done();
             }
             catch (err) {

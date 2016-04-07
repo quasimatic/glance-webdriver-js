@@ -7,7 +7,7 @@ import {tagElementWithID, GlanceSelector, waitForChange} from './client';
 import GetStrategies from './get-strategies';
 import SetStrategies from './set-strategies';
 import WebdriverIODriver from './drivers/webdriverio-driver';
-import {Parser} from '@quasimatic/glance-selector'
+import {Parser} from 'glance-selector'
 import PromiseUtils from './promise-utils';
 
 import Cast from "./cast";
@@ -119,30 +119,7 @@ class Glance {
     pause(delay) {
         return this.wrapPromise(()=> this.webdriver.pause(delay));
     }
-
-    //
-    // Wait for change
-    //
-    // watchForChange(selector) {
-    //     return this.wrapPromise(()=> this.convertGlanceSelector(selector).then((wdioSelector)=> this.driver.selectorExecute(wdioSelector, function (elements) {
-    //         elements[0].setAttribute("data-glance-wait-for-change", "true")
-    //     })));
-    // }
-    //
-    // waitForChange(selector) {
-    //     return this.wrapPromise(()=> {
-    //         return this.convertGlanceSelector(selector).then((wdioSelector)=> {
-    //             return this.driver.getAttribute(wdioSelector, "data-glance-wait-for-change").then((res)=> {
-    //                 if (res == null)
-    //                     return Promise.resolve();
-    //                 else
-    //                     return Promise.reject("Waiting for element to change: " + reference)
-    //             }, () => Promise.resolve())
-    //
-    //         })
-    //     });
-    // }
-
+    
     //
     // Labels
     //
@@ -270,28 +247,7 @@ class Glance {
 
     find(selector) {
         return this.getCustomLabeledElements(selector).then((labels)=> {
-            return this.glanceElement(selector, labels).then((cssIds)=> {
-
-
-                return this.webdriver.element(cssIds)
-                        .then(res => {
-                            return this.webdriver.execute(waitForChange, res.value, "data-glance-wait-for-change")
-                        })
-                        .then((res)=> {
-                            if (res.value == null) {
-                                return Promise.resolve(cssIds);
-                            }
-                            else {
-                                return Promise.reject("Waiting for element to change: " + selector)
-                            }
-                        }, ()=> {
-                            return Promise.resolve(cssIds)
-                        });
-
-                })
-                .catch(function (reason) {
-                    return Promise.reject(reason.message);
-                });
+            return this.glanceElement(selector, labels)
         });
     }
 

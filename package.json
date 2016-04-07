@@ -1,10 +1,10 @@
 {
   "name": "glance-webdriver",
-  "version": "0.3.0",
+  "version": "0.3.4",
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
-    "browserify": "./node_modules/.bin/browserify src/glance-selector.js -o lib/glance-selector.js -t [ babelify --presets [ es2015 ] ] -d -p [minifyify --map bundle.js.map --output bundle.js.map] && sed -i ''  '1s/^/export default function() {/' lib/glance-selector.js && echo '}' >> lib/glance-selector.js",
+    "browserify": "./node_modules/.bin/browserify src/glance-selector.js -o lib/glance-selector.js -t [ babelify --presets [ es2015 ] ] -d -p [minifyify --map bundle.js.map --output bundle.js.map] && sed -i ''  '1s/^/module.exports = function() {/' lib/glance-selector.js && echo '}' >> lib/glance-selector.js",
     "build": "babel src -d lib && npm run browserify",
     "pretest": "npm run build",
     "test": "mocha --compilers js:babel-register --recursive test"
