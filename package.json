@@ -1,6 +1,6 @@
 {
-  "name": "@quasimatic/glance",
-  "version": "0.2.8",
+  "name": "glance-webdriver",
+  "version": "0.3.0",
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/quasimatic/glance",
   "dependencies": {
-    "@quasimatic/glance-selector": "0.0.7",
+    "glance-selector": "0.1.0",
     "immutable": "^3.7.6",
     "install": "^0.6.1",
     "lodash": "^4.8.1",
