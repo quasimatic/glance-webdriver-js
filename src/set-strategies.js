@@ -1,4 +1,5 @@
 import log from 'loglevel';
+import Glance from "./glance";
 import {getTagNameFromClient} from './client';
 
 function getTagName(g, elementReference) {
@@ -24,7 +25,7 @@ export default [
         }
 
         if (custom) {
-            return Promise.resolve(custom.call(g, selector.replace(/(.+):.+$/, "$1"), value));
+            return Promise.resolve(custom(new Glance(g), selector.replace(/(.+):.+$/, "$1"), value));
         }
 
         return Promise.reject();

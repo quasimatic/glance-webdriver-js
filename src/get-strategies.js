@@ -1,4 +1,5 @@
 import log from 'loglevel';
+import Glance from "./glance"
 
 import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getHTMLFromClient, getSelectTextFromClient} from './client';
 
@@ -40,7 +41,7 @@ export default [
         }
 
         if (custom) {
-            return Promise.resolve(custom.call(g, selector.replace(/(.+):.+$/, "$1")))
+            return Promise.resolve(custom(new Glance(g), selector.replace(/(.+):.+$/, "$1")))
         }
 
         return Promise.reject();

@@ -37,8 +37,8 @@ describe('Input get', function () {
     });
 
     it("should get using a custom label", function () {
-        return glance.addGetter("complex-control-1", function (selector) {
-                return this.get(selector + ">special-widget>span")
+        return glance.addGetter("complex-control-1", function (g, selector) {
+                return g.get(selector + ">special-widget>span")
             })
             .get("wrapper-1>special-container:complex-control-1").should.eventually.equal('special value 1');
     });
@@ -81,8 +81,8 @@ describe('Input set', function () {
     });
 
     it("should set using a custom label", function () {
-        return glance.addSetter("complex-control-1", function (selector, value) {
-                return this.set(selector + ">wrapper-1>special-widget>input", "special value 1")
+        return glance.addSetter("complex-control-1", function (g, selector, value) {
+                return g.set(selector + ">wrapper-1>special-widget>input", "special value 1")
             })
             .set("special-container:complex-control-1", "special value 1")
             .get("special-container>special-widget>input").should.eventually.equal('special value 1');
@@ -90,8 +90,8 @@ describe('Input set', function () {
 
 
     it("should set a non element custom label", function () {
-        return glance.addSetter("non-element", function (selector, value) {
-                return this.set("wrapper-1>special-widget-2>input", value)
+        return glance.addSetter("non-element", function (g, selector, value) {
+                return g.set("wrapper-1>special-widget-2>input", value)
             })
             .set("non-element", "special value 2")
             .get("special-container>special-widget-2>input").should.eventually.equal('special value 2');
