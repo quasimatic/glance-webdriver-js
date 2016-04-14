@@ -19,7 +19,7 @@ let options = {
 describe('beforeAll Hooks', function () {
     this.timeout(5000);
 
-    after(function () {
+    afterEach(function () {
         cast.end();
     });
 

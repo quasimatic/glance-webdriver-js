@@ -2,11 +2,11 @@ import {createGlance} from "../test-helper"
 let glance;
 
 describe('Window', function () {
-    before(function () {
+    beforeEach(function () {
         glance = createGlance();
     });
 
-    after(function(){
+    afterEach(function(){
         glance.end();
     });
 

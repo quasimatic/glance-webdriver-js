@@ -19,11 +19,11 @@ let options = {
 describe('Cast', function () {
     this.timeout(5000);
 
-    before(function () {
+    beforeEach(function () {
         cast = new Cast(options);
     });
 
-    after(function () {
+    afterEach(function () {
         cast.end();
     });
 

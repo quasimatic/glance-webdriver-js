@@ -3,12 +3,12 @@ import {createGlance} from "../test-helper"
 let glance;
 
 describe('Input get', function () {
-    before(function () {
+    beforeEach(function () {
         glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/get.html")
     })
 
-    after(function(){
+    afterEach(function(){
         glance.end();
     });
 
@@ -45,12 +45,12 @@ describe('Input get', function () {
 });
 
 describe('Input set', function () {
-    before(function () {
+    beforeEach(function () {
         glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/set.html")
     })
 
-    after(function(){
+    afterEach(function(){
         glance.end();
     });
 
@@ -140,12 +140,12 @@ describe('Input set', function () {
 });
 
 describe("page setters", function () {
-    before(function () {
+    beforeEach(function () {
         glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/set.html")
     })
 
-    after(function(){
+    afterEach(function(){
         glance.end();
     });
     

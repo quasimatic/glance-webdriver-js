@@ -17,6 +17,7 @@ var customSets = [];
 
 class Glance {
     constructor(config) {
+        this.config = config.config || config;
         this.promiseUtils = new PromiseUtils(new Promise((resolve, reject)=> {
                 if (config.logLevel) {
                     this.setLogLevel(config.logLevel);
@@ -37,7 +38,7 @@ class Glance {
                     console.log("A driver or driverConfig must be provided.");
                     reject();
                 }
-            }), config);
+            }), this.config);
     }
 
     parse(reference) {
@@ -79,7 +80,10 @@ class Glance {
     }
 
     click(selector) {
-        return this.wrapPromise(() => this.find(selector).then((wdioSelector) => this.webdriver.click(wdioSelector)));
+        return this.wrapPromise(() => this.find(selector).then((wdioSelector) => {
+            log.info("Clicking:", selector)
+            return this.webdriver.click(wdioSelector)
+        }));
     }
 
     doubleClick(selector) {

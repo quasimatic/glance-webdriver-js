@@ -9,7 +9,7 @@ chai.Should();
 
 export function createGlance() {
     return new Glance({
-        retry: 2,
+        retryCount: 2,
         retryDelay: 2,
         driverConfig: {
             capabilities: [{

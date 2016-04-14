@@ -3,11 +3,11 @@ let glance;
 
 describe("Chainable", function () {
     this.timeout(5000)
-    before(function () {
+    beforeEach(function () {
         glance = createGlance();
     });
 
-    after(function(){
+    afterEach(function(){
         glance.end();
     });
 

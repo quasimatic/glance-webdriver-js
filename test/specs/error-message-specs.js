@@ -2,12 +2,12 @@ import {createGlance} from "../test-helper"
 let glance;
 
 describe('Error Messages', function () {
-    before(function () {
+    beforeEach(function () {
         glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/errors.html")
     });
 
-    after(function(){
+    afterEach(function(){
         glance.end();
     });
 

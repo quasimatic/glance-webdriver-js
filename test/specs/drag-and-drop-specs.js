@@ -2,12 +2,12 @@ import {createGlance} from "../test-helper"
 let glance;
 
 describe('Drag and Drop', function () {
-	before(function() {
+	beforeEach(function() {
 		glance = createGlance();
 		return glance.url("file:///" + __dirname + "/examples/drag-and-drop.html")
 	});
 
-	after(function(){
+	afterEach(function(){
 		glance.end();
 	})
 
