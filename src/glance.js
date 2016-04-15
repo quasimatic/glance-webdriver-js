@@ -13,32 +13,33 @@ import PromiseUtils from './promise-utils';
 import Cast from "./cast";
 
 var customGets = [];
+
 var customSets = [];
 
 class Glance {
     constructor(config) {
         this.config = config.config || config;
         this.promiseUtils = new PromiseUtils(new Promise((resolve, reject)=> {
-                if (config.logLevel) {
-                    this.setLogLevel(config.logLevel);
-                }
+            if (config.logLevel) {
+                this.setLogLevel(config.logLevel);
+            }
 
-                if (config.webdriver) {
-                    this.customLabels = config.customLabels || {}
-                    this.webdriver = config.webdriver;
-                    resolve();
-                }
-                else if (config.driverConfig) {
-                    this.customLabels = {};
-                    this.webdriver = new WebdriverIODriver(config.driverConfig);
-                    this.webdriver.init().then(resolve);
+            if (config.webdriver) {
+                this.customLabels = config.customLabels || {};
+                this.webdriver = config.webdriver;
+                resolve();
+            }
+            else if (config.driverConfig) {
+                this.customLabels = {};
+                this.webdriver = new WebdriverIODriver(config.driverConfig);
+                this.webdriver.init().then(resolve);
 
-                }
-                else {
-                    console.log("A driver or driverConfig must be provided.");
-                    reject();
-                }
-            }), this.config);
+            }
+            else {
+                console.log("A driver or driverConfig must be provided.");
+                reject();
+            }
+        }), this.config);
     }
 
     parse(reference) {
@@ -113,9 +114,9 @@ class Glance {
     dragAndDrop(sourceSelector, targetSelector, xOffset, yOffset) {
         return this.wrapPromise(()=> {
             return Promise.all([
-                    this.find(sourceSelector),
-                    this.find(targetSelector)
-                ])
+                this.find(sourceSelector),
+                this.find(targetSelector)
+            ])
                 .then(result => this.webdriver.dragAndDrop(result[0], result[1], xOffset, yOffset));
         });
     }
@@ -123,13 +124,20 @@ class Glance {
     pause(delay) {
         return this.wrapPromise(()=> this.webdriver.pause(delay));
     }
-    
+
+    setCustomLabels(labels) {
+        Object.assign(this.customLabels, labels);
+    }
+
     //
     // Labels
     //
     addLabel(label, func) {
         return this.wrapPromise(()=> {
-            this.customLabels[label] = func;
+            if (this.customLabels[label])
+                this.customLabels[label].locator = func;
+            else
+                this.customLabels[label] = {locator: func};
             return Promise.resolve();
         });
     }
@@ -140,26 +148,45 @@ class Glance {
     get(selector) {
         var g = new Glance(this);
         return this.wrapPromise(()=> {
-            return GetStrategies.firstResolved((getStrategy)=> getStrategy(g, selector, customGets))
+            if (this.customLabels[selector] && this.customLabels[selector].get) {
+                return Promise.resolve(this.customLabels[selector].get(g))
+            }
+            else {
+                return GetStrategies.firstResolved((getStrategy)=> getStrategy(g, selector, customGets))
+            }
         });
     }
 
     set(selector, value) {
         var g = new Glance(this);
         return this.wrapPromise(()=> {
-            return SetStrategies.firstResolved((setStrategy)=> setStrategy(g, selector, value, customSets))
+            if (this.customLabels[selector] && this.customLabels[selector].set) {
+                return Promise.resolve(this.customLabels[selector].set(g, value))
+            }
+            else {
+                return SetStrategies.firstResolved((setStrategy)=> setStrategy(g, selector, value, customSets))
+            }
         });
     }
 
     addGetter(label, lookup) {
         return this.wrapPromise(()=> {
-            customGets[label] = lookup
+            if (this.customLabels[label])
+                this.customLabels[label].get = lookup
+            else
+                this.customLabels[label] = {get: lookup}
+
             return Promise.resolve();
         })
     }
 
     addSetter(label, lookup) {
         return this.wrapPromise(()=> {
+            if (this.customLabels[label])
+                this.customLabels[label].set = lookup;
+            else
+                this.customLabels[label] = {set: lookup};
+
             customSets[label] = lookup
             return Promise.resolve();
         });
@@ -176,13 +203,19 @@ class Glance {
     // Glance selector
     //
     glanceElement(selector, resolvedLabels, multiple) {
-        var mergedLabels = Object.assign({}, this.customLabels, resolvedLabels)
+        console.log(this.customLabels, resolvedLabels)
+        var mergedLabels = Object.assign({}, this.customLabels, resolvedLabels);
         var logLevel = this.logLevel;
 
         return this.webdriver
             .execute(loadGlanceSelector)
             .then(() => {
-                return this.webdriver.execute(GlanceSelector, selector, mergedLabels, multiple, logLevel)
+                var resolvedCustomLabels = Object.keys(mergedLabels).reduce(function (previous, current) {
+                    previous[current] = mergedLabels[current].locator;
+                    return previous;
+                }, {});
+
+                return this.webdriver.execute(GlanceSelector, selector, resolvedCustomLabels, multiple, logLevel)
                     .then(res => {
                         var val = [].concat(res.value);
 
@@ -194,32 +227,31 @@ class Glance {
                     })
                     .then(({val, ids}) => {
                         return this.webdriver.execute(tagElementWithID, val, ids)
-                        //return Promise.resolve()
                             .then(function () {
-                            var idsAsCss = ids.map(function (id) {
-                                return `[data-glance-id="${id}"]`;
-                            });
+                                var idsAsCss = ids.map(function (id) {
+                                    return `[data-glance-id="${id}"]`;
+                                });
 
-                            return this.log("browser").then(function (logs) {
-                                log.debug("CLIENT:", logs.value.map(l => l.message).join("\n").replace(/ \(undefined:undefined\)/g, ''))
+                                return this.log("browser").then(function (logs) {
+                                    log.debug("CLIENT:", logs.value.map(l => l.message).join("\n").replace(/ \(undefined:undefined\)/g, ''))
 
-                                if (idsAsCss.length == 0) {
-                                    throw new Error("Element not found: " + selector);
-                                }
+                                    if (idsAsCss.length == 0) {
+                                        throw new Error("Element not found: " + selector);
+                                    }
 
-                                if (idsAsCss.length == 1) {
-                                    return idsAsCss[0];
-                                }
+                                    if (idsAsCss.length == 1) {
+                                        return idsAsCss[0];
+                                    }
 
-                                if (multiple) {
-                                    return idsAsCss.join(",");
-                                }
+                                    if (multiple) {
+                                        return idsAsCss.join(",");
+                                    }
 
-                                if (idsAsCss.length > 1) {
-                                    throw new Error("Found " + idsAsCss.length + " duplicates for: " + selector)
-                                }
-                            });
-                        })
+                                    if (idsAsCss.length > 1) {
+                                        throw new Error("Found " + idsAsCss.length + " duplicates for: " + selector)
+                                    }
+                                });
+                            })
                     })
 
             })
@@ -232,15 +264,15 @@ class Glance {
             var labels = data.map((r)=> r.label);
 
             var foundLabels = labels.filter((label)=> {
-                return this.customLabels[label] && typeof(this.customLabels[label]) == 'function';
+                return this.customLabels[label] && typeof(this.customLabels[label].locator) == 'function';
             });
 
             var resolvedCustomLabels = {};
             foundLabels.resolveSeries((key) => {
                 var g = new Glance(this);
 
-                return Promise.resolve(this.customLabels[key](g, key)).then((element) => {
-                    resolvedCustomLabels[key] = element.value;
+                return Promise.resolve(this.customLabels[key].locator(g, key)).then((element) => {
+                    resolvedCustomLabels[key] = {locator: element.value};
                 })
             }).then(() => {
                 resolve(resolvedCustomLabels);

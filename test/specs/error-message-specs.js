@@ -18,4 +18,16 @@ describe('Error Messages', function () {
             .should.be.rejectedWith("Element not found: non-existing-button-1");
 
     });
+
+    it("should show detail errors when settings", function(){
+        glance.addSetter("custom-setter", function(g, value){
+            return g.cast({
+                "missing-element": value
+            })
+        });
+
+        glance.setLogLevel('trace')
+
+        return glance.set("custom-setter", "value").should.be.rejectedWith("Element not found: missing-element");
+    });
 });
