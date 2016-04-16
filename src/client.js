@@ -4,6 +4,9 @@ function tagElementWithID(elements, ids) {
     }
 }
 
+function emptyClientFunction() {
+}
+
 function waitForChange(element, name) {
     return element.getAttribute(name)
 }
@@ -41,6 +44,7 @@ function getSelectTextFromClient(select) {
     return select.options[i].text;
 }
 
+export {emptyClientFunction};
 export {getAttributeFromClient};
 export {getTagNameFromClient};
 export {getTextFromClient};

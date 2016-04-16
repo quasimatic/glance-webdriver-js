@@ -3,7 +3,7 @@ import log from "loglevel";
 
 import loadGlanceSelector from '../lib/glance-selector';
 
-import {tagElementWithID, GlanceSelector, waitForChange} from './client';
+import {tagElementWithID, GlanceSelector, waitForChange, emptyClientFunction} from './client';
 import GetStrategies from './get-strategies';
 import SetStrategies from './set-strategies';
 import WebdriverIODriver from './drivers/webdriverio-driver';
@@ -13,7 +13,6 @@ import PromiseUtils from './promise-utils';
 import Cast from "./cast";
 
 var customGets = [];
-
 var customSets = [];
 
 class Glance {
@@ -26,11 +25,13 @@ class Glance {
 
             if (config.webdriver) {
                 this.customLabels = config.customLabels || {};
+                this.addClientModifierFunc = config.addClientModifierFunc || emptyClientFunction;
                 this.webdriver = config.webdriver;
                 resolve();
             }
             else if (config.driverConfig) {
                 this.customLabels = {};
+                this.addClientModifierFunc = emptyClientFunction;
                 this.webdriver = new WebdriverIODriver(config.driverConfig);
                 this.webdriver.init().then(resolve);
 
@@ -53,7 +54,7 @@ class Glance {
     }
 
     wrapPromise(func) {
-        return this.promiseUtils.waitForThen(this, function () {
+        return this.promiseUtils.waitForThen(this, function() {
             return this.promiseUtils.retryingPromise(func)
         });
     }
@@ -143,6 +144,13 @@ class Glance {
     }
 
     //
+    // Modifiers
+    //
+    addClientModifiers(addClientModifierFunc) {
+        this.addClientModifierFunc = addClientModifierFunc
+    }
+
+    //
     // Getters and Setters
     //
     get(selector) {
@@ -209,49 +217,51 @@ class Glance {
         return this.webdriver
             .execute(loadGlanceSelector)
             .then(() => {
-                var resolvedCustomLabels = Object.keys(mergedLabels).reduce(function (previous, current) {
+                var resolvedCustomLabels = Object.keys(mergedLabels).reduce(function(previous, current) {
                     previous[current] = mergedLabels[current].locator;
                     return previous;
                 }, {});
 
-                return this.webdriver.execute(GlanceSelector, selector, resolvedCustomLabels, multiple, logLevel)
-                    .then(res => {
-                        var val = [].concat(res.value);
+                return this.webdriver.execute(this.addClientModifierFunc).then(res => {
+                    return this.webdriver.execute(GlanceSelector, selector, resolvedCustomLabels, multiple, logLevel)
+                        .then(res => {
+                            var val = [].concat(res.value);
 
-                        var ids = val.map(function (e) {
-                            return shortid.generate();
-                        });
+                            var ids = val.map(function(e) {
+                                return shortid.generate();
+                            });
 
-                        return {val, ids}
-                    })
-                    .then(({val, ids}) => {
-                        return this.webdriver.execute(tagElementWithID, val, ids)
-                            .then(function () {
-                                var idsAsCss = ids.map(function (id) {
-                                    return `[data-glance-id="${id}"]`;
-                                });
+                            return {val, ids}
+                        })
+                        .then(({val, ids}) => {
+                            return this.webdriver.execute(tagElementWithID, val, ids)
+                                .then(function() {
+                                    var idsAsCss = ids.map(function(id) {
+                                        return `[data-glance-id="${id}"]`;
+                                    });
 
-                                return this.log("browser").then(function (logs) {
-                                    log.debug("CLIENT:", logs.value.map(l => l.message).join("\n").replace(/ \(undefined:undefined\)/g, ''))
+                                    return this.log("browser").then(function(logs) {
+                                        log.debug("CLIENT:", logs.value.map(l => l.message).join("\n").replace(/ \(undefined:undefined\)/g, ''))
 
-                                    if (idsAsCss.length == 0) {
-                                        throw new Error("Element not found: " + selector);
-                                    }
+                                        if (idsAsCss.length == 0) {
+                                            throw new Error("Element not found: " + selector);
+                                        }
 
-                                    if (idsAsCss.length == 1) {
-                                        return idsAsCss[0];
-                                    }
+                                        if (idsAsCss.length == 1) {
+                                            return idsAsCss[0];
+                                        }
 
-                                    if (multiple) {
-                                        return idsAsCss.join(",");
-                                    }
+                                        if (multiple) {
+                                            return idsAsCss.join(",");
+                                        }
 
-                                    if (idsAsCss.length > 1) {
-                                        throw new Error("Found " + idsAsCss.length + " duplicates for: " + selector)
-                                    }
-                                });
-                            })
-                    })
+                                        if (idsAsCss.length > 1) {
+                                            throw new Error("Found " + idsAsCss.length + " duplicates for: " + selector)
+                                        }
+                                    });
+                                })
+                        })
+                })
 
             })
     }
@@ -287,19 +297,19 @@ class Glance {
     }
 
     then(onFulfilled, onRejected) {
-        onFulfilled = onFulfilled || function (value) {
+        onFulfilled = onFulfilled || function(value) {
                 return Promise.resolve(value)
             };
-        onRejected = onRejected || function (reason) {
+        onRejected = onRejected || function(reason) {
                 return Promise.reject(reason)
             };
 
         var g = this;
-        return this.promiseUtils.waitForThen(g, function (value) {
+        return this.promiseUtils.waitForThen(g, function(value) {
                 g.promiseUtils.setPromise(Promise.resolve())
                 return Promise.resolve(onFulfilled(value));
             },
-            function (reason) {
+            function(reason) {
                 g.promiseUtils.setPromise(Promise.resolve())
                 return Promise.resolve(onRejected(reason));
             }
@@ -307,12 +317,12 @@ class Glance {
     }
 
     catch(onRejected) {
-        onRejected = onRejected || function (reason) {
+        onRejected = onRejected || function(reason) {
                 return Promise.reject(reason)
             };
 
         var g = this;
-        return this.promiseUtils.waitForCatch(g, function (reason) {
+        return this.promiseUtils.waitForCatch(g, function(reason) {
             g.promiseUtils.setPromise(Promise.resolve())
             return Promise.resolve(onRejected(reason));
         });
