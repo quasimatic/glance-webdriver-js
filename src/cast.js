@@ -119,16 +119,16 @@ class Cast {
                 };
 
                 return this.beforeAll.resolveSeries(beforeAll => beforeAll(this, store))
-                    .then(()=> processTargets(this, store.desiredState.toObject(), store))
+                    .then(()=> processTargets(this, store.desiredState.toJS(), store))
                     .then(()=> this.afterAll.resolveSeries(afterAll => afterAll(this, store)))
                     .then(()=> stores.push(store))
             })
             .then(function() {
                 if (stores.length == 1) {
-                    return stores[0].currentState.toObject();
+                    return stores[0].currentState.toJS();
                 }
                 else {
-                    return stores.map(s => s.currentState.toObject());
+                    return stores.map(s => s.currentState.toJS());
                 }
             })
     }

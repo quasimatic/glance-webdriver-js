@@ -157,14 +157,14 @@ class Glance {
         });
     }
 
-    set(selector, value) {
+    set(selector, ...values) {
         var g = new Glance(this);
         return this.wrapPromise(()=> {
             if (this.customLabels[selector] && this.customLabels[selector].set) {
-                return Promise.resolve(this.customLabels[selector].set(g, value))
+                return Promise.resolve(this.customLabels[selector].set.apply(this, [].concat(g, values)))
             }
             else {
-                return SetStrategies.firstResolved((setStrategy)=> setStrategy(g, selector, value, customSets))
+                return SetStrategies.firstResolved((setStrategy)=> setStrategy(g, selector, values[0], customSets))
             }
         });
     }
@@ -203,7 +203,6 @@ class Glance {
     // Glance selector
     //
     glanceElement(selector, resolvedLabels, multiple) {
-        console.log(this.customLabels, resolvedLabels)
         var mergedLabels = Object.assign({}, this.customLabels, resolvedLabels);
         var logLevel = this.logLevel;
 

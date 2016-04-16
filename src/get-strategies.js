@@ -1,7 +1,7 @@
 import log from 'loglevel';
 import Glance from "./glance"
 
-import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getHTMLFromClient, getSelectTextFromClient} from './client';
+import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getHTMLFromClient, getSelectTextFromClient, getAttributeFromClient} from './client';
 
 function getTagName(g, elementReference) {
     return g.webdriver.element(elementReference).then(element => {
@@ -28,25 +28,14 @@ function getHTML(g, elementReference) {
     });
 }
 
+function getAttribute(g, elementReference, name) {
+    return g.webdriver.element(elementReference).then(element => {
+        return g.webdriver.execute(getAttributeFromClient, element.value, name)
+            .then(res => res.value.toLowerCase())
+    });
+}
+
 export default [
-    function custom(g, selector, customGets) {
-        var custom = customGets[selector]
-        if (!custom) {
-            var match = selector.match(/.+:(.+)$/);
-            if (match) {
-                var label = match[1]
-                if (label)
-                    custom = customGets[label];
-            }
-        }
-
-        if (custom) {
-            return Promise.resolve(custom(new Glance(g), selector.replace(/(.+):.+$/, "$1")))
-        }
-
-        return Promise.reject();
-    },
-
     function url(g, selector, customGets) {
         log.debug("Getter: url")
         if (selector == "$url") {
@@ -70,6 +59,20 @@ export default [
         }
 
         return Promise.reject();
+    },
+
+    function checkbox(g, selector) {
+        return g.find(selector).then((wdioSelector)=> {
+            return getTagName(g, wdioSelector).then(function(tagName) {
+                return getAttribute(g, wdioSelector, "type").then(function(attributeType) {
+                    if (tagName === "input" && attributeType === "checkbox") {
+                        return g.webdriver.driver.isSelected(wdioSelector)
+                    }
+
+                    return Promise.reject();
+                })
+            })
+        })
     },
 
     function value(g, selector, customGets) {

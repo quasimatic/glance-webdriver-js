@@ -20,13 +20,12 @@ describe('Error Messages', function () {
     });
 
     it("should show detail errors when settings", function(){
+        this.timeout(10000)
         glance.addSetter("custom-setter", function(g, value){
             return g.cast({
                 "missing-element": value
             })
         });
-
-        glance.setLogLevel('trace')
 
         return glance.set("custom-setter", "value").should.be.rejectedWith("Element not found: missing-element");
     });

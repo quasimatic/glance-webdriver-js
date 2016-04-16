@@ -10,9 +10,13 @@ function waitForChange(element, name) {
 
 function GlanceSelector(selector, customLabels, multiple, logLevel) {
     glanceSelector.addCustomLabels(customLabels);
+    glanceSelector.setLogLevel(logLevel);
     return glanceSelector(selector);
 }
 
+function getAttributeFromClient(element, name) {
+    return element.getAttribute(name);
+}
 
 function getTagNameFromClient(element) {
     return element.tagName;
@@ -37,6 +41,7 @@ function getSelectTextFromClient(select) {
     return select.options[i].text;
 }
 
+export {getAttributeFromClient};
 export {getTagNameFromClient};
 export {getTextFromClient};
 export {getUrlFromClient};

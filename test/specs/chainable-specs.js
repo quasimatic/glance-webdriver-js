@@ -2,7 +2,7 @@ import {createGlance} from "../test-helper"
 let glance;
 
 describe("Chainable", function () {
-    this.timeout(5000)
+    this.timeout(10000)
     beforeEach(function () {
         glance = createGlance();
     });
