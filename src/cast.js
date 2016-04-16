@@ -53,7 +53,9 @@ function processTargets(cast, state, store, parentTarget) {
 
                                     evaluatedTarget.hooks = evaluatedTarget.hooks.concat(targetHooks);
 
-                                    return processTargets(cast, value, store, evaluatedTarget)
+                                    return processTargets(cast, value, store, evaluatedTarget).then(()=>{
+                                        parentTarget.context.pop()
+                                    });
                                 }
 
                                 return Promise.resolve(evaluatedTarget).then(evaluatedTarget => {
