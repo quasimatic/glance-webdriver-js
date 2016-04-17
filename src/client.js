@@ -4,9 +4,6 @@ function tagElementWithID(elements, ids) {
     }
 }
 
-function emptyClientFunction() {
-}
-
 function waitForChange(element, name) {
     return element.getAttribute(name)
 }
@@ -19,6 +16,44 @@ function GlanceSelector(selector, customLabels, multiple, logLevel) {
 
 function getAttributeFromClient(element, name) {
     return element.getAttribute(name);
+}
+
+function addModifiersToBrowser(modifierString) {
+    function functionReviver(key, value) {
+        if (key === "") return value;
+        if (typeof value === 'string') {
+            var startOfFunc = /^function[^\(]*\(([^\)]*)\)[^\{]*\{/;
+            var match = value.match(startOfFunc);
+
+            if (match) {
+                 var args = match[1].split(',').map(function(arg) { return arg.replace(/\s+/, ''); });
+                 return new Function(args, value.replace(startOfFunc, '').replace(/\}$/, ''));
+             }
+        }
+
+        return value;
+    }
+
+    var modifiers = JSON.parse(modifierString, functionReviver);
+    glanceSelector.addModifiers(modifiers);
+}
+
+function serializeModifiers(modifiers) {
+    function functionReplacer(key, value) {
+        if (typeof(value) === 'function') {
+            return value.toString();
+        }
+        return value;
+    }
+
+    var browserSideModifiers = Object.keys(modifiers).reduce((o, k) => {
+        if(modifiers[k].browser) {
+            o[k] = modifiers[k];
+        }
+        return o;
+    }, {});
+
+    return JSON.stringify(browserSideModifiers, functionReplacer);
 }
 
 function getTagNameFromClient(element) {
@@ -44,7 +79,8 @@ function getSelectTextFromClient(select) {
     return select.options[i].text;
 }
 
-export {emptyClientFunction};
+export {addModifiersToBrowser}
+export {serializeModifiers}
 export {getAttributeFromClient};
 export {getTagNameFromClient};
 export {getTextFromClient};

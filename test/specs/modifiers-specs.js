@@ -14,7 +14,7 @@ describe('Modifiers', function() {
     });
 
     it("should get value", function() {
-        glance.addClientModifiers(nextClosestSibling);
+        glance.addModifiers(nextClosestSibling)
         return glance.get("start > label:next-closest-sibling").should.eventually.equal('label 1');
     });
 

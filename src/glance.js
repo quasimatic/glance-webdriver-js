@@ -3,7 +3,7 @@ import log from "loglevel";
 
 import loadGlanceSelector from '../lib/glance-selector';
 
-import {tagElementWithID, GlanceSelector, waitForChange, emptyClientFunction} from './client';
+import {tagElementWithID, GlanceSelector, waitForChange,addModifiersToBrowser,serializeModifiers} from './client';
 import GetStrategies from './get-strategies';
 import SetStrategies from './set-strategies';
 import WebdriverIODriver from './drivers/webdriverio-driver';
@@ -25,13 +25,13 @@ class Glance {
 
             if (config.webdriver) {
                 this.customLabels = config.customLabels || {};
-                this.addClientModifierFunc = config.addClientModifierFunc || emptyClientFunction;
+                this.modifiers = config.modifiers || {};
                 this.webdriver = config.webdriver;
                 resolve();
             }
             else if (config.driverConfig) {
                 this.customLabels = {};
-                this.addClientModifierFunc = emptyClientFunction;
+                this.modifiers = {};
                 this.webdriver = new WebdriverIODriver(config.driverConfig);
                 this.webdriver.init().then(resolve);
 
@@ -146,8 +146,11 @@ class Glance {
     //
     // Modifiers
     //
-    addClientModifiers(addClientModifierFunc) {
-        this.addClientModifierFunc = addClientModifierFunc
+    addModifiers(modifiers) {
+        return this.wrapPromise(()=> {
+            Object.assign(this.modifiers, modifiers);
+            return Promise.resolve();
+        });
     }
 
     //
@@ -222,7 +225,7 @@ class Glance {
                     return previous;
                 }, {});
 
-                return this.webdriver.execute(this.addClientModifierFunc).then(res => {
+                return this.webdriver.execute(addModifiersToBrowser, serializeModifiers(this.modifiers)).then(res => {
                     return this.webdriver.execute(GlanceSelector, selector, resolvedCustomLabels, multiple, logLevel)
                         .then(res => {
                             var val = [].concat(res.value);
