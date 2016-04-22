@@ -47,6 +47,9 @@
     "browserify": "^13.0.0",
     "minifyify": "^7.3.3"
   },
+  "babel": {
+    "presets": ["es2015"]
+  },
   "directories": {
     "test": "test"
   }
