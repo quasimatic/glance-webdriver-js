@@ -5,7 +5,7 @@ let cast;
 
 let options = {
     driverConfig: {
-        capabilities: [{
+        desiredCapabilities: [{
             browserName: 'phantomjs'
         }],
         logLevel: 'silent',
