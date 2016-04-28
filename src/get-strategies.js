@@ -1,7 +1,6 @@
 import log from 'loglevel';
-import Glance from "./glance"
 
-import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getHTMLFromClient, getSelectTextFromClient, getAttributeFromClient} from './client';
+import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getSelectTextFromClient, getAttributeFromClient} from './client';
 
 function getTagName(g, elementReference) {
     return g.webdriver.element(elementReference).then(element => {
@@ -19,13 +18,6 @@ function getText(g, elementReference) {
 
 function getUrl(g) {
     return g.webdriver.execute(getUrlFromClient).then(res => res.value)
-}
-
-function getHTML(g, elementReference) {
-    return g.webdriver.element(elementReference).then(element => {
-        return g.webdriver.execute(getHTMLFromClient, element.value)
-            .then(res => res.value)
-    });
 }
 
 function getAttribute(g, elementReference, name) {
@@ -47,20 +39,7 @@ export default [
 
         return Promise.reject()
     },
-
-    function html(g, selector, customGets) {
-        var data = g.parse(selector);
-
-        if (selector == "html" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("html") != -1)) {
-            selector = selector.replace(/:html$/, "");
-            return g.find(selector).then((wdioSelector)=> {
-                return getHTML(g, wdioSelector)
-            });
-        }
-
-        return Promise.reject();
-    },
-
+    
     function checkbox(g, selector) {
         return g.find(selector).then((wdioSelector)=> {
             return getTagName(g, wdioSelector).then(function(tagName) {
@@ -73,16 +52,6 @@ export default [
                 })
             })
         })
-    },
-
-    function value(g, selector, customGets) {
-        var data = g.parse(selector);
-        if (selector == "value" || (data[data.length-1].modifiers && data[data.length-1].modifiers.indexOf("value") != -1)) {
-            selector = selector.replace(/:value$/, "");
-            return g.find(selector).then((wdioSelector)=> g.webdriver.getValue(wdioSelector));
-        }
-
-        return Promise.reject();
     },
 
     function input(g, selector, customGets) {

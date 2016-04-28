@@ -19,7 +19,7 @@ module.exports = {
     ],
     module: {
         loaders: [
-            {test: /.js/, loaders: ['babel-loader']}
+            {test: /glance-selector.js/, loaders: ['babel-loader']}
         ]
     }
 };

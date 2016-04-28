@@ -3,17 +3,30 @@ import log from "loglevel";
 
 import loadGlanceSelector from '../lib/glance-selector';
 
-import {tagElementWithID, GlanceSelector, waitForChange,addModifiersToBrowser,serializeModifiers} from './client';
+import {tagElementWithID, GlanceSelector, waitForChange, addModifiersToBrowser, serializeModifiers} from './client';
 import GetStrategies from './get-strategies';
 import SetStrategies from './set-strategies';
 import WebdriverIODriver from './drivers/webdriverio-driver';
 import {Parser} from 'glance-selector'
 import PromiseUtils from './promise-utils';
 
+import getHTML from "./getters/html";
+import getValue from "./getters/value";
+
 import Cast from "./cast";
 
 var customGets = [];
 var customSets = [];
+
+var defaultModifiers = {
+    "html": {
+        getter: getHTML
+    },
+
+    "value": {
+        getter: getValue
+    }
+};
 
 class Glance {
     constructor(config) {
@@ -157,10 +170,17 @@ class Glance {
     // Getters and Setters
     //
     get(selector) {
-        var g = new Glance(this);
+        let g = new Glance(this);
+        let data = Parser.parse(selector);
+        let lastLabel = data[data.length - 1];
+        var modifiers = lastLabel.modifiers.filter(name=> defaultModifiers[name] && defaultModifiers[name].getter).map(name => defaultModifiers[name]);
+
         return this.wrapPromise(()=> {
             if (this.customLabels[selector] && this.customLabels[selector].get) {
                 return Promise.resolve(this.customLabels[selector].get(g))
+            }
+            else if (modifiers.length > 0) {
+                return modifiers[0].getter(g, selector);
             }
             else {
                 return GetStrategies.firstResolved((getStrategy)=> getStrategy(g, selector, customGets))
@@ -278,7 +298,7 @@ class Glance {
             var foundLabels = labels.filter((label)=> {
                 return this.customLabels[label] && typeof(this.customLabels[label].locator) == 'function';
             });
-
+            
             var resolvedCustomLabels = {};
             foundLabels.resolveSeries((key) => {
                 var g = new Glance(this);
