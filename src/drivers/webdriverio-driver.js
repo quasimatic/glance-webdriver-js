@@ -67,6 +67,10 @@ class WebdriverIODriver {
         return this.driver.pause(delay)
     }
 
+    saveScreenshot(filename) {
+        return this.driver.saveScreenshot(filename)
+    }
+
     end() {
         return this.driver.end()
     }

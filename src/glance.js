@@ -139,6 +139,10 @@ class Glance {
         return this.wrapPromise(()=> this.webdriver.pause(delay));
     }
 
+    saveScreenshot(filename) {
+        return this.wrapPromise(()=> this.webdriver.saveScreenshot(filename));
+    }
+
     setCustomLabels(labels) {
         Object.assign(this.customLabels, labels);
     }
