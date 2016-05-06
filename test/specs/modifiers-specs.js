@@ -1,20 +1,23 @@
 import {createGlance} from "../test-helper"
 import {nextClosestSibling} from "./helpers/modifiers";
 
-describe('Modifiers', function() {
+describe('Modifiers', function () {
     let glance;
 
-    beforeEach(function() {
+    beforeEach(function () {
         glance = createGlance();
         return glance.url("file:///" + __dirname + "/examples/modifiers.html")
     })
 
-    afterEach(function() {
+    afterEach(function () {
         glance.end();
     });
 
-    it("should get value", function() {
-        glance.addModifiers(nextClosestSibling)
+    it("should get value", function () {
+        glance.addExtension({
+            modifiers: nextClosestSibling
+
+        })
         return glance.get("start > label:next-closest-sibling").should.eventually.equal('label 1');
     });
 

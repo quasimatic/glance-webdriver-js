@@ -3,7 +3,7 @@ import log from 'loglevel'
 
 import loadGlanceSelector from '../lib/glance-selector'
 
-import {tagElementWithID, GlanceSelector, addModifiersToBrowser, serializeModifiers} from './client'
+import {tagElementWithID, GlanceSelector, addModifiersToBrowser, serializeBrowserSideModifiers} from './client'
 import GetStrategies from './get-strategies'
 import SetStrategies from './set-strategies'
 import WebdriverIODriver from './drivers/webdriverio-driver'
@@ -38,13 +38,11 @@ class Glance {
 
             if (config.webdriver) {
                 this.customLabels = config.customLabels || {};
-                this.modifiers = config.modifiers || {};
                 this.extensions = config.extensions || [];
                 this.webdriver = config.webdriver;
                 resolve();
             } else if (config.driverConfig) {
                 this.customLabels = {};
-                this.modifiers = {};
                 this.extensions = config.extensions || [];
                 this.webdriver = new WebdriverIODriver(config.driverConfig);
                 this.webdriver.init().then(resolve);
@@ -155,17 +153,7 @@ class Glance {
             return Promise.resolve();
         });
     }
-
-    //
-    // Modifiers
-    //
-    addModifiers(modifiers) {
-        return this.wrapPromise(() => {
-            Object.assign(this.modifiers, modifiers);
-            return Promise.resolve();
-        });
-    }
-
+    
     //
     // Getters and Setters
     //
@@ -246,7 +234,9 @@ class Glance {
                     return previous;
                 }, {});
 
-                return this.webdriver.execute(addModifiersToBrowser, serializeModifiers(this.modifiers)).then(() => {
+                var configuredModifiers = this.extensions.filter(e => e.modifiers).reduce((o, e) => Object.assign({}, o, e.modifiers), {});
+
+                return this.webdriver.execute(addModifiersToBrowser, serializeBrowserSideModifiers(configuredModifiers)).then(() => {
                     return this.webdriver.execute(GlanceSelector, selector, resolvedCustomLabels, multiple, logLevel)
                         .then(res => {
                             var val = [].concat(res.value);

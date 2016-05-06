@@ -43,7 +43,7 @@ function addModifiersToBrowser(modifierString) {
     });
 }
 
-function serializeModifiers(modifiers) {
+function serializeBrowserSideModifiers(modifiers) {
     function functionReplacer(key, value) {
         if (typeof(value) === 'function') {
             return value.toString();
@@ -85,7 +85,7 @@ function getSelectTextFromClient(select) {
 }
 
 export {addModifiersToBrowser}
-export {serializeModifiers}
+export {serializeBrowserSideModifiers}
 export {getAttributeFromClient};
 export {getTagNameFromClient};
 export {getTextFromClient};
