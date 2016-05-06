@@ -37,12 +37,10 @@ class Glance {
             }
 
             if (config.webdriver) {
-                this.customLabels = config.customLabels || {};
                 this.extensions = config.extensions || [];
                 this.webdriver = config.webdriver;
                 resolve();
             } else if (config.driverConfig) {
-                this.customLabels = {};
                 this.extensions = config.extensions || [];
                 this.webdriver = new WebdriverIODriver(config.driverConfig);
                 this.webdriver.init().then(resolve);
@@ -140,10 +138,6 @@ class Glance {
         return this.wrapPromise(() => this.webdriver.saveScreenshot(filename));
     }
 
-    setCustomLabels(labels) {
-        Object.assign(this.customLabels, labels);
-    }
-
     //
     // Extensions
     //
@@ -164,8 +158,9 @@ class Glance {
         var modifiers = lastLabel.modifiers.filter(name => defaultModifiers[name] && defaultModifiers[name].getter).map(name => defaultModifiers[name]);
 
         return this.wrapPromise(() => {
-            if (this.customLabels[selector] && this.customLabels[selector].get) {
-                return Promise.resolve(this.customLabels[selector].get(g));
+            let customLabels = this.extensions.filter(e => e.labels).reduce((o, e) => Object.assign({}, o, e.labels), {});
+            if (customLabels[selector] && customLabels[selector].get) {
+                return Promise.resolve(customLabels[selector].get(g));
             }
 
             if (modifiers.length > 0) {
@@ -179,39 +174,15 @@ class Glance {
     set(selector, ...values) {
         var g = new Glance(this);
         return this.wrapPromise(() => {
-            if (this.customLabels[selector] && this.customLabels[selector].set) {
-                return Promise.resolve(this.customLabels[selector].set.apply(this, [].concat(g, values)));
+            let customLabels = this.extensions.filter(e => e.labels).reduce((o, e) => Object.assign({}, o, e.labels), {});
+            if (customLabels[selector] && customLabels[selector].set) {
+                return Promise.resolve(customLabels[selector].set.apply(this, [].concat(g, values)));
             } else {
                 return SetStrategies.firstResolved((setStrategy) => setStrategy(g, selector, values[0], customSets));
             }
         });
     }
-
-    addGetter(label, lookup) {
-        return this.wrapPromise(() => {
-            if (this.customLabels[label]) {
-                this.customLabels[label].get = lookup;
-            } else {
-                this.customLabels[label] = {get: lookup};
-            }
-
-            return Promise.resolve();
-        });
-    }
-
-    addSetter(label, lookup) {
-        return this.wrapPromise(() => {
-            if (this.customLabels[label]) {
-                this.customLabels[label].set = lookup;
-            } else {
-                this.customLabels[label] = {set: lookup};
-            }
-
-            customSets[label] = lookup;
-            return Promise.resolve();
-        });
-    }
-
+    
     //
     // Script excecution
     //
@@ -223,7 +194,7 @@ class Glance {
     // Glance selector
     //
     glanceElement(selector, resolvedLabels, multiple) {
-        var mergedLabels = Object.assign({}, this.customLabels, resolvedLabels);
+        var mergedLabels = Object.assign({}, resolvedLabels);
         var logLevel = this.logLevel;
 
         return this.webdriver
@@ -296,7 +267,6 @@ class Glance {
 
                 return Promise.resolve(customLabels[key].locate(key, {glance: g})).then((element) => {
                     resolvedCustomLabels[key] = element.value;
-                    // resolvedCustomLabels[key] = {locate: element.value}
                 });
             }).then(() => {
                 resolve(resolvedCustomLabels);
