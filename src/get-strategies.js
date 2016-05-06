@@ -45,7 +45,7 @@ export default [
             return getTagName(g, wdioSelector).then(function(tagName) {
                 return getAttribute(g, wdioSelector, "type").then(function(attributeType) {
                     if (tagName === "input" && attributeType === "checkbox") {
-                        return g.webdriver.driver.isSelected(wdioSelector)
+                        return g.driver.isSelected(wdioSelector)
                     }
 
                     return Promise.reject();

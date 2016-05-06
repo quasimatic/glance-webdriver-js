@@ -17,12 +17,12 @@ function getAttribute(g, elementReference, name) {
 }
 
 function selectByValue(g, elementReference, value) {
-    return g.webdriver.driver.selectByValue(elementReference, value)
+    return g.driver.selectByValue(elementReference, value)
 }
 
 function selectByVisibleText(g, glanceSelector, elementReference, value) {
     return g.find(glanceSelector + "> option >" + value).then(optionReference => {
-        return g.webdriver.driver.getValue(optionReference).then(function(value) {
+        return g.driver.getValue(optionReference).then(function(value) {
             return this.selectByValue(elementReference, value)
         });
     });
@@ -94,7 +94,7 @@ export default [
             return getTagName(g, wdioSelector).then(function(tagName) {
                 return getAttribute(g, wdioSelector, "type").then(function(attributeType) {
                     if (tagName === "input" && attributeType === "checkbox") {
-                        return g.webdriver.driver.isSelected(wdioSelector).then(function(isSelected) {
+                        return g.driver.isSelected(wdioSelector).then(function(isSelected) {
                             if(isSelected != value) {
                                 return g.webdriver.click(wdioSelector);
                             }

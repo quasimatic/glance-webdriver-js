@@ -39,11 +39,13 @@ class Glance {
             if (config.webdriver) {
                 this.extensions = config.extensions || [];
                 this.webdriver = config.webdriver;
+                this.driver = this.webdriver.driver;
                 resolve();
             } else if (config.driverConfig) {
                 this.extensions = config.extensions || [];
                 this.webdriver = new WebdriverIODriver(config.driverConfig);
                 this.webdriver.init().then(resolve);
+                this.driver = this.webdriver.driver;
             } else {
                 console.log('A driver or driverConfig must be provided.');
                 reject();
@@ -182,7 +184,7 @@ class Glance {
             }
         });
     }
-    
+
     //
     // Script excecution
     //
