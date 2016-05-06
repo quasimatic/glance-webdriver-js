@@ -39,12 +39,14 @@ class Glance {
             if (config.webdriver) {
                 this.customLabels = config.customLabels || {};
                 this.modifiers = config.modifiers || {};
+                this.extensions = config.extensions || [];
                 this.webdriver = config.webdriver;
                 resolve();
             }
             else if (config.driverConfig) {
                 this.customLabels = {};
                 this.modifiers = {};
+                this.extensions = config.extensions || [];
                 this.webdriver = new WebdriverIODriver(config.driverConfig);
                 this.webdriver.init().then(resolve);
 
@@ -148,14 +150,11 @@ class Glance {
     }
 
     //
-    // Labels
+    // Extensions
     //
-    addLabel(label, func) {
+    addExtension(extension) {
         return this.wrapPromise(()=> {
-            if (this.customLabels[label])
-                this.customLabels[label].locator = func;
-            else
-                this.customLabels[label] = {locator: func};
+            this.extensions.push(extension);
             return Promise.resolve();
         });
     }
@@ -245,7 +244,7 @@ class Glance {
             .execute(loadGlanceSelector)
             .then(() => {
                 var resolvedCustomLabels = Object.keys(mergedLabels).reduce(function(previous, current) {
-                    previous[current] = mergedLabels[current].locator;
+                    previous[current] = mergedLabels[current];
                     return previous;
                 }, {});
 
@@ -295,20 +294,22 @@ class Glance {
 
     getCustomLabeledElements(reference) {
         return new Promise((resolve, reject)=> {
-
             var data = this.parse(reference);
             var labels = data.map((r)=> r.label);
 
+            var customLabels = this.extensions.filter(e => e.labels).reduce((o,e) => Object.assign({}, o, e.labels), {})
+
             var foundLabels = labels.filter((label)=> {
-                return this.customLabels[label] && typeof(this.customLabels[label].locator) == 'function';
+                return customLabels[label] && typeof(customLabels[label].locate) == 'function';
             });
-            
+
             var resolvedCustomLabels = {};
             foundLabels.resolveSeries((key) => {
                 var g = new Glance(this);
 
-                return Promise.resolve(this.customLabels[key].locator(g, key)).then((element) => {
-                    resolvedCustomLabels[key] = {locator: element.value};
+                return Promise.resolve(customLabels[key].locate(key, {glance: g})).then((element) => {
+                    resolvedCustomLabels[key] = element.value;
+                    // resolvedCustomLabels[key] = {locate: element.value};
                 })
             }).then(() => {
                 resolve(resolvedCustomLabels);

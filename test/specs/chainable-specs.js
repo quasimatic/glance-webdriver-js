@@ -29,11 +29,19 @@ describe("Chainable", function() {
                     })
             })
             .then(function() {
-                return glance.addLabel("customlabel", function(g, selector) {
-                    return g.find("Button 2").then((wdioSelector)=> {
-                        return g.webdriver.element(wdioSelector)
-                    })
-                }).get("customlabel:html").should.eventually.match(/<button.*>Button 2<\/button>/);
+                glance.addExtension({
+                    labels: {
+                        "customlabel": {
+                            locate: function(selector, {glance}) {
+                                return glance.find("Button 2").then((wdioSelector)=> {
+                                    return glance.webdriver.element(wdioSelector)
+                                });
+                            }
+                        }
+                    }
+                });
+
+                return glance.get("customlabel:html").should.eventually.match(/<button.*>Button 2<\/button>/);
             })
             .then(function() {
                 return glance.url("file:///" + __dirname + "/examples/chaining-2.html")
@@ -42,8 +50,14 @@ describe("Chainable", function() {
                     .get("result-a").should.eventually.equal("Result A");
             })
             .then(function() {
-                return glance.addLabel("blockinglabel", function(selector) {
-                    return glance.click("Custom Button").find("Custom Button").then((wdioSelector)=> glance.webdriver.element(wdioSelector))
+                return glance.addExtension({
+                    labels: {
+                        "blockinglabel": {
+                            locate: function(selector, {glance}) {
+                                return glance.find("Custom Button").then((wdioSelector)=> glance.webdriver.element(wdioSelector))
+                            }
+                        }
+                    }
                 })
                     .url("file:///" + __dirname + "/examples/chaining.html")
                     .then(function() {

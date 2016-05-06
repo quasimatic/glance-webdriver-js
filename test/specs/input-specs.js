@@ -44,11 +44,19 @@ describe('Input get', function() {
     });
 
     it("should get a custom label with a get modifier", function() {
-        return glance.addLabel("complex-control-1", function(g) {
-            return g.find("special-widget>span").then(id => {
-                return g.webdriver.element(id)
-            })
-        }).get("complex-control-1:html").should.eventually.match(/<span.*>special value 1<\/span>/);
+        glance.addExtension({
+            labels: {
+                "complex-control-1": {
+                    locate: function(selector, {glance}) {
+                        return glance.find("special-widget>span").then(id => {
+                            return glance.webdriver.element(id)
+                        })
+                    }
+                }
+            }
+        })
+
+        return glance.get("complex-control-1:html").should.eventually.match(/<span.*>special value 1<\/span>/);
     });
 });
 

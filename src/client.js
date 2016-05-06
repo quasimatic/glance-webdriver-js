@@ -9,9 +9,12 @@ function waitForChange(element, name) {
 }
 
 function GlanceSelector(selector, customLabels, multiple, logLevel) {
-    glanceSelector.addCustomLabels(customLabels);
     glanceSelector.setLogLevel(logLevel);
-    return glanceSelector(selector);
+    return glanceSelector(selector, {
+        preload: {
+            labels: customLabels
+        }
+    });
 }
 
 function getAttributeFromClient(element, name) {
@@ -35,7 +38,9 @@ function addModifiersToBrowser(modifierString) {
     }
 
     var modifiers = JSON.parse(modifierString, functionReviver);
-    glanceSelector.addModifiers(modifiers);
+    glanceSelector.addExtension({
+        modifiers: modifiers
+    });
 }
 
 function serializeModifiers(modifiers) {
