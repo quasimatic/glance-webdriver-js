@@ -4,7 +4,7 @@ export default function select(g, selector, value, customSets) {
 
     var data = g.parse(selector);
 
-    if (selector == "value" || (data[data.length - 1].modifiers && data[data.length - 1].modifiers.indexOf("value") != -1)) {
+    if (selector == "value" || (data[data.length - 1].properties && data[data.length - 1].properties.indexOf("value") != -1)) {
         selector = selector.replace(/:value$/, "");
         byValue = true;
         log.debug("selecting by value")

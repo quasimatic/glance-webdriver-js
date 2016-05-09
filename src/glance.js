@@ -3,7 +3,7 @@ import log from 'loglevel'
 
 import loadGlanceSelector from '../lib/glance-selector'
 
-import {tagElementWithID, GlanceSelector, addModifiersToBrowser, serializeBrowserSideModifiers} from './client'
+import {tagElementWithID, GlanceSelector, addPropertiesToBrowser, serializeBrowserSideProperties} from './client'
 import GetStrategies from './get-strategies'
 import SetStrategies from './set-strategies'
 import WebdriverIODriver from './drivers/webdriverio-driver'
@@ -157,7 +157,7 @@ class Glance {
         let g = new Glance(this);
         let data = Parser.parse(selector);
         let lastLabel = data[data.length - 1];
-        var modifiers = lastLabel.modifiers.filter(name => defaultModifiers[name] && defaultModifiers[name].getter).map(name => defaultModifiers[name]);
+        var properties = lastLabel.properties.filter(name => defaultModifiers[name] && defaultModifiers[name].getter).map(name => defaultModifiers[name]);
 
         return this.wrapPromise(() => {
             let customLabels = this.extensions.filter(e => e.labels).reduce((o, e) => Object.assign({}, o, e.labels), {});
@@ -165,8 +165,8 @@ class Glance {
                 return Promise.resolve(customLabels[selector].get(g));
             }
 
-            if (modifiers.length > 0) {
-                return modifiers[0].getter(g, selector);
+            if (properties.length > 0) {
+                return properties[0].getter(g, selector);
             } else {
                 return GetStrategies.firstResolved((getStrategy) => getStrategy(g, selector, customGets));
             }
@@ -207,9 +207,9 @@ class Glance {
                     return previous;
                 }, {});
 
-                var configuredModifiers = this.extensions.filter(e => e.modifiers).reduce((o, e) => Object.assign({}, o, e.modifiers), {});
+                var configuredModifiers = this.extensions.filter(e => e.properties).reduce((o, e) => Object.assign({}, o, e.properties), {});
 
-                return this.webdriver.execute(addModifiersToBrowser, serializeBrowserSideModifiers(configuredModifiers)).then(() => {
+                return this.webdriver.execute(addPropertiesToBrowser, serializeBrowserSideProperties(configuredModifiers)).then(() => {
                     return this.webdriver.execute(GlanceSelector, selector, resolvedCustomLabels, multiple, logLevel)
                         .then(res => {
                             var val = [].concat(res.value);

@@ -21,7 +21,7 @@ function getAttributeFromClient(element, name) {
     return element.getAttribute(name);
 }
 
-function addModifiersToBrowser(modifierString) {
+function addPropertiesToBrowser(propertyString) {
     function functionReviver(key, value) {
         if (key === "") return value;
         if (typeof value === 'string') {
@@ -37,13 +37,13 @@ function addModifiersToBrowser(modifierString) {
         return value;
     }
 
-    var modifiers = JSON.parse(modifierString, functionReviver);
+    var properties = JSON.parse(propertyString, functionReviver);
     glanceSelector.addExtension({
-        modifiers: modifiers
+        properties: properties
     });
 }
 
-function serializeBrowserSideModifiers(modifiers) {
+function serializeBrowserSideProperties(properties) {
     function functionReplacer(key, value) {
         if (typeof(value) === 'function') {
             return value.toString();
@@ -51,14 +51,14 @@ function serializeBrowserSideModifiers(modifiers) {
         return value;
     }
 
-    var browserSideModifiers = Object.keys(modifiers).reduce((o, k) => {
-        if(modifiers[k].browser) {
-            o[k] = modifiers[k];
+    var browserSideProperties = Object.keys(properties).reduce((o, k) => {
+        if(properties[k].browser) {
+            o[k] = properties[k];
         }
         return o;
     }, {});
 
-    return JSON.stringify(browserSideModifiers, functionReplacer);
+    return JSON.stringify(browserSideProperties, functionReplacer);
 }
 
 function getTagNameFromClient(element) {
@@ -84,8 +84,8 @@ function getSelectTextFromClient(select) {
     return select.options[i].text;
 }
 
-export {addModifiersToBrowser}
-export {serializeBrowserSideModifiers}
+export {addPropertiesToBrowser}
+export {serializeBrowserSideProperties}
 export {getAttributeFromClient};
 export {getTagNameFromClient};
 export {getTextFromClient};
