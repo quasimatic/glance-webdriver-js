@@ -1,4 +1,4 @@
-import {createGlance} from "../test-helper"
+import {createGlance} from "./test-helper"
 let glance;
 
 describe('Drag and Drop', function () {

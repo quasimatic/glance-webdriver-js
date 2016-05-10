@@ -1,4 +1,4 @@
-import {createGlance} from "../test-helper"
+import {createGlance} from "./test-helper"
 import {nextClosestSibling} from "./helpers/properties";
 
 describe('Properties', function () {

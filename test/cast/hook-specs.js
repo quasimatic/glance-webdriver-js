@@ -1,5 +1,5 @@
-import {createGlance} from "../../test-helper"
-import Cast from "../../../src/cast";
+import {createGlance} from "../test-helper"
+import Cast from "../../src/cast";
 
 let cast;
 

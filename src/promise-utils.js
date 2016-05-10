@@ -48,6 +48,12 @@ export default class PromiseUtils {
         });
     }
 
+    wrapPromise(glance, func) {
+        return glance.promiseUtils.waitForThen(glance, function () {
+            return this.promiseUtils.retryingPromise(func);
+        });
+    }
+
     waitForThen(glance, resolve, reject) {
         reject = reject || function (reason) {
                 return Promise.reject(reason)

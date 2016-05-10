@@ -1,4 +1,4 @@
-import {createGlance} from "../test-helper"
+import {createGlance} from "./test-helper"
 
 describe('Extensions: labels', function() {
     let glance;

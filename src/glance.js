@@ -62,68 +62,62 @@ class Glance {
         this.logLevel = level;
         return this;
     }
-
-    wrapPromise(func) {
-        return this.promiseUtils.waitForThen(this, function () {
-            return this.promiseUtils.retryingPromise(func);
-        });
-    }
-
+    
     url(address) {
-        return this.wrapPromise(() => this.webdriver.url(address));
+        return this.promiseUtils.wrapPromise(this, () => this.webdriver.url(address));
     }
 
     end() {
-        return this.wrapPromise(() => this.webdriver.end());
+        return this.promiseUtils.wrapPromise(this, () => this.webdriver.end());
     }
 
     //
     // Cast
     //
     cast(state) {
-        return this.wrapPromise(() => new Cast(new Glance(this)).apply(state));
+        return this.promiseUtils.wrapPromise(this, () => new Cast(new Glance(this)).apply(state));
     }
 
     //
     // Interactions
     //
     type(text) {
-        return this.wrapPromise(() => this.webdriver.keys(text));
+        return this.promiseUtils.wrapPromise(this, () => this.webdriver.keys(text));
     }
 
     click(selector) {
-        return this.wrapPromise(() => this.find(selector).then((wdioSelector) => {
+        return this.promiseUtils.wrapPromise(this, () => this.find(selector).then((wdioSelector) => {
             log.info('Clicking:', selector);
             return this.webdriver.click(wdioSelector);
         }));
     }
 
     doubleClick(selector) {
-        return this.wrapPromise(() => this.find(selector).then((wdioSelector) => this.webdriver.doubleClick(wdioSelector)));
+        return this.promiseUtils.wrapPromise(this, () => this.find(selector).then((wdioSelector) => this.webdriver.doubleClick(wdioSelector)));
     }
 
     middleClick(selector) {
-        return this.wrapPromise(() => this.find(selector).then((wdioSelector) => this.webdriver.middleClick(wdioSelector)));
+        return this.promiseUtils.wrapPromise(this, () => this.find(selector).then((wdioSelector) => this.webdriver.middleClick(wdioSelector)));
     }
 
     rightClick(selector) {
-        return this.wrapPromise(() => this.find(selector).then((wdioSelector) => this.webdriver.rightClick(wdioSelector)));
+        return this.promiseUtils.wrapPromise(this, () => this.find(selector).then((wdioSelector) => this.webdriver.rightClick(wdioSelector)));
     }
 
     moveMouseTo(selector, xOffset, yOffset) {
-        return this.wrapPromise(() => this.find(selector).then((wdioSelector) => this.webdriver.moveToObject(wdioSelector, xOffset, yOffset)));
+        return this.promiseUtils.wrapPromise(this, () => this.find(selector).then((wdioSelector) => this.webdriver.moveToObject(wdioSelector, xOffset, yOffset)));
     }
 
     mouseDown() {
-        return this.wrapPromise(() => this.webdriver.buttonDown(0));
+        return this.promiseUtils.wrapPromise(this, () => this.webdriver.buttonDown(0));
     }
 
     mouseUp() {
-        return this.wrapPromise(() => this.webdriver.buttonUp(0));
+        return this.promiseUtils.wrapPromise(this, () => this.webdriver.buttonUp(0));
     }
 
     dragAndDrop(sourceSelector, targetSelector, xOffset, yOffset) {
-        return this.wrapPromise(() => {
+        return this.promiseUtils.wrapPromise(this, () => {
             return Promise.all([
                 this.find(sourceSelector),
                 this.find(targetSelector)
@@ -133,18 +127,18 @@ class Glance {
     }
 
     pause(delay) {
-        return this.wrapPromise(() => this.webdriver.pause(delay));
+        return this.promiseUtils.wrapPromise(this, () => this.webdriver.pause(delay));
     }
 
     saveScreenshot(filename) {
-        return this.wrapPromise(() => this.webdriver.saveScreenshot(filename));
+        return this.promiseUtils.wrapPromise(this, () => this.webdriver.saveScreenshot(filename));
     }
 
     //
     // Extensions
     //
     addExtension(extension) {
-        return this.wrapPromise(() => {
+        return this.promiseUtils.wrapPromise(this, () => {
             this.extensions.push(extension);
             return Promise.resolve();
         });
@@ -159,7 +153,7 @@ class Glance {
         let lastLabel = data[data.length - 1];
         var properties = lastLabel.properties.filter(name => defaultModifiers[name] && defaultModifiers[name].getter).map(name => defaultModifiers[name]);
 
-        return this.wrapPromise(() => {
+        return this.promiseUtils.wrapPromise(this, () => {
             let customLabels = this.extensions.filter(e => e.labels).reduce((o, e) => Object.assign({}, o, e.labels), {});
             if (customLabels[selector] && customLabels[selector].get) {
                 return Promise.resolve(customLabels[selector].get(g));
@@ -175,7 +169,7 @@ class Glance {
 
     set(selector, ...values) {
         var g = new Glance(this);
-        return this.wrapPromise(() => {
+        return this.promiseUtils.wrapPromise(this, () => {
             let customLabels = this.extensions.filter(e => e.labels).reduce((o, e) => Object.assign({}, o, e.labels), {});
             if (customLabels[selector] && customLabels[selector].set) {
                 return Promise.resolve(customLabels[selector].set.apply(this, [].concat(g, values)));
@@ -189,7 +183,7 @@ class Glance {
     // Script excecution
     //
     execute(func, ...args) {
-        return this.wrapPromise(() => this.webdriver.execute(func, args));
+        return this.promiseUtils.wrapPromise(this, () => this.webdriver.execute(func, args));
     }
 
     //
