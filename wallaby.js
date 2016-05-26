@@ -2,7 +2,7 @@ module.exports = function () {
     return {
         files: [
             {pattern: 'lib/glance-selector.js', instrument: false},
-            {pattern: 'src/client.js', instrument: false},
+            {pattern: 'src/utils/client.js', instrument: false},
             {pattern: 'test/helpers/*.js', instrument: false},
             'src/**/*.js',
             'test/**/*.js',

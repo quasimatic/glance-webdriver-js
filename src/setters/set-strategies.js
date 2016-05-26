@@ -1,6 +1,6 @@
 import log from 'loglevel';
-import Glance from "./glance";
-import {getTagNameFromClient, getAttributeFromClient} from './client';
+import Glance from "../glance";
+import {getTagNameFromClient, getAttributeFromClient} from '../utils/client';
 
 function getTagName(g, elementReference) {
     return g.webdriver.element(elementReference).then(element => {

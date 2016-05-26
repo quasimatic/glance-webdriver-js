@@ -3,12 +3,12 @@ import log from 'loglevel'
 
 import loadGlanceSelector from '../lib/glance-selector'
 
-import {tagElementWithID, GlanceSelector, addPropertiesToBrowser, serializeBrowserSideProperties} from './client'
-import GetStrategies from './get-strategies'
-import SetStrategies from './set-strategies'
+import {tagElementWithID, GlanceSelector, addPropertiesToBrowser, serializeBrowserSideProperties} from './utils/client'
+import GetStrategies from './getters/get-strategies'
+import SetStrategies from './setters/set-strategies'
 import WebdriverIODriver from './drivers/webdriverio-driver'
 import {Parser} from 'glance-selector'
-import PromiseUtils from './promise-utils'
+import PromiseUtils from './utils/promise-utils'
 
 import getHTML from './getters/html'
 import getValue from './getters/value';

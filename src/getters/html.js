@@ -1,4 +1,4 @@
-import {getHTMLFromClient} from '../client';
+import {getHTMLFromClient} from '../utils/client';
 
 function getHTML(g, elementReference) {
     return g.webdriver.element(elementReference).then(element => {
@@ -10,5 +10,5 @@ function getHTML(g, elementReference) {
 export default function(g, selector) {
     return g.find(selector).then((wdioSelector)=> {
         return getHTML(g, wdioSelector)
-    })
+    });
 }

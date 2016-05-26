@@ -1,5 +1,5 @@
 import log from "loglevel";
-import Glance from "./glance";
+import Glance from "../glance";
 
 Array.prototype.resolveSeries = function (func) {
     return this.reduce((p1, next)=> p1.then(() => func(next)), Promise.resolve());

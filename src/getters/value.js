@@ -1,4 +1,4 @@
-import {getValueFromClient} from '../client';
+import {getValueFromClient} from '../utils/client';
 
 export default function(g, selector) {
     selector = selector.replace(/:value$/, "");

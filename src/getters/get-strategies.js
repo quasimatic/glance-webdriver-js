@@ -1,6 +1,6 @@
 import log from 'loglevel';
 
-import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getSelectTextFromClient, getAttributeFromClient} from './client';
+import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getSelectTextFromClient, getAttributeFromClient} from '../utils/client';
 
 function getTagName(g, elementReference) {
     return g.webdriver.element(elementReference).then(element => {

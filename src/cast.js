@@ -1,6 +1,6 @@
 import Glance from "./glance";
 import GlanceConverter from "./converters/glance-converter";
-import PromiseUtils from "./promise-utils";
+import PromiseUtils from "./utils/promise-utils";
 import Immutable from 'immutable'
 
 var converters = [GlanceConverter];
