@@ -29,9 +29,11 @@ function addPropertiesToBrowser(propertyString) {
             var match = value.match(startOfFunc);
 
             if (match) {
-                 var args = match[1].split(',').map(function(arg) { return arg.replace(/\s+/, ''); });
-                 return new Function(args, value.replace(startOfFunc, '').replace(/\}$/, ''));
-             }
+                var args = match[1].split(',').map(function (arg) {
+                    return arg.replace(/\s+/, '');
+                });
+                return new Function(args, value.replace(startOfFunc, '').replace(/\}$/, ''));
+            }
         }
 
         return value;
@@ -52,7 +54,7 @@ function serializeBrowserSideProperties(properties) {
     }
 
     var browserSideProperties = Object.keys(properties).reduce((o, k) => {
-        if(properties[k].browser) {
+        if (properties[k].browser) {
             o[k] = properties[k];
         }
         return o;
@@ -84,17 +86,21 @@ function getSelectTextFromClient(select) {
     return select.options[i].text;
 }
 
-export {addPropertiesToBrowser}
-export {serializeBrowserSideProperties}
-export {getAttributeFromClient};
-export {getTagNameFromClient};
-export {getTextFromClient};
-export {getUrlFromClient};
-export {getHTMLFromClient};
-export {getSelectTextFromClient};
+function checkGlanceSelector() {
+    return typeof(glanceSelector) != 'undefined';
+}
 
-export {waitForChange};
-export {tagElementWithID};
-export {GlanceSelector};
-
-export default GlanceSelector
+export {
+    checkGlanceSelector,
+    addPropertiesToBrowser,
+    serializeBrowserSideProperties,
+    getAttributeFromClient,
+    getTagNameFromClient,
+    getTextFromClient,
+    getUrlFromClient,
+    getHTMLFromClient,
+    getSelectTextFromClient,
+    waitForChange,
+    tagElementWithID,
+    GlanceSelector
+}
