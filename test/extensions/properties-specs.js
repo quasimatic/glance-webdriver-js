@@ -1,12 +1,12 @@
-import {createGlance} from "./test-helper"
-import {nextClosestSibling} from "./helpers/properties";
+import {createGlance} from "../test-helper"
+import {nextClosestSibling} from "../helpers/properties";
 
 describe('Properties', function () {
     let glance;
 
     beforeEach(function () {
         glance = createGlance();
-        return glance.url("file:///" + __dirname + "/examples/properties.html")
+        return glance.url("file:///" + __dirname + "/../examples/properties.html")
     })
 
     afterEach(function () {

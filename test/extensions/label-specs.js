@@ -1,29 +1,29 @@
-import {createGlance} from "./test-helper"
+import {createGlance} from "../test-helper"
 
-describe('Extensions: labels', function() {
+describe('Extensions: labels', function () {
     let glance;
 
-    beforeEach(function() {
+    beforeEach(function () {
         glance = createGlance();
-        return glance.url("file:///" + __dirname + "/examples/custom.html")
+        return glance.url("file:///" + __dirname + "/../examples/custom.html");
     });
 
-    afterEach(function() {
+    afterEach(function () {
         glance.end();
     });
 
-    it("should support custom labels", function() {
+    it("should provide custom locator", function () {
         glance.addExtension({
             labels: {
                 "a-custom-thing": {
-                    locate: function(label, {glance}) {
+                    locate: function (label, {glance}) {
                         return glance.find("custom-item").then((wdioSelector)=> {
-                            return glance.webdriver.element(wdioSelector)
+                            return glance.webdriver.element(wdioSelector);
                         });
                     }
                 }
             }
-        })
+        });
 
         return glance.get("a-custom-thing").should.eventually.equal('something custom');
     });

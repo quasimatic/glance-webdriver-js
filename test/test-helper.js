@@ -12,9 +12,9 @@ export function createGlance() {
         retryCount: 2,
         retryDelay: 2,
         driverConfig: {
-            desiredCapabilities: [{
+            desiredCapabilities: {
                 browserName: 'phantomjs'
-            }],
+            },
             logLevel: 'silent',
             coloredLogs: true,
             screenshotPath: './errorShots/',
