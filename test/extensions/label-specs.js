@@ -18,7 +18,7 @@ describe('Extensions: labels', function () {
                 "a-custom-thing": {
                     locate: function (label, {glance}) {
                         return glance.find("custom-item").then((wdioSelector)=> {
-                            return glance.webdriver.element(wdioSelector);
+                            return glance.browser.element(wdioSelector);
                         });
                     }
                 }

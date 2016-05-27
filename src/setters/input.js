@@ -5,7 +5,7 @@ export default function input(g, selector, value, customSets) {
         return getTagName(g, wdioSelector).then(function (tagName) {
             log.debug("Found tag name:", tagName)
             if (tagName === "input" || tagName === "textarea") {
-                return g.webdriver.setValue(wdioSelector, value)
+                return g.browser.setValue(wdioSelector, value)
             }
 
             return Promise.reject();

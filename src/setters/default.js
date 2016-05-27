@@ -3,8 +3,8 @@ import Glance from "./glance";
 import {getTagNameFromClient} from './client';
 
 function getTagName(g, elementReference) {
-    return g.webdriver.element(elementReference).then(element => {
-        return g.webdriver.execute(getTagNameFromClient, element.value)
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getTagNameFromClient, element.value)
             .then(res => res.value.toLowerCase())
     });
 }

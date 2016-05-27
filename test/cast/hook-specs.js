@@ -37,7 +37,7 @@ describe('beforeAll Hooks', function () {
                 "$url": "file:///" + __dirname + "/examples/test.html"
             })
             .then(function () {
-                return cast.glance.webdriver.getTitle().should.eventually.equal("Test")
+                return cast.glance.browser.getTitle().should.eventually.equal("Test")
             })
     });
 
@@ -61,7 +61,7 @@ describe('beforeAll Hooks', function () {
                 "$url": "file:///" + __dirname + "/examples/"
             })
             .then(function () {
-                return cast.glance.webdriver.getTitle().should.eventually.equal("Test")
+                return cast.glance.browser.getTitle().should.eventually.equal("Test")
             })
     });
 });
@@ -172,7 +172,7 @@ describe("Target hooks", function () {
                 },
                 afterEach: function (cast, target, store) {
                     return cast.glance.set(target.label, target.value).then(function () {
-                        return cast.glance.webdriver.getTitle().then(function (title) {
+                        return cast.glance.browser.getTitle().then(function (title) {
                             values.push(title);
                         })
                     })

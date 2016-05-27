@@ -56,7 +56,7 @@ describe('Input get', function () {
                 "complex-control-1": {
                     locate: function (selector, {glance}) {
                         return glance.find("special-widget>span").then(id => {
-                            return glance.webdriver.element(id)
+                            return glance.browser.element(id)
                         });
                     }
                 }
@@ -207,7 +207,7 @@ describe("page setters", function () {
     it("should change the url by a setter", function () {
         return glance.set("$url", "file:///" + __dirname + "/examples/set-2.html")
             .then(function () {
-                return glance.webdriver.getTitle().should.eventually.equal("NEW SET TEST PAGE");
+                return glance.browser.getTitle().should.eventually.equal("NEW SET TEST PAGE");
             })
     });
 });

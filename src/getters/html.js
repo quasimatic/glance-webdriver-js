@@ -1,8 +1,8 @@
 import {getHTMLFromClient} from '../utils/client';
 
 function getHTML(g, elementReference) {
-    return g.webdriver.element(elementReference).then(element => {
-        return g.webdriver.execute(getHTMLFromClient, element.value)
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getHTMLFromClient, element.value)
             .then(res => res.value)
     });
 }

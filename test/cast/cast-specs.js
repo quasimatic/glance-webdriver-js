@@ -31,7 +31,7 @@ describe('Cast', function() {
         return cast.apply({
             "$url": "file:///" + __dirname + "/examples/page1.html"
         })
-            .then(() => cast.glance.webdriver.getTitle())
+            .then(() => cast.glance.browser.getTitle())
             .should.eventually.equal("Page 1")
     })
 
@@ -42,7 +42,7 @@ describe('Cast', function() {
                 "file:///" + __dirname + "/examples/page2.html"
             ]
         })
-            .then(() => cast.glance.webdriver.getTitle())
+            .then(() => cast.glance.browser.getTitle())
             .should.eventually.equal("Page 2")
     })
 
@@ -75,7 +75,7 @@ describe('Cast', function() {
         cast = new Cast(Object.assign({
             targetHooks: [{
                 after: function(cast, target) {
-                    return cast.glance.webdriver.getTitle().then(function(title) {
+                    return cast.glance.browser.getTitle().then(function(title) {
                         if (title == "Title needs to change") {
                             return cast.glance.click("Change Title");
                         }
@@ -88,7 +88,7 @@ describe('Cast', function() {
             "$url": "file:///" + __dirname + "/examples/url-hook.html"
         })
             .then(function() {
-                return cast.glance.webdriver.getTitle().should.eventually.equal("Title Changed");
+                return cast.glance.browser.getTitle().should.eventually.equal("Title Changed");
             })
     });
 

@@ -3,15 +3,15 @@ import Glance from "../glance";
 import {getTagNameFromClient, getAttributeFromClient} from '../utils/client';
 
 function getTagName(g, elementReference) {
-    return g.webdriver.element(elementReference).then(element => {
-        return g.webdriver.execute(getTagNameFromClient, element.value)
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getTagNameFromClient, element.value)
             .then(res => res.value.toLowerCase());
     });
 }
 
 function getAttribute(g, elementReference, name) {
-    return g.webdriver.element(elementReference).then(element => {
-        return g.webdriver.execute(getAttributeFromClient, element.value, name)
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getAttributeFromClient, element.value, name)
             .then(res => res.value.toLowerCase());
     });
 }
@@ -33,7 +33,7 @@ export default [
         log.debug("Setter: url");
         if (selector == "$url") {
             log.debug("Setting url:", value);
-            return g.webdriver.url(value);
+            return g.browser.url(value);
         }
 
         return Promise.reject();
@@ -81,7 +81,7 @@ export default [
         var data = g.parse(selector);
         if (selector == "value" || (data[data.length - 1].properties && data[data.length - 1].properties.indexOf("value") != -1)) {
             selector = selector.replace(/:value$/, "");
-            return g.find(selector).then((wdioSelector)=> g.webdriver.setValue(wdioSelector, value));
+            return g.find(selector).then((wdioSelector)=> g.browser.setValue(wdioSelector, value));
         }
 
         return Promise.reject();
@@ -96,7 +96,7 @@ export default [
                     if (tagName === "input" && attributeType === "checkbox") {
                         return g.driver.isSelected(wdioSelector).then(function(isSelected) {
                             if(isSelected != value) {
-                                return g.webdriver.click(wdioSelector);
+                                return g.browser.click(wdioSelector);
                             }
                         });
                     }
@@ -114,7 +114,7 @@ export default [
             return getTagName(g, wdioSelector).then(function(tagName) {
                 log.debug("Found tag name:", tagName);
                 if (tagName === "input" || tagName === "textarea") {
-                    return g.webdriver.setValue(wdioSelector, value);
+                    return g.browser.setValue(wdioSelector, value);
                 }
 
                 return Promise.reject();

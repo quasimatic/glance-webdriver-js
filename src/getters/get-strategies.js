@@ -3,26 +3,26 @@ import log from 'loglevel';
 import {getTagNameFromClient, getTextFromClient, getUrlFromClient, getSelectTextFromClient, getAttributeFromClient} from '../utils/client';
 
 function getTagName(g, elementReference) {
-    return g.webdriver.element(elementReference).then(element => {
-        return g.webdriver.execute(getTagNameFromClient, element.value)
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getTagNameFromClient, element.value)
             .then(res => res.value.toLowerCase())
     });
 }
 
 function getText(g, elementReference) {
-    return g.webdriver.element(elementReference).then(element => {
-        return g.webdriver.execute(getTextFromClient, element.value)
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getTextFromClient, element.value)
             .then(res => res.value)
     });
 }
 
 function getUrl(g) {
-    return g.webdriver.execute(getUrlFromClient).then(res => res.value)
+    return g.browser.execute(getUrlFromClient).then(res => res.value)
 }
 
 function getAttribute(g, elementReference, name) {
-    return g.webdriver.element(elementReference).then(element => {
-        return g.webdriver.execute(getAttributeFromClient, element.value, name)
+    return g.browser.element(elementReference).then(element => {
+        return g.browser.execute(getAttributeFromClient, element.value, name)
             .then(res => res.value.toLowerCase())
     });
 }
@@ -58,7 +58,7 @@ export default [
         return g.find(selector).then((wdioSelector)=> {
             return getTagName(g, wdioSelector).then(function(tagName) {
                 if (tagName === "input") {
-                    return g.webdriver.getValue(wdioSelector);
+                    return g.browser.getValue(wdioSelector);
                 }
 
                 return Promise.reject();
@@ -70,8 +70,8 @@ export default [
         return g.find(selector).then((wdioSelector)=> {
             return getTagName(g, wdioSelector).then(function(tagName) {
                 if (tagName === "select") {
-                    return g.webdriver.element(wdioSelector).then(res => {
-                        return g.webdriver.execute(getSelectTextFromClient, res.value)
+                    return g.browser.element(wdioSelector).then(res => {
+                        return g.browser.execute(getSelectTextFromClient, res.value)
                             .then(res => res.value)
                     });
                 }

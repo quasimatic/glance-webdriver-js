@@ -3,7 +3,7 @@ export default function value(g, selector, value, customSets) {
     var data = g.parse(selector);
     if (selector == "value" || (data[data.length - 1].properties && data[data.length - 1].properties.indexOf("value") != -1)) {
         selector = selector.replace(/:value$/, "");
-        return g.find(selector).then((wdioSelector)=> g.webdriver.setValue(wdioSelector, value));
+        return g.find(selector).then((wdioSelector)=> g.browser.setValue(wdioSelector, value));
     }
 
     return Promise.reject();

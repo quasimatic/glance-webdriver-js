@@ -1,6 +1,6 @@
 import * as wdio from 'webdriverio';
 
-class WebdriverIODriver {
+class WebdriverIOAdapter {
     constructor(config) {
         this.driver = wdio.remote(config);
     }
@@ -96,4 +96,4 @@ class WebdriverIODriver {
     }
 }
 
-export default WebdriverIODriver;
+export default WebdriverIOAdapter;

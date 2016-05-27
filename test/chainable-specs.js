@@ -34,7 +34,7 @@ describe("Chainable", function() {
                         "customlabel": {
                             locate: function(selector, {glance}) {
                                 return glance.find("Button 2").then((wdioSelector)=> {
-                                    return glance.webdriver.element(wdioSelector)
+                                    return glance.browser.element(wdioSelector)
                                 });
                             }
                         }
@@ -54,7 +54,7 @@ describe("Chainable", function() {
                     labels: {
                         "blockinglabel": {
                             locate: function(selector, {glance}) {
-                                return glance.find("Custom Button").then((wdioSelector)=> glance.webdriver.element(wdioSelector))
+                                return glance.find("Custom Button").then((wdioSelector)=> glance.browser.element(wdioSelector))
                             }
                         }
                     }
