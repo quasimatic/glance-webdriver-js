@@ -238,6 +238,7 @@ class Glance {
                                         }
 
                                         if (idsAsCss.length > 1) {
+                                            console.log('Found ' + idsAsCss.length + ' duplicates for: ' + selector);
                                             throw new Error('Found ' + idsAsCss.length + ' duplicates for: ' + selector);
                                         }
                                     });
