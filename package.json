@@ -4,7 +4,7 @@
   "description": "Automation at a glance",
   "main": "lib/glance.js",
   "scripts": {
-    "build": "babel src -d lib && webpack",
+    "build": "babel src -d lib",
     "pretest": "npm run build",
     "test": "mocha --compilers js:babel-register --recursive test",
     "prepublish": "npm run build"
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/quasimatic/glance-webdriver",
   "dependencies": {
+    "glance-common": "0.0.1",
     "glance-selector": "0.4.2",
     "immutable": "^3.8.1",
     "lodash": "^4.13.1",
