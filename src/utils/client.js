@@ -1,7 +1,6 @@
-function tagElementWithID(elements, ids) {
-    for (var i = 0; i < elements.length; ++i) {
-        elements[i].setAttribute("data-glance-id", ids[i]);
-    }
+function tagElementWithID(element, id) {
+    element.setAttribute("data-glance-id", id);
+    return id;
 }
 
 function waitForChange(element, name) {
