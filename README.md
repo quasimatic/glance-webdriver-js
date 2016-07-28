@@ -45,7 +45,8 @@ Then lets print the result to console:
 .then(function(result){console.log(result)});
 
 Our final script is :
-```var Glance = require("glance-webdriver").default;
+```
+var Glance = require("glance-webdriver").default;
 
 var glance = new Glance({
 
