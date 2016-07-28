@@ -46,18 +46,29 @@ Then lets print the result to console:
 
 Our final script is :
 ```var Glance = require("glance-webdriver").default;
+
 var glance = new Glance({
+
   driverConfig: {
+  
      desiredCapabilities: {browserName: 'firefox'}
+     
         }});
 
    glance.url("http://www.imdb.com/")
+   
   .set("Find movies","back to the future")
+  
   .click("magnifyingglass")
+  
   .click("Back to the Future (1985)")
+  
   .get("ratingValue")
+  
   .then(function(result){
+  
   console.log(result)
+  
   });
 ```
 Lets run the script:
