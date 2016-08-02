@@ -8,20 +8,20 @@ export default class Glance extends GlanceCommon {
         };
 
         config.browser = config.browser || new WebdriverIOAdapter(config.driverConfig);
-        config.execute = (func, ...args) => {
-                let callback = args.pop();
+        config.browserExecute = (func, ...args) => {
+            let callback = args.pop();
 
-                return this.browser.executeAsync(function () {
-                    var args = Array.prototype.slice.call(arguments);
-                    var func = args.shift();
-                    var done = args.pop();
-                    args.push(function (err, result) {
-                        done(result);
-                    });
+            return this.browser.executeAsync(function () {
+                var args = Array.prototype.slice.call(arguments);
+                var func = args.shift();
+                var done = args.pop();
+                args.push(function (err, result) {
+                    done(result);
+                });
 
-                    eval("(" + func + ")").apply(null, args);
-                }, func.toString(), ...args).then(res => callback(null, res), callback);
-            }
+                eval("(" + func + ")").apply(null, args);
+            }, func.toString(), ...args).then(res => callback(null, res), callback);
+        }
 
         super(config);
     }
