@@ -21,11 +21,34 @@ class WebdriverIOAdapter {
     }
 
     getUrl(address) {
-        return this.driver.url();
+        return this.driver.url().then(res => res.value);
     }
 
     setUrl(address) {
         return this.driver.url(address);
+    }
+
+    getTabs() {
+        return this.driver.getTabIds();
+    }
+
+    getActiveTab() {
+        return this.driver.getCurrentTabId();
+    }
+
+    setActiveTab(id) {
+        return this.driver.switchTab(id);
+    }
+
+    closeTab(id) {
+        if(id) {
+            return this.driver.switchTab(id).then(result => {
+                return this.driver.close();
+            });
+        }
+        else {
+            return this.driver.close();
+        }
     }
 
     type(keys) {
@@ -107,7 +130,7 @@ class WebdriverIOAdapter {
     }
 
     getValue(element) {
-        return this.elementReference(element).then(reference => this.driver.getValue(reference));
+        return this.elementReference(element).then(reference => this.driver.getValue(reference).then(res => res.value));
     }
 
     setValue(element, ...values) {

@@ -3,8 +3,8 @@ import WebdriverIOAdapter from "./adapters/webdriverio-adapter";
 
 export default class Glance extends GlanceCommon {
     constructor(config = {}) {
-        config.newInstance = function () {
-            return new Glance(this);
+        config.newInstance = function (config = this.config) {
+            return new Glance({...this, config});
         };
 
         config.browser = config.browser || new WebdriverIOAdapter(config.driverConfig);
