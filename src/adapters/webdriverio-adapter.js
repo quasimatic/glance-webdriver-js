@@ -52,7 +52,11 @@ class WebdriverIOAdapter {
     }
 
     type(keys) {
-        return this.driver.keys(keys);
+        return this.driver.keys(keys.split(''));
+    }
+
+    sendKeys(...keys) {
+        return this.driver.keys(...keys);
     }
 
     click(element) {
