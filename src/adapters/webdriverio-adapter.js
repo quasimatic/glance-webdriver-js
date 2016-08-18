@@ -41,7 +41,7 @@ class WebdriverIOAdapter {
     }
 
     closeTab(id) {
-        if(id) {
+        if (id) {
             return this.driver.switchTab(id).then(result => {
                 return this.driver.close();
             });
@@ -97,16 +97,20 @@ class WebdriverIOAdapter {
         return this.driver.executeAsync.apply(this.driver, [func].concat(args)).then(res => res.value);
     }
 
-    dragAndDrop(elementReferenceSource, elementReferenceTarget, xOffset, yOffset) {
-        if (this.driver.isMobile) {
-            return this.driver.getLocation(elementReferenceSource).then(
-                (location) => this.driver.touchDown(location.x, location.y)
-            ).getLocation(elementReferenceTarget).then(
-                (location) => this.driver.touchMove(location.x, location.y).touchUp(location.x, location.y)
-            );
-        }
+    dragAndDrop(elementSource, elementTarget, xOffset, yOffset) {
+        return this.elementReference(elementSource).then((elementReferenceSource) => {
+            return this.elementReference(elementTarget).then((elementReferenceTarget) => {
+                if (this.driver.isMobile) {
+                    return this.driver.getLocation(elementReferenceSource).then(
+                        (location) => this.driver.touchDown(location.x, location.y)
+                    ).getLocation(elementReferenceTarget).then(
+                        (location) => this.driver.touchMove(location.x, location.y).touchUp(location.x, location.y)
+                    );
+                }
 
-        return this.driver.moveToObject(elementReferenceSource).buttonDown().moveToObject(elementReferenceTarget, xOffset, yOffset).buttonUp();
+                return this.driver.moveToObject(elementReferenceSource).buttonDown().moveToObject(elementReferenceTarget, xOffset, yOffset).buttonUp();
+            });
+        });
     }
 
     pause(delay) {
