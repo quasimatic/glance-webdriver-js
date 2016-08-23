@@ -3,7 +3,7 @@ import WebdriverIOAdapter from "./adapters/webdriverio-adapter";
 
 export default class Glance extends GlanceCommon {
     constructor(config = {}) {
-        config.newInstance = function (config = this.config) {
+        config.newInstance = (config = this.config) => {
             return new Glance({...this, config});
         };
 
@@ -13,7 +13,7 @@ export default class Glance extends GlanceCommon {
 
             return new Promise((resolve, reject)=> {
                 var timeout = setTimeout(function () {
-                    reject("Browser Execute Timeo");
+                    reject("Browser Execute Timeout");
                 }, 2000);
 
                 return this.browser.executeAsync(function () {
@@ -33,7 +33,7 @@ export default class Glance extends GlanceCommon {
                     return reject(error)
                 });
             }).then(res => callback(null, res), callback);
-        }
+        };
 
         super(config);
     }
