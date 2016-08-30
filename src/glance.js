@@ -38,3 +38,4 @@ export default class Glance extends GlanceCommon {
         super(config);
     }
 }
+
