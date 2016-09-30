@@ -1,6 +1,6 @@
 import * as wdio from 'webdriverio';
-import {tagElementWithID} from '../utils/client'
 import shortid from 'shortid';
+import {tagElementWithID} from '../utils/client';
 
 class WebdriverIOAdapter {
     constructor(config) {

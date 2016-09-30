@@ -1,8 +1,7 @@
-module.exports = function () {
+module.exports = function (wallaby) {
     return {
         files: [
-            {pattern: 'lib/glance-selector.js', instrument: false},
-            {pattern: 'src/utils/client.js', instrument: false},
+            {pattern: 'src/utils/client.js'},
             {pattern: 'test/helpers/*.js', instrument: false},
             'src/**/*.js',
             'test/**/*.js',
@@ -14,11 +13,13 @@ module.exports = function () {
             'test/**/*-specs.js'
         ],
 
-        preprocessors: {
-            '**/*.js': file => require('babel-core').transform(
-                file.content,
-                {sourceMap: true, presets: ['es2015']})
+        compilers: {
+            '**/*.js': wallaby.compilers.babel({
+                presets: ['es2015', 'stage-0'],
+                babel: require('babel-core')
+            })
         },
+
         env: {
             type: 'node'
         },
@@ -27,11 +28,6 @@ module.exports = function () {
 
         bootstrap: function () {
             require('./test/test-helper');
-        },
-
-        workers: {
-            initial: 6,
-            regular: 6
         }
     };
 };
