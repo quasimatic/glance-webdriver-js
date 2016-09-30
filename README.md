@@ -3,7 +3,7 @@ This guide is meant for non technical users, but you can use it anyway.
 Requirements Checklist (you can skip to the verify step in each action if you think installation exists. Otherwise standard next>next>next installation):
 
 1. Install Java jdk -
-    1. [latest download at time of writing  (Java 8)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+    1. [Latest download at time of writing  (Java 8)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
     2. Verify Java installation by opening a **new** cmd window and type `java -version` - the version should appear
 2. Install Javascript -
     1. ([Latest Node.js installation at time of writing](https://nodejs.org/),   includes npm (node package manager))
@@ -27,7 +27,8 @@ Now let’s write some automation - we will make a simple todo list on [todomvc.
 
 ```var glance = new Glance({```
  ```driverConfig: { desiredCapabilities: {browserName: ‘chrome’} }```
-```});```
+```});
+```
 
 6. Go to mvctodo.com:
 `glance.url(“http://todomvc.com/”)`
