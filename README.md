@@ -27,8 +27,8 @@ Now let’s write some automation - we will make a simple todo list on [todomvc.
 
 ```var glance = new Glance({```
  ```driverConfig: { desiredCapabilities: {browserName: ‘chrome’} }```
-```});
-```
+});```
+
 
 6. Go to mvctodo.com:
 `glance.url(“http://todomvc.com/”)`
