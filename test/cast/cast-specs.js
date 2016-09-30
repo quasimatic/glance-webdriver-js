@@ -29,7 +29,7 @@ describe('Cast', function() {
 
     it("should go to url", function() {
         return cast.apply({
-            "$url": "file:///" + __dirname + "/examples/page1.html"
+            "browser:url": "file:///" + __dirname + "/examples/page1.html"
         })
             .then(() => cast.glance.browser.getTitle())
             .should.eventually.equal("Page 1")
@@ -37,7 +37,7 @@ describe('Cast', function() {
 
     it("should go to multiple urls", function() {
         return cast.apply({
-            "$url": [
+            "browser:url": [
                 "file:///" + __dirname + "/examples/page1.html",
                 "file:///" + __dirname + "/examples/page2.html"
             ]
@@ -48,7 +48,7 @@ describe('Cast', function() {
 
     it("should set value", function() {
         return cast.apply({
-            "$url": "file:///" + __dirname + "/examples/page1.html",
+            "browser:url": "file:///" + __dirname + "/examples/page1.html",
             "text-1": "Data 1"
         })
             .then(function() {
@@ -58,7 +58,7 @@ describe('Cast', function() {
 
     it("should set multiple values", function() {
         return cast.apply({
-            "$url": "file:///" + __dirname + "/examples/page1.html",
+            "browser:url": "file:///" + __dirname + "/examples/page1.html",
             "text-1": "Data 1",
             "text-2": "Data 2"
         })
@@ -85,7 +85,7 @@ describe('Cast', function() {
         }, options));
 
         return cast.apply({
-            "$url": "file:///" + __dirname + "/examples/url-hook.html"
+            "browser:url": "file:///" + __dirname + "/examples/url-hook.html"
         })
             .then(function() {
                 return cast.glance.browser.getTitle().should.eventually.equal("Title Changed");
@@ -94,7 +94,7 @@ describe('Cast', function() {
 
     it("should support nested labels as a glance container", function() {
         return cast.apply({
-            "$url": "file:///" + __dirname + "/examples/custom-label.html",
+            "browser:url": "file:///" + __dirname + "/examples/custom-label.html",
             "wrapper-1": {
                 "text-1": "Data 1",
                 "text-2": "Data 2"
@@ -110,15 +110,15 @@ describe('Cast', function() {
 
     it("should go to multiple urls and set value", function() {
         this.timeout(10000)
-        return cast.apply({"$url": "file:///" + __dirname + "/examples/page1.html"})
+        return cast.apply({"browser:url": "file:///" + __dirname + "/examples/page1.html"})
             .then(function() {
                 return cast.apply([
                     {
-                        "$url": "file:///" + __dirname + "/examples/page1.html",
+                        "browser:url": "file:///" + __dirname + "/examples/page1.html",
                         "text-1": "Data 1"
                     },
                     {
-                        "$url": "file:///" + __dirname + "/examples/page2.html",
+                        "browser:url": "file:///" + __dirname + "/examples/page2.html",
                         "text-1": "Data 2"
                     }
                 ])
@@ -135,7 +135,7 @@ describe('Cast', function() {
 
     it("should manage context correctly", function() {
         return cast.apply({
-            "$url": "file:///" + __dirname + "/examples/context.html",
+            "browser:url": "file:///" + __dirname + "/examples/context.html",
             "other": {
                 "input": "value",
             },

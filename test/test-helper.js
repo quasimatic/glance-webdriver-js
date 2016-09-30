@@ -12,7 +12,7 @@ export function createGlance() {
         retryCount: 2,
         retryDelay: 2,
         driverConfig: {
-            desiredCapabilities: {
+            capabilities: {
                 browserName: 'phantomjs'
             },
             logLevel: 'silent',

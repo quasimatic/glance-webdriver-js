@@ -27,14 +27,14 @@ describe('beforeAll Hooks', function () {
         cast = new Cast(Object.assign({
             beforeAll: [
                 function (cast, store) {
-                    store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url").replace("test.html", "before-test.html"));
+                    store.desiredState = store.desiredState.set("browser:url", store.desiredState.get("browser:url").replace("test.html", "before-test.html"));
                 }
             ]
 
         }, options));
 
         return cast.apply({
-                "$url": "file:///" + __dirname + "/examples/test.html"
+                "browser:url": "file:///" + __dirname + "/examples/test.html"
             })
             .then(function () {
                 return cast.glance.browser.getTitle().should.eventually.equal("Test")
@@ -45,20 +45,20 @@ describe('beforeAll Hooks', function () {
         cast = new Cast(Object.assign({
             beforeAll: [
                 function (cast, store) {
-                    store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + "before");
+                    store.desiredState = store.desiredState.set("browser:url", store.desiredState.get("browser:url") + "before");
                 },
                 function (cast, store) {
-                    store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + "-test");
+                    store.desiredState = store.desiredState.set("browser:url", store.desiredState.get("browser:url") + "-test");
                 },
                 function (cast, store) {
-                    store.desiredState = store.desiredState.set("$url", store.desiredState.get("$url") + ".html");
+                    store.desiredState = store.desiredState.set("browser:url", store.desiredState.get("browser:url") + ".html");
                 }
             ]
 
         }, options));
 
         return cast.apply({
-                "$url": "file:///" + __dirname + "/examples/"
+                "browser:url": "file:///" + __dirname + "/examples/"
             })
             .then(function () {
                 return cast.glance.browser.getTitle().should.eventually.equal("Test")
@@ -127,7 +127,7 @@ describe("Target hooks", function () {
 
         return cast.apply([
                 {
-                    "$url": "file:///" + __dirname + "/examples/set-hooks.html",
+                    "browser:url": "file:///" + __dirname + "/examples/set-hooks.html",
                     "after-hook-text-1": "Data"
                 }
             ])
@@ -149,7 +149,7 @@ describe("Target hooks", function () {
 
         return cast.apply([
                 {
-                    "$url": "file:///" + __dirname + "/examples/set-hooks.html",
+                    "browser:url": "file:///" + __dirname + "/examples/set-hooks.html",
                     "before-hook-text-1": "Data"
                 }
             ])
@@ -168,7 +168,7 @@ describe("Target hooks", function () {
                     target.continue = true;
                 },
                 beforeEach: function (cast, target, store) {
-                    target.label = "$url";
+                    target.label = "browser:url";
                 },
                 afterEach: function (cast, target, store) {
                     return cast.glance.set(target.label, target.value).then(function () {
@@ -200,7 +200,7 @@ describe.skip("Custom Context", function () {
         cast = new Cast(Object.assign({}, options));
 
         return cast.apply({
-                "$url": "file:///" + __dirname + "/examples/custom-label.html",
+                "browser:url": "file:///" + __dirname + "/examples/custom-label.html",
                 "First Wrapper": {
                     "text-1": "Data 1",
                     "text-2": "Data 2"

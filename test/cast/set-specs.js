@@ -29,12 +29,12 @@ describe('Cast setters', function() {
 
     it("should set values that are null", function() {
         return cast.apply({
-            "$url": "file:///" + __dirname + "/examples/set.html",
+            "browser:url": "file:///" + __dirname + "/examples/set.html",
             "text-1": "value 1",
             "text-2": "value 2"
         })
             .should.eventually.deep.equal({
-                "$url": "file:///" + __dirname + "/examples/set.html",
+                "browser:url": "file:///" + __dirname + "/examples/set.html",
                 "text-1": "value 1",
                 "text-2": "value 2"
             })
@@ -42,14 +42,14 @@ describe('Cast setters', function() {
 
     it("should get values for checkboxes", function() {
         return cast.apply({
-            "$url": "file:///" + __dirname + "/examples/set.html",
+            "browser:url": "file:///" + __dirname + "/examples/set.html",
             "checkboxes": {
                 "checkbox-1": true,
                 "checkbox-2": false
             }
         })
             .should.eventually.deep.equal({
-                "$url": "file:///" + __dirname + "/examples/set.html",
+                "browser:url": "file:///" + __dirname + "/examples/set.html",
                 "checkboxes": {
                     "checkbox-1": true,
                     "checkbox-2": false
