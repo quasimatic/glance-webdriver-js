@@ -2,6 +2,7 @@
 
 ## Requirements
 - Selenium
+- Node
 
 ## Install
 ```

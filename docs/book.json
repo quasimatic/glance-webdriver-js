@@ -1,6 +1,12 @@
 { 
-  "gitbook": "2.5.2",
+  "gitbook": "3.2.2",
   "structure": { 
     "summary": "SUMMARY.md" 
-  } 
+  },
+  "plugins": ["codepen"],
+  "pluginsConfig": {
+    "codepen": {
+      "defaultTab": "js,result"
+    }
+  }
 }
