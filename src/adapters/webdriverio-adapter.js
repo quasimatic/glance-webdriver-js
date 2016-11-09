@@ -138,7 +138,7 @@ class WebdriverIOAdapter {
     }
 
     getValue(element) {
-        return this.elementReference(element).then(reference => this.driver.getValue(reference).then(res => res.value));
+        return this.elementReference(element).then(reference => this.driver.getValue(reference).then(value => value));
     }
 
     setValue(element, ...values) {
