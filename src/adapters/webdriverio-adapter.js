@@ -164,6 +164,10 @@ class WebdriverIOAdapter {
     maximize() {
         return this.driver.windowHandleMaximize();
     }
+
+    scroll(element) {
+        return this.elementReference(element).then(reference => this.driver.scroll(reference));
+    }
 }
 
 export default WebdriverIOAdapter;
