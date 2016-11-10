@@ -152,6 +152,18 @@ class WebdriverIOAdapter {
     log(type) {
         return this.driver.log(type);
     }
+
+    setWindowSize(size) {
+        return this.driver.windowHandleSize(size);
+    }
+
+    getWindowSize() {
+        return this.driver.windowHandleSize();
+    }
+
+    maximize() {
+        return this.driver.windowHandleMaximize();
+    }
 }
 
 export default WebdriverIOAdapter;
