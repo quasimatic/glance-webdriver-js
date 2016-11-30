@@ -12,7 +12,9 @@ export default class Glance extends GlanceCommon {
             let callback = args.pop();
 
             return new Promise((resolve, reject)=> {
+                var rejected = false;
                 var timeout = setTimeout(function () {
+                    rejected = true;
                     reject("Browser Execute Timeout");
                 }, 2000);
 
@@ -20,15 +22,17 @@ export default class Glance extends GlanceCommon {
                     var args = Array.prototype.slice.call(arguments);
                     var func = args.shift();
                     var done = args.pop();
-                    args.push(function (err, result) {
+                    args.push(function (e, result) {
                         done(result);
                     });
 
                     eval("(" + func + ")").apply(null, args);
                 }, func.toString(), ...args).then(result => {
+                    if(rejected) return;
                     clearTimeout(timeout);
                     return resolve(result)
                 }, error => {
+                    if(rejected) return;
                     clearTimeout(timeout);
                     return reject(error)
                 });
