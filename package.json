@@ -14,18 +14,19 @@
     "url": "git+https://github.com/quasimatic/glance-webdriver.git"
   },
   "keywords": [
+    "glance",
     "automation",
     "webdriver",
     "selenium"
   ],
-  "author": "Robots",
+  "author": "Dan Gilkerson",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/quasimatic/glance-webdriver/issues"
   },
   "homepage": "https://github.com/quasimatic/glance-webdriver",
   "dependencies": {
-    "glance-common": "~0.2.10",
+    "glance-browser": "~0.3.0",
     "immutable": "^3.8.1",
     "lodash": "^4.17.2",
     "loglevel": "1.4.1",
