@@ -1,5 +1,5 @@
 import Glance from "./glance";
-import {Cast} from "glance-common";
+import {Cast} from "glance-browser";
 
 export default class WebdriverCast extends Cast {
     constructor(options) {
