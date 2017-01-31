@@ -209,4 +209,6 @@
             (example: edit > button#node-type - this will only search for edit buttons)
 		#value
 			look for the selector in the value attribute
+		#attribute-<attribute name>
+			limit the search to the specified attribute name
 	
