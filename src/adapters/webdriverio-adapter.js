@@ -3,171 +3,172 @@ import shortid from 'shortid';
 import {tagElementWithID} from '../utils/client';
 
 class WebdriverIOAdapter {
-    constructor(config) {
-        this.driver = wdio.remote(config);
-    }
+	constructor(config) {
+		this.driver = wdio.remote(config);
+		this.driver.timeouts('implicit', 0);
+	}
 
-    init() {
-        return this.driver.init().catch(function (error) {
-            console.log(error)
-            return Promise.reject(error);
-        });
-    }
+	init() {
+		return this.driver.init().catch(function(error) {
+			console.log(error);
+			return Promise.reject(error);
+		});
+	}
 
-    elementReference(element) {
-        return this.execute(tagElementWithID, element, shortid.generate()).then(function (id) {
-            return `[data-glance-id="${id}"]`;
-        });
-    }
+	elementReference(element) {
+		return this.execute(tagElementWithID, element, shortid.generate()).then(function(id) {
+			return `[data-glance-id="${id}"]`;
+		});
+	}
 
-    getUrl(address) {
-        return this.driver.url().then(res => res.value);
-    }
+	getUrl(address) {
+		return this.driver.url().then(res => res.value);
+	}
 
-    setUrl(address) {
-        return this.driver.url(address);
-    }
+	setUrl(address) {
+		return this.driver.url(address);
+	}
 
-    getTabs() {
-        return this.driver.getTabIds();
-    }
+	getTabs() {
+		return this.driver.getTabIds();
+	}
 
-    getActiveTab() {
-        return this.driver.getCurrentTabId();
-    }
+	getActiveTab() {
+		return this.driver.getCurrentTabId();
+	}
 
-    setActiveTab(id) {
-        return this.driver.switchTab(id);
-    }
+	setActiveTab(id) {
+		return this.driver.switchTab(id);
+	}
 
-    closeTab(id) {
-        if (id) {
-            return this.driver.switchTab(id).then(result => {
-                return this.driver.close();
-            });
-        }
-        else {
-            return this.driver.close();
-        }
-    }
+	closeTab(id) {
+		if (id) {
+			return this.driver.switchTab(id).then(result => {
+				return this.driver.close();
+			});
+		}
+		else {
+			return this.driver.close();
+		}
+	}
 
-    type(keys) {
-        return this.driver.keys(keys.split(''));
-    }
+	type(keys) {
+		return this.driver.keys(keys.split(''));
+	}
 
-    sendKeys(...keys) {
-        return this.driver.keys(...keys);
-    }
+	sendKeys(...keys) {
+		return this.driver.keys(...keys);
+	}
 
-    click(element) {
-        return this.elementReference(element).then(reference => this.driver.click(reference));
-    }
+	click(element) {
+		return this.driver.elementIdClick(element.ELEMENT);
+	}
 
-    doubleClick(element) {
-        return this.elementReference(element).then(reference => this.driver.doubleClick(reference));
-    }
+	doubleClick(element) {
+		return this.elementReference(element).then(reference => this.driver.doubleClick(reference));
+	}
 
-    middleClick(element) {
-        return this.elementReference(element).then(reference => this.driver.middleClick(reference));
-    }
+	middleClick(element) {
+		return this.elementReference(element).then(reference => this.driver.middleClick(reference));
+	}
 
-    moveMouseTo(element, xOffset, yOffset) {
-        return this.elementReference(element).then(reference => this.driver.moveToObject(reference, xOffset, yOffset));
-    }
+	moveMouseTo(element, xOffset, yOffset) {
+		return this.elementReference(element).then(reference => this.driver.moveToObject(reference, xOffset, yOffset));
+	}
 
-    rightClick(elementReference) {
-        return this.elementReference(element).then(reference => this.driver.rightClick(reference));
-    }
+	rightClick(elementReference) {
+		return this.elementReference(element).then(reference => this.driver.rightClick(reference));
+	}
 
-    mouseDown(button) {
-        button = button || 0;
-        return this.driver.buttonDown(button);
-    }
+	mouseDown(button) {
+		button = button || 0;
+		return this.driver.buttonDown(button);
+	}
 
-    mouseUp(button) {
-        button = button || 0;
-        return this.driver.buttonUp(button);
-    }
+	mouseUp(button) {
+		button = button || 0;
+		return this.driver.buttonUp(button);
+	}
 
-    execute(func, ...args) {
-        return this.driver.execute.apply(this.driver, [func].concat(args)).then(res => res.value)
-    }
+	execute(func, ...args) {
+		return this.driver.execute.apply(this.driver, [func].concat(args)).then(res => res.value);
+	}
 
-    executeAsync(func, ...args) {
-        return this.driver.executeAsync.apply(this.driver, [func].concat(args)).then(res => res.value);
-    }
+	executeAsync(func, ...args) {
+		return this.driver.executeAsync.apply(this.driver, [func].concat(args)).then(res => res.value);
+	}
 
-    dragAndDrop(elementSource, elementTarget, xOffset, yOffset) {
-        return this.elementReference(elementSource).then((elementReferenceSource) => {
-            return this.elementReference(elementTarget).then((elementReferenceTarget) => {
-                if (this.driver.isMobile) {
-                    return this.driver.getLocation(elementReferenceSource).then(
-                        (location) => this.driver.touchDown(location.x, location.y)
-                    ).getLocation(elementReferenceTarget).then(
-                        (location) => this.driver.touchMove(location.x, location.y).touchUp(location.x, location.y)
-                    );
-                }
+	dragAndDrop(elementSource, elementTarget, xOffset, yOffset) {
+		return this.elementReference(elementSource).then((elementReferenceSource) => {
+			return this.elementReference(elementTarget).then((elementReferenceTarget) => {
+				if (this.driver.isMobile) {
+					return this.driver.getLocation(elementReferenceSource).then(
+						(location) => this.driver.touchDown(location.x, location.y)
+					).getLocation(elementReferenceTarget).then(
+						(location) => this.driver.touchMove(location.x, location.y).touchUp(location.x, location.y)
+					);
+				}
 
-                return this.driver.moveToObject(elementReferenceSource).buttonDown().moveToObject(elementReferenceTarget, xOffset, yOffset).buttonUp();
-            });
-        });
-    }
+				return this.driver.moveToObject(elementReferenceSource).buttonDown().moveToObject(elementReferenceTarget, xOffset, yOffset).buttonUp();
+			});
+		});
+	}
 
-    pause(delay) {
-        return this.driver.pause(delay);
-    }
+	pause(delay) {
+		return this.driver.pause(delay);
+	}
 
-    saveScreenshot(filename) {
-        return this.driver.saveScreenshot(filename);
-    }
+	saveScreenshot(filename) {
+		return this.driver.saveScreenshot(filename);
+	}
 
-    end() {
-        return this.driver.end();
-    }
+	end() {
+		return this.driver.end();
+	}
 
-    find(reference) {
-        return this.element(reference);
-    }
+	find(reference) {
+		return this.element(reference);
+	}
 
-    element(reference) {
-        return this.driver.element(reference).then(res => res.value);
-    }
+	element(reference) {
+		return this.driver.element(reference).then(res => res.value);
+	}
 
-    elements(reference) {
-        return this.driver.elements(reference).then(res => res.value);
-    }
+	elements(reference) {
+		return this.driver.elements(reference).then(res => res.value);
+	}
 
-    getValue(element) {
-        return this.elementReference(element).then(reference => this.driver.getValue(reference).then(value => value));
-    }
+	getValue(element) {
+		return this.elementReference(element).then(reference => this.driver.getValue(reference).then(value => value));
+	}
 
-    setValue(element, ...values) {
-        return this.elementReference(element).then(reference => this.driver.setValue(reference, ...values));
-    }
+	setValue(element, ...values) {
+		return this.driver.elementIdValue(element.ELEMENT, ...values);
+	}
 
-    getTitle() {
-        return this.driver.getTitle();
-    }
+	getTitle() {
+		return this.driver.getTitle();
+	}
 
-    log(type) {
-        return this.driver.log(type);
-    }
+	log(type) {
+		return this.driver.log(type);
+	}
 
-    setWindowSize(size) {
-        return this.driver.windowHandleSize(size);
-    }
+	setWindowSize(size) {
+		return this.driver.windowHandleSize(size);
+	}
 
-    getWindowSize() {
-        return this.driver.windowHandleSize();
-    }
+	getWindowSize() {
+		return this.driver.windowHandleSize();
+	}
 
-    maximize() {
-        return this.driver.windowHandleMaximize();
-    }
+	maximize() {
+		return this.driver.windowHandleMaximize();
+	}
 
-    scroll(element) {
-        return this.elementReference(element).then(reference => this.driver.scroll(reference));
-    }
+	scroll(element) {
+		return this.elementReference(element).then(reference => this.driver.scroll(reference));
+	}
 }
 
 export default WebdriverIOAdapter;
