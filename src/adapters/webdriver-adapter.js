@@ -9,8 +9,8 @@ class WebdriverAdapter {
 		//
 		// Need to parse out the browser
 		//
-			.forBrowser('firefox')
-			.usingServer('http://localhost:4444/wd/hub')
+			.forBrowser(config.desiredCapabilities.browserName)
+			.usingServer('http://localhost:' + config.port + '/wd/hub')
 			.build();
 	}
 
