@@ -5,7 +5,6 @@ import {tagElementWithID} from '../utils/client';
 class WebdriverIOAdapter {
 	constructor(config) {
 		this.driver = wdio.remote(config);
-		this.driver.timeouts('implicit', 0);
 	}
 
 	init() {
