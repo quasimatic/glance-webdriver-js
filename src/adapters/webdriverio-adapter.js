@@ -4,7 +4,12 @@ import {tagElementWithID} from '../utils/client';
 
 class WebdriverIOAdapter {
 	constructor(config) {
-		this.driver = wdio.remote(config);
+		this.driver = wdio.remote({
+			...config,
+			plugins: {
+				'wdio-screenshot': {}
+			}
+		});
 	}
 
 	init() {
@@ -118,7 +123,7 @@ class WebdriverIOAdapter {
 	}
 
 	saveScreenshot(filename) {
-		return this.driver.saveScreenshot(filename);
+		return this.driver.saveDocumentScreenshot(filename);
 	}
 
 	end() {
