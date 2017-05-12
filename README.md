@@ -142,6 +142,13 @@ For a guide to run your first selenium glance script:
 			example: input#3 will return the 3rd input element found
 		#class
 			limit the selector to class attribute
+			Ex: "Create > save#class" 
+			    would  look for an element like the folowing one, where we find a button that has the word 
+			    Create in it, and it also has the word "save" in it's class attribute.
+			
+			<button type="button" ng-click="createTopic(topic)" class="topic-button save create-btn ng-binding">
+			    Create
+			</button>
 		#contains
 			selector given can be part of a longer text string
 		#css
