@@ -133,7 +133,7 @@ For a guide to run your first selenium glance script:
 		:count
 			returns a count of the elements 
 ###	Options:
-		these options are added to end of selector to allow us to change how the object is found or filtered
+		these options are added to end of a label to allow us to change how the object is found or filtered
         
 		#visible
 			default - return only visible elements
