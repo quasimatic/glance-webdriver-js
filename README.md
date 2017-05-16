@@ -1,14 +1,15 @@
-For a step by step guide to setting up selenium:
+## For a step by step guide to setting up selenium:
 
 [http://educate.quasimatic.com/installation/setting-up-selenium](http://educate.quasimatic.com/installation/setting-up-selenium)
 
-For a guide to run your first selenium glance script:
+## For a guide to run your first selenium glance script:
 
 [http://educate.quasimatic.com/selenium/glance-from-scratch](http://educate.quasimatic.com/selenium/glance-from-scratch)
 
 
-#API 
-(work in progress - subject to change)
+## API 
+* (work in progress - subject to change)
+
 
 ##	Methods
 
