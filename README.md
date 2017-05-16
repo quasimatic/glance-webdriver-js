@@ -132,27 +132,36 @@ For a guide to run your first selenium glance script:
 			return the specified attribute value
 		:count
 			returns a count of the elements 
+
 ###	Options:
-		these options are added to end of a label to allow us to change how the object is found or filtered
-        
-		#visible
-			default - return only visible elements
-		#<index>
-			return element number <index>
-			example: input#3 will return the 3rd input element found
-		#class
-			limit the selector to class attribute
-		#contains
-			selector given can be part of a longer text string
-		#css
-			applies selector as a css query
-		#exact-text
-			find only elements that are an exact textual match
-		#node-type
-			look only for elements that match this node-type 
-            (example: edit > button#node-type - this will only search for edit buttons)
-		#value
-			look for the selector in the value attribute
-		#attribute-<attribute name>
-			limit the search to the specified attribute name
-	
+These options are added to end of a label to allow us to change how the object is found or filtered
+
+<dl>
+  <dt>#visible</dt>
+  <dd>default - return only visible elements</dd>
+  <dt>#hidden</dt>
+  <dd>limit the search to hidden elements</dd>
+  <dt>#&lt;index&gt;</dt>
+  <dd>return element number &lt;index&gt;<br>
+      example: input#3 will return the 3rd input element found</dd>
+  <dt>#class</dt>
+  <dd>limit the selector to class attribute</dd>
+  <dt>#contains-text</dt>
+  <dd>selector given can be part of a longer text string</dd>
+  <dt>#css</dt>
+  <dd>applies selector as a css query<br><br>
+  See CodePen: http://codepen.io/quasimatic/pen/xdJKJP</dd>
+  <dt>#exact-text</dt>
+  <dd>find only elements that are an exact textual match</dd>
+  <dt>#node-type</dt>
+  <dd>look only for elements that match this node-type<br>
+      (example: edit ^ button#node-type - this will only search for edit buttons)</dd>
+  <dt>#value</dt>
+  <dd>look for the selector in the value attribute</dd>
+  <dt>#attribute-&lt;attribute name&gt;</dt>
+  <dd>limit the search to the specified attribute name</dd>
+  <dt>#id</dt>
+  <dd>limit the search to the specified id (fastest way to search)</dd>
+  <dt>#closest</dt>
+  <dd>visibly closest element to the scope</dd>
+</dl>
