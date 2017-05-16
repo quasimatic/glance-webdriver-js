@@ -6,11 +6,6 @@
 
 [http://educate.quasimatic.com/selenium/glance-from-scratch](http://educate.quasimatic.com/selenium/glance-from-scratch)
 
-
-## API 
-* (work in progress - subject to change)
-
-
 ##	Methods
 
 ####		setLogLevel(level)
