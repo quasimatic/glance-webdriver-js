@@ -111,9 +111,9 @@
 				'password': "mypass"
 			})
 		
-------------------------
+========================
 ### Special projections:
-------------------------
+========================
 These are added to end of selector to project the results.
 
 <dl>
