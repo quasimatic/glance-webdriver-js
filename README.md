@@ -134,7 +134,8 @@ These options are added to end of a label to allow us to change how the object i
 
 <dl>
   <dt>#visible</dt>
-  <dd>default - return only visible elements</dd>
+  <dd>default - return only visible elements<br><br>
+  See CodePen: https://codepen.io/quasimatic/pen/MmqGGq/</dd>
   <dt>#hidden</dt>
   <dd>limit the search to hidden elements</dd>
   <dt>#&lt;index&gt;</dt>
