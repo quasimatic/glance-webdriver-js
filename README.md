@@ -111,25 +111,27 @@
 				'password': "mypass"
 			})
 		
-###	Special projections:
-		these projects are added to end of selector to project the results
-		
-		browser:url
-			return the current URL
-		browser:title
-			return the page's current title
-		:text
-			return the elements innertext
-		:html
-			return the elements outerHTML
-		:value
-			return the elements value
-		:attribute-<attribute name>
-			return the specified attribute value
-		:count
-			returns a count of the elements 
+### Special projections:
+These are added to end of selector to project the results.
 
-###	Options:
+<dl>
+<dt>browser:url</dt>
+<dd>return the current URL</dd>
+<dt>browser:title</dt>
+<dd>return the page's current title</dd>
+<dt>:text</dt>
+<dd>return the elements innertext</dd>
+<dt>:html</dt>
+<dd>return the elements outerHTML</dd>
+<dt>:value</dt>
+<dd>return the elements value</dd>
+<dt>:attribute-&lt;attribute name$gt;</dt>
+<dd>return the specified attribute value</dd>
+<dt>:count</dt>
+<dd>returns a count of the elements </dd>
+</dl>		
+
+### Options:
 These options are added to end of a label to allow us to change how the object is found or filtered
 
 <dl>
