@@ -112,9 +112,9 @@
 			})
 		
 ------------------------
-### Special projections:
+### Special projections: These are added to end of selector to project the results.
 ------------------------
-These are added to end of selector to project the results.
+
 
 <dl>
 <dt>browser:url</dt>
@@ -135,8 +135,9 @@ These are added to end of selector to project the results.
 
 ------------
 ### Options:
-------------
 These options are added to end of a label to allow us to change how the object is found or filtered
+------------
+
 
 <dl>
   <dt>#attribute-&lt;attribute name&gt;</dt>
