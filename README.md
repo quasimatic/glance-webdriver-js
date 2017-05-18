@@ -133,16 +133,12 @@
 These options are added to end of a label to allow us to change how the object is found or filtered
 
 <dl>
-  <dt>#visible</dt>
-  <dd>default - return only visible elements<br><br>
-  See CodePen: https://codepen.io/quasimatic/pen/MmqGGq/</dd>
-  <dt>#hidden</dt>
-  <dd>limit the search to hidden elements</dd>
-  <dt>#&lt;index&gt;</dt>
-  <dd>return element number &lt;index&gt;<br><br>
-  See CodePen: https://codepen.io/quasimatic/pen/BROxEm</dd>
+  <dt>#attribute-&lt;attribute name&gt;</dt>
+  <dd>limit the search to the specified attribute name</dd>
   <dt>#class</dt>
   <dd>limit the selector to class attribute</dd>
+  <dt>#closest</dt>
+  <dd>visibly closest element to the scope</dd>
   <dt>#contains-text</dt>
   <dd>selector given can be part of a longer text string</dd>
   <dt>#css</dt>
@@ -150,15 +146,19 @@ These options are added to end of a label to allow us to change how the object i
   See CodePen: http://codepen.io/quasimatic/pen/xdJKJP</dd>
   <dt>#exact-text</dt>
   <dd>find only elements that are an exact textual match</dd>
+  <dt>#hidden</dt>
+  <dd>limit the search to hidden elements</dd>
+  <dt>#id</dt>
+  <dd>limit the search to the specified id (fastest way to search)</dd>
+  <dt>#&lt;index&gt;</dt>
+  <dd>return element number &lt;index&gt;<br><br>
+  See CodePen: https://codepen.io/quasimatic/pen/BROxEm</dd>
   <dt>#node-type</dt>
   <dd>look only for elements that match this node-type<br>
       (example: edit ^ button#node-type - this will only search for edit buttons)</dd>
   <dt>#value</dt>
   <dd>look for the selector in the value attribute</dd>
-  <dt>#attribute-&lt;attribute name&gt;</dt>
-  <dd>limit the search to the specified attribute name</dd>
-  <dt>#id</dt>
-  <dd>limit the search to the specified id (fastest way to search)</dd>
-  <dt>#closest</dt>
-  <dd>visibly closest element to the scope</dd>
+  <dt>#visible</dt>
+  <dd>default behavior - return only visible elements<br><br>
+  See CodePen: https://codepen.io/quasimatic/pen/MmqGGq/</dd>
 </dl>
