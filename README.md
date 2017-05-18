@@ -139,8 +139,8 @@ These options are added to end of a label to allow us to change how the object i
   <dt>#hidden</dt>
   <dd>limit the search to hidden elements</dd>
   <dt>#&lt;index&gt;</dt>
-  <dd>return element number &lt;index&gt;<br>
-      example: input#3 will return the 3rd input element found</dd>
+  <dd>return element number &lt;index&gt;<br><br>
+  See CodePen: https://codepen.io/quasimatic/pen/BROxEm</dd>
   <dt>#class</dt>
   <dd>limit the selector to class attribute</dd>
   <dt>#contains-text</dt>
