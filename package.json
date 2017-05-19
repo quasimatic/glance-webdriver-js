@@ -33,7 +33,6 @@
     "npm": "^4.5.0",
     "selenium-webdriver": "^3.4.0",
     "shortid": "^2.2.8",
-    "wdio-screenshot": "^0.6.0",
     "webdriverio": "^4.8.0"
   },
   "devDependencies": {

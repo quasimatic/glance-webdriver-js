@@ -6,9 +6,6 @@ class WebdriverIOAdapter {
 	constructor(config) {
 		this.driver = wdio.remote({
 			...config,
-			plugins: {
-				'wdio-screenshot': {}
-			}
 		});
 	}
 
@@ -123,7 +120,7 @@ class WebdriverIOAdapter {
 	}
 
 	saveScreenshot(filename) {
-		return this.driver.saveDocumentScreenshot(filename);
+		return this.driver.saveScreenshot(filename);
 	}
 
 	end() {
