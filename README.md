@@ -144,7 +144,7 @@ These options are added to end of a label to allow us to change how the object i
 <dl>
   <dt>#attribute-&lt;attribute name&gt;</dt>
   <dd>limit the search to the specified attribute name<br><br>
-  See CodePen: https://codepen.io/quasimatic/pen/zwQVEL
+  Example Code: https://codepen.io/quasimatic/pen/zwQVEL
   </dd>
   <dt>#class</dt>
   <dd>limit the selector to class attribute</dd>
@@ -154,7 +154,7 @@ These options are added to end of a label to allow us to change how the object i
   <dd>selector given can be part of a longer text string</dd>
   <dt>#css</dt>
   <dd>applies selector as a css query<br><br>
-  See CodePen: http://codepen.io/quasimatic/pen/xdJKJP
+  Example Code: http://codepen.io/quasimatic/pen/xdJKJP
   </dd>
   <dt>#exact-text</dt>
   <dd>find only elements that are an exact textual match</dd>
@@ -164,7 +164,7 @@ These options are added to end of a label to allow us to change how the object i
   <dd>limit the search to the specified id (fastest way to search)</dd>
   <dt>#&lt;index&gt;</dt>
   <dd>return element number &lt;index&gt;<br><br>
-  See CodePen: https://codepen.io/quasimatic/pen/BROxEm
+  Example Code: https://codepen.io/quasimatic/pen/BROxEm
   </dd>
   <dt>#node-type</dt>
   <dd>look only for elements that match this node-type<br>
@@ -174,6 +174,6 @@ These options are added to end of a label to allow us to change how the object i
   <dd>look for the selector in the value attribute</dd>
   <dt>#visible</dt>
   <dd>default behavior - return only visible elements<br><br>
-  See CodePen: https://codepen.io/quasimatic/pen/MmqGGq/
+  Example Code: https://codepen.io/quasimatic/pen/MmqGGq/
   </dd>
 </dl>
