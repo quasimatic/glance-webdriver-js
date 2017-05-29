@@ -143,7 +143,8 @@ These options are added to end of a label to allow us to change how the object i
 
 <dl>
   <dt>#attribute-&lt;attribute name&gt;</dt>
-  <dd>limit the search to the specified attribute name</dd>
+  <dd>limit the search to the specified attribute name</dd><br><br>
+  See CodePen: https://codepen.io/quasimatic/pen/zwQVEL
   <dt>#class</dt>
   <dd>limit the selector to class attribute</dd>
   <dt>#closest</dt>
