@@ -138,7 +138,7 @@ These are added to end of selector to project the results.
 ### Options:
 ------------
 
-These options are added to end of a label to allow us to change how the object is found or filtered
+These options are added to end of a Glance label to allow us to change how the object is found or filtered
 
 
 <dl>
