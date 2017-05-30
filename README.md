@@ -151,7 +151,9 @@ These options are added to end of a label to allow us to change how the object i
   <dt>#closest</dt>
   <dd>visibly closest element to the scope</dd>
   <dt>#contains-text</dt>
-  <dd>selector given can be part of a longer text string</dd>
+  <dd>selector given can be part of a longer text string<br><br>
+  Example Code: https://codepen.io/quasimatic/pen/bWPwjK
+  </dd>
   <dt>#css</dt>
   <dd>applies selector as a css query<br><br>
   Example Code: http://codepen.io/quasimatic/pen/xdJKJP
