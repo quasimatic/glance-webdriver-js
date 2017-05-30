@@ -147,7 +147,9 @@ These options are added to end of a Glance label to allow us to change how the o
   Example Code: https://codepen.io/quasimatic/pen/zwQVEL
   </dd>
   <dt>#class</dt>
-  <dd>limit the selector to class attribute</dd>
+  <dd>limit the selector to class attribute<br><br>
+  Example Code: https://codepen.io/quasimatic/pen/OmebeK
+  </dd>
   <dt>#closest</dt>
   <dd>visibly closest element to the scope</dd>
   <dt>#contains-text</dt>
