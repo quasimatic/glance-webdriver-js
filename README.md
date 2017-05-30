@@ -151,7 +151,9 @@ These options are added to end of a Glance label to allow us to change how the o
   Example Code: https://codepen.io/quasimatic/pen/OmebeK
   </dd>
   <dt>#closest</dt>
-  <dd>visibly closest element to the scope</dd>
+  <dd>visibly closest element to the scope<br><br>
+  Example Code: https://codepen.io/quasimatic/pen/YVoEYo
+  </dd>
   <dt>#contains-text</dt>
   <dd>selector given can be part of a longer text string<br><br>
   Example Code: https://codepen.io/quasimatic/pen/bWPwjK
