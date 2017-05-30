@@ -163,7 +163,9 @@ These options are added to end of a Glance label to allow us to change how the o
   Example Code: http://codepen.io/quasimatic/pen/xdJKJP
   </dd>
   <dt>#exact-text</dt>
-  <dd>find only elements that are an exact textual match</dd>
+  <dd>find only elements that are an exact textual match<br><br>
+  Example Code: https://codepen.io/quasimatic/pen/qmzVJv
+  </dd>
   <dt>#hidden</dt>
   <dd>limit the search to hidden elements</dd>
   <dt>#id</dt>
