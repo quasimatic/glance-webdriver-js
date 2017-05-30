@@ -169,13 +169,13 @@ These options are added to end of a label to allow us to change how the object i
   Example Code: https://codepen.io/quasimatic/pen/BROxEm
   </dd>
   <dt>#node-type</dt>
-  <dd>look only for elements that match this node-type<br>
-      (example: edit ^ button#node-type - this will only search for edit buttons)
+  <dd>look only for elements that match this node-type<br><br>
+  Example Code: https://codepen.io/quasimatic/pen/rmEWQy
   </dd>
   <dt>#value</dt>
   <dd>look for the selector in the value attribute</dd>
   <dt>#visible</dt>
   <dd>default behavior - return only visible elements<br><br>
-  Example Code: https://codepen.io/quasimatic/pen/MmqGGq/
+  Example Code: https://codepen.io/quasimatic/pen/MmqGGq
   </dd>
 </dl>
