@@ -5,13 +5,7 @@ import fs from 'fs';
 class WebdriverAdapter {
 	constructor(config) {
 		this.config = config;
-		this.driver = new Webdriver.Builder()
-		//
-		// Need to parse out the browser
-		//
-			.forBrowser(config.desiredCapabilities.browserName)
-			.usingServer('http://localhost:' + config.port + '/wd/hub')
-			.build();
+		this.driver = config.driver;
 	}
 
 	init() {
