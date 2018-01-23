@@ -30,7 +30,7 @@
     "immutable": "^3.8.2",
     "lodash": "^4.17.4",
     "loglevel": "1.6.1",
-    "selenium-webdriver": "^4.0.0-alpha.1",
+    "selenium-webdriver": "^3.6.0",
     "shortid": "^2.2.8",
     "webdriverio": "^4.10.1"
   },
